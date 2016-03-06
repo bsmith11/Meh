@@ -1,0 +1,24 @@
+disabled_rules:
+  - cyclomatic_complexity
+  - file_length
+  - function_body_length
+  - function_parameter_count
+  - line_length
+  - nesting
+  - statement_position
+  - todo
+  - type_body_length
+  - variable_name
+  - variable_name_max_length
+  - variable_name_min_length
+  - valid_docs
+
+type_name:
+    min_length: 2
+
+variable_name:
+    excluded:
+        - URL
+
+excluded:
+  - Pods

@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import AlamofireImage
 
 class PhotoCell: UICollectionViewCell {
 
     // MARK: - Properties
 
-    private var photoImageView = UIImageView(frame: CGRect.zero)
+    private let photoImageView = UIImageView(frame: CGRect.zero)
 
     // MARK: - Lifecycle
 
@@ -25,6 +26,13 @@ class PhotoCell: UICollectionViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        photoImageView.af_cancelImageRequest()
+        photoImageView.image = nil
     }
 
     // MARK - Setup
@@ -47,6 +55,11 @@ class PhotoCell: UICollectionViewCell {
     }
 
     func configureWithURL(URL: NSURL?) {
-        photoImageView.image = UIImage(named: "mediocre")
+        if let URL = URL {
+            photoImageView.af_setImageWithURL(URL)
+        }
+        else {
+            photoImageView.image = nil
+        }
     }
 }

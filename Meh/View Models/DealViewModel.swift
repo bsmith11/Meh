@@ -8,21 +8,29 @@
 
 import UIKit
 
-struct DealTheme {
-    var backgroundColor: UIColor?
-    var foregroundColor: UIColor?
-    var accentColor: UIColor?
+protocol DealViewModelDelegate {
+    func didUpdateDeal()
 }
 
-class DealViewModel: NSObject {
-    var dealTheme: DealTheme?
-    var dealName: NSAttributedString?
+class DealViewModel {
+    private let dealService: DealService
+    private(set) var deal: Deal? {
+        didSet {
+            delegate?.didUpdateDeal()
+        }
+    }
 
-    override init() {
-        super.init()
+    var delegate: DealViewModelDelegate?
 
-        dealTheme?.backgroundColor = UIColor(hexString: "C4E3F1")
-        dealTheme?.foregroundColor = UIColor.blackColor()
-        dealTheme?.accentColor = UIColor(hexString: "92A64D")
+    init() {
+        dealService = DealService(client: APIClient.sharedInstance)
+        dealService.mockFetchDeal { (deal: Deal?, error: NSError?) -> Void in
+            self.deal = deal
+
+        }
+    }
+
+    private func downloadDeal(completion: DealCompletion?) {
+        dealService.mockFetchDeal(completion)
     }
 }

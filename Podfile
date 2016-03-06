@@ -2,7 +2,13 @@ source 'https://github.com/CocoaPods/Specs'
 
 platform :ios, '9.0'
 
-# Add Application pods here
+use_frameworks!
+inhibit_all_warnings!
+
+pod 'Alamofire', '~> 3.2'
+pod 'AlamofireImage', '~> 2.3'
+pod 'pop', '~> 1.0'
+pod 'youtube-ios-player-helper', :git=>'https://github.com/youtube/youtube-ios-player-helper', :commit=>'head'
 
 target :unit_tests, :exclusive => true do
   link_with 'UnitTests'
