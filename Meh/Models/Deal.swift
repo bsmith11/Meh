@@ -7,65 +7,17 @@
 //
 
 import UIKit
-
-struct Story {
-
-    // MARK: - Properties
-
-    let title: String
-    let body: String
-
-    init?(dictionary: Dictionary<String, String>) {
-        if let title = dictionary["title"], body = dictionary["body"] {
-            self.title = title
-            self.body = body
-        }
-        else {
-            return nil
-        }
-    }
-}
-
-struct Theme {
-
-    // MARK: - Properties
-
-    private(set) var accentColor = UIColor.grayColor()
-    private(set) var foregroundColor = UIColor.blackColor()
-    private(set) var backgroundColor = UIColor.whiteColor()
-
-    init(dictionary: Dictionary<String, String>) {
-        if let accent = dictionary["accentColor"] {
-            accentColor = UIColor(hexString: accent)
-        }
-
-        if let foreground = dictionary["foreground"] {
-            if foreground == "dark" {
-                foregroundColor = UIColor.blackColor()
-            }
-            else {
-                foregroundColor = UIColor.whiteColor()
-            }
-        }
-
-        if let background = dictionary["backgroundColor"] {
-            backgroundColor = UIColor(hexString: background)
-        }
-    }
-
-    init() {
-
-    }
-}
+//import Argo
+//import Curry
 
 struct Deal {
 
     // MARK: - Properties
 
-    private(set) var dealID: String
+    private(set) var id: String
     private(set) var title: String?
     private(set) var features: String?
-    private(set) var price: String?
+    private(set) var prices = [Int]()
     private(set) var soldOutDate: NSDate?
     private(set) var specifications: String?
     private(set) var story: Story?
@@ -91,17 +43,17 @@ struct Deal {
 
     init?(dictionary: Dictionary<String, AnyObject>) {
 
-        if let dealDictionary = dictionary["deal"], dealID = dealDictionary["id"] as? String {
-            self.dealID = dealID
+        if let dealDictionary = dictionary["deal"], id = dealDictionary["id"] as? String {
+            self.id = id
             title = dealDictionary["title"] as? String
             features = dealDictionary["features"] as? String
             features = features?.stringByReplacingOccurrencesOfString("\r", withString: "\n")
             features = features?.stringByReplacingOccurrencesOfString("- ", withString: "\u{2022} ")
 
             if let items = dealDictionary["items"] as? [Dictionary<String, AnyObject>] {
-                if let item = items.first {
+                for item in items {
                     if let priceInt = item["price"] as? Int {
-                        price = String(priceInt)
+                        prices.append(priceInt)
                     }
                 }
             }
@@ -142,3 +94,15 @@ struct Deal {
         }
     }
 }
+
+//// MARK: - Decodable
+//
+//extension Deal: Decodable {
+//    static func decode(json: JSON) -> Decoded<Deal> {
+//        return curry(Deal.init)
+//        <^> json <| "id"
+//        <*> json <|? "title"
+//        <*> json <|? "features"
+//        <*> json <|? "specifications"
+//    }
+//}

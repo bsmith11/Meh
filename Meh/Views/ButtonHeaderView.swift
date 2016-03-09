@@ -109,12 +109,25 @@ class ButtonHeaderView: UICollectionReusableView {
 
         titleLabel.attributedText = NSAttributedString(string: title, attributes: titleAttributes)
 
-        var buttonTitle = ""
-        if let price = deal?.price {
-            buttonTitle = "$" + price
-        }
-        else {
-            buttonTitle = "No Price"
+        var buttonTitle = "No price"
+
+        if let prices = deal?.prices {
+            if prices.count > 0 {
+                var lowestPrice = Int.max
+                var highestPrice = 0
+
+                for price in prices {
+                    lowestPrice = min(lowestPrice, price)
+                    highestPrice = max(highestPrice, price)
+                }
+
+                if lowestPrice == highestPrice {
+                    buttonTitle = "$" + String(lowestPrice)
+                }
+                else {
+                    buttonTitle = "$" + String(lowestPrice) + " - $" + String(highestPrice)
+                }
+            }
         }
 
         let buttonParagraphStyle = NSMutableParagraphStyle()

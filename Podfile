@@ -7,7 +7,8 @@ inhibit_all_warnings!
 
 pod 'Alamofire', '~> 3.2'
 pod 'AlamofireImage', '~> 2.3'
-pod 'SwiftyMarkdown', '~> 0.2'
+pod 'Curry', '~> 2.0'
+pod 'Argo', '~> 2.2'
 pod 'pop', '~> 1.0'
 pod 'Shimmer', '~> 1.0'
 pod 'youtube-ios-player-helper', :git=>'https://github.com/youtube/youtube-ios-player-helper', :commit=>'head'
