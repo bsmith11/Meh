@@ -15,12 +15,44 @@ class StoryCell: UICollectionViewCell {
     private let titleLabel = UILabel(frame: CGRect.zero)
     private let bodyLabel = UILabel(frame: CGRect.zero)
 
+    private static var titleAttributes: Dictionary<String, AnyObject> {
+        get {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineBreakMode = .ByWordWrapping
+
+            let attributes = [
+                NSFontAttributeName: UIFont.storyTitleFont(),
+                NSForegroundColorAttributeName: UIColor.blackColor(),
+                NSParagraphStyleAttributeName: paragraphStyle
+            ]
+
+            return attributes
+        }
+    }
+
+    private static var bodyAttributes: Dictionary<String, AnyObject> {
+        get {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineBreakMode = .ByWordWrapping
+
+            let attributes = [
+                NSFontAttributeName: UIFont.storyBodyFont(),
+                NSForegroundColorAttributeName: UIColor.blackColor(),
+                NSParagraphStyleAttributeName: paragraphStyle
+            ]
+
+            return attributes
+        }
+    }
+
     // MARK: - Lifecycle
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         backgroundColor = UIColor.whiteColor()
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.mainScreen().scale
 
         configureViews()
         configureLayout()
@@ -64,61 +96,23 @@ class StoryCell: UICollectionViewCell {
     func configureWithDeal(deal: Deal?) {
         let title = deal?.story?.title ?? "No Title"
 
-        let titleParagraphStyle = NSMutableParagraphStyle()
-        titleParagraphStyle.lineBreakMode = .ByWordWrapping
-
-        let titleAttributes = [
-            NSFontAttributeName: UIFont.storyTitleFont(),
-            NSForegroundColorAttributeName: UIColor.blackColor(),
-            NSParagraphStyleAttributeName: titleParagraphStyle
-        ]
-
-        titleLabel.attributedText = NSAttributedString(string: title, attributes: titleAttributes)
+        titleLabel.attributedText = NSAttributedString(string: title, attributes: StoryCell.titleAttributes)
 
         let body = deal?.story?.body ?? "No Body"
 
-        let bodyParagraphStyle = NSMutableParagraphStyle()
-        bodyParagraphStyle.lineBreakMode = .ByWordWrapping
-
-        let bodyAttributes = [
-            NSFontAttributeName: UIFont.storyBodyFont(),
-            NSForegroundColorAttributeName: UIColor.blackColor(),
-            NSParagraphStyleAttributeName: bodyParagraphStyle
-        ]
-
-        bodyLabel.attributedText = NSAttributedString(string: body, attributes: bodyAttributes)
+        bodyLabel.attributedText = NSAttributedString(string: body, attributes: StoryCell.bodyAttributes)
     }
 
     static func heightWithDeal(deal: Deal?, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 40.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
+        let options: NSStringDrawingOptions = .UsesLineFragmentOrigin
 
-        let title = deal?.story?.title ?? "No Title"
+        let title: NSString = deal?.story?.title ?? "No Title"
+        let titleBoundingRect = title.boundingRectWithSize(size, options: options, attributes: titleAttributes, context: nil)
 
-        let titleParagraphStyle = NSMutableParagraphStyle()
-        titleParagraphStyle.lineBreakMode = .ByWordWrapping
-
-        let titleAttributes = [
-            NSFontAttributeName: UIFont.storyTitleFont(),
-            NSForegroundColorAttributeName: UIColor.blackColor(),
-            NSParagraphStyleAttributeName: titleParagraphStyle
-        ]
-
-        let titleBoundingRect = (title as NSString).boundingRectWithSize(size, options: options, attributes: titleAttributes, context: nil)
-
-        let body = deal?.story?.body ?? "No Body"
-
-        let bodyParagraphStyle = NSMutableParagraphStyle()
-        bodyParagraphStyle.lineBreakMode = .ByWordWrapping
-
-        let bodyAttributes = [
-            NSFontAttributeName: UIFont.storyBodyFont(),
-            NSForegroundColorAttributeName: UIColor.blackColor(),
-            NSParagraphStyleAttributeName: bodyParagraphStyle
-        ]
-
-        let bodyBoundingRect = (body as NSString).boundingRectWithSize(size, options: options, attributes: bodyAttributes, context: nil)
+        let body: NSString = deal?.story?.body ?? "No Body"
+        let bodyBoundingRect = body.boundingRectWithSize(size, options: options, attributes: bodyAttributes, context: nil)
 
         return ceil(titleBoundingRect.height) + 20.0 + ceil(bodyBoundingRect.height) + 40.0
     }

@@ -24,6 +24,7 @@ class InfoHeaderView: UICollectionReusableView {
 
     private var deal: Deal?
     private var selectedCell: UICollectionViewCell?
+    private var runImageTransitionIfCached = true
 
     var delegate: InfoHeaderViewDelegate?
 
@@ -48,15 +49,6 @@ class InfoHeaderView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 
-//    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
-//        super.applyLayoutAttributes(layoutAttributes)
-//
-//        let transform = CGAffineTransformMakeScale(layoutAttributes.alpha, layoutAttributes.alpha)
-//        photoCollectionView.transform = transform
-//        pageControl.transform = transform
-//        nameLabel.transform = transform
-//    }
-
     // MARK: - Setup
 
     private func configureViews() {
@@ -80,7 +72,7 @@ class InfoHeaderView: UICollectionReusableView {
     private func configureLayout() {
         let photoCollectionViewConstraints: [NSLayoutConstraint] = [
             photoCollectionView.heightAnchor.constraintEqualToConstant(InfoHeaderView.photoCellWidth),
-            photoCollectionView.topAnchor.constraintEqualToAnchor(topAnchor, constant: 10.0),
+            photoCollectionView.topAnchor.constraintEqualToAnchor(topAnchor, constant: 20.0),
             photoCollectionView.leadingAnchor.constraintEqualToAnchor(leadingAnchor),
             trailingAnchor.constraintEqualToAnchor(photoCollectionView.trailingAnchor)
         ]
@@ -88,9 +80,9 @@ class InfoHeaderView: UICollectionReusableView {
         NSLayoutConstraint.activateConstraints(photoCollectionViewConstraints)
 
         let pageControlConstraints: [NSLayoutConstraint] = [
-            pageControl.topAnchor.constraintEqualToAnchor(photoCollectionView.bottomAnchor, constant: 10.0),
+            pageControl.topAnchor.constraintEqualToAnchor(photoCollectionView.bottomAnchor, constant: 20.0),
             pageControl.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
-            bottomAnchor.constraintEqualToAnchor(pageControl.bottomAnchor, constant: 10.0)
+            bottomAnchor.constraintEqualToAnchor(pageControl.bottomAnchor, constant: 20.0)
         ]
 
         NSLayoutConstraint.activateConstraints(pageControlConstraints)
@@ -102,6 +94,8 @@ class InfoHeaderView: UICollectionReusableView {
         pageControl.numberOfPages = deal?.photoURLs.count ?? 0
         pageControl.pageIndicatorTintColor = deal?.theme.accentColor
         pageControl.currentPageIndicatorTintColor = deal?.theme.accentColor
+
+        hidePageControl()
     }
 
     // MARK: - Actions
@@ -114,8 +108,16 @@ class InfoHeaderView: UICollectionReusableView {
         selectedCell?.hidden = false
     }
 
+    func showPageControlAnimated(animated: Bool) {
+        pageControl.showAnimated(animated)
+    }
+
+    func hidePageControl() {
+        pageControl.hide()
+    }
+
     static func height() -> CGFloat {
-        return InfoHeaderView.photoCellWidth + PageControl.height() + (3 * 10.0)
+        return InfoHeaderView.photoCellWidth + PageControl.height() + (3 * 20.0)
     }
 }
 
@@ -123,7 +125,7 @@ class InfoHeaderView: UICollectionReusableView {
 
 extension InfoHeaderView: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
+        return deal?.photoURLs.count > 0 ? 1 : 0
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -140,7 +142,11 @@ extension InfoHeaderView: UICollectionViewDataSource, UICollectionViewDelegate {
                 }
             }
 
-            cell.configureWithURL(URL)
+            cell.configureWithURL(URL, runImageTransitionIfCached: runImageTransitionIfCached)
+
+            if runImageTransitionIfCached {
+                runImageTransitionIfCached = false
+            }
 
             return cell
         }

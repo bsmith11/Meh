@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 import AlamofireImage
 
 class PhotoCell: UICollectionViewCell {
@@ -54,9 +55,14 @@ class PhotoCell: UICollectionViewCell {
         NSLayoutConstraint.activateConstraints(photoImageViewConstraints)
     }
 
-    func configureWithURL(URL: NSURL?) {
+    func configureWithURL(URL: NSURL?, runImageTransitionIfCached: Bool) {
         if let URL = URL {
-            photoImageView.af_setImageWithURL(URL)
+            let width = UIScreen.mainScreen().bounds.width
+            let height = width - 40.0
+            let size = CGSize(width: width, height: height)
+            let imageFilter = AspectScaledToFitSizeFilter.init(size: size)
+
+            photoImageView.af_setImageWithURL(URL, placeholderImage: nil, filter: imageFilter, imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: runImageTransitionIfCached, completion: nil)
         }
         else {
             photoImageView.image = nil

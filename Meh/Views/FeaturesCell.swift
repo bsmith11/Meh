@@ -14,12 +14,30 @@ class FeaturesCell: UICollectionViewCell {
 
     private let textLabel = UILabel(frame: CGRect.zero)
 
+    private static var textAttributes: Dictionary<String, AnyObject> {
+        get {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineBreakMode = .ByWordWrapping
+            paragraphStyle.headIndent = 10.0
+
+            let attributes = [
+                NSFontAttributeName: UIFont.dealFeaturesFont(),
+                NSForegroundColorAttributeName: UIColor.blackColor(),
+                NSParagraphStyleAttributeName: paragraphStyle
+            ]
+
+            return attributes
+        }
+    }
+
     // MARK: - Lifecycle
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         backgroundColor = UIColor.whiteColor()
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.mainScreen().scale
 
         configureViews()
         configureLayout()
@@ -50,32 +68,17 @@ class FeaturesCell: UICollectionViewCell {
 
     func configureWithFeatures(features: String?) {
         let text = features ?? "No Features"
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .ByWordWrapping
-        let attributes = [
-            NSFontAttributeName: UIFont.dealFeaturesFont(),
-            NSForegroundColorAttributeName: UIColor.blackColor(),
-            NSParagraphStyleAttributeName: paragraphStyle
-        ]
 
-        textLabel.attributedText = NSAttributedString(string: text, attributes: attributes)
+        textLabel.attributedText = NSAttributedString(string: text, attributes: FeaturesCell.textAttributes)
     }
 
     static func heightWithFeatures(features: String?, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 40.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
+        let options: NSStringDrawingOptions = .UsesLineFragmentOrigin
 
-        let text = features ?? "No Features"
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .ByWordWrapping
-        let attributes = [
-            NSFontAttributeName: UIFont.dealFeaturesFont(),
-            NSForegroundColorAttributeName: UIColor.blackColor(),
-            NSParagraphStyleAttributeName: paragraphStyle
-        ]
-
-        let boundingRect = (text as NSString).boundingRectWithSize(size, options: options, attributes: attributes, context: nil)
+        let text: NSString = features ?? "No Features"
+        let boundingRect = text.boundingRectWithSize(size, options: options, attributes: textAttributes, context: nil)
 
         return ceil(boundingRect.size.height) + 40.0
     }

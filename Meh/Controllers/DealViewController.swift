@@ -10,6 +10,7 @@ import UIKit
 import youtube_ios_player_helper
 import SafariServices
 import pop
+import Shimmer
 
 class DealViewController: UIViewController {
 
@@ -17,6 +18,7 @@ class DealViewController: UIViewController {
 
     private let dealCollectionView: ControlContainableCollectionView
     private let playerView = YTPlayerView(frame: CGRect.zero)
+    private let shimmerView = FBShimmeringView(frame: CGRect.zero)
 
     private var viewModel: DealViewModel
     private var didAppear = false
@@ -50,10 +52,10 @@ class DealViewController: UIViewController {
 
     override func loadView() {
         view = UIView()
+        view.backgroundColor = UIColor.whiteColor()
 
         configureViews()
         configureLayout()
-        configureTheme()
     }
 
     override func viewDidLayoutSubviews() {
@@ -61,7 +63,19 @@ class DealViewController: UIViewController {
 
         var bottomInset = dealCollectionView.bounds.height - dealCollectionView.contentSize.height + dealCollectionView.bounds.height - ButtonHeaderView.heightWithDeal(viewModel.deal, width: dealCollectionView.bounds.width)
         bottomInset = max(0, bottomInset)
+
         dealCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: bottomInset, right: 0.0)
+
+        if let imageView = shimmerView.contentView as? UIImageView {
+            if let image = imageView.image {
+                let x: CGFloat = view.frame.midX - (image.size.width / 2.0)
+                let y: CGFloat = 120.0
+                let frame = CGRect(x: x, y: y, width: image.size.width, height: image.size.height)
+
+                shimmerView.frame = frame
+                imageView.bounds = shimmerView.bounds
+            }
+        }
     }
 
     override func viewDidLoad() {
@@ -70,20 +84,21 @@ class DealViewController: UIViewController {
         if let videoID = viewModel.deal?.videoURL?.absoluteString.youtubeVideoID() {
             playerView.loadWithVideoId(videoID, playerVars: playerVariables)
         }
-    }
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-
-        if !didAppear {
-            didAppear = true
-            bounceContentOffset()
-        }
+        shimmerView.shimmering = true
     }
 
     // MARK: - Setup
 
     private func configureViews() {
+        let image = UIImage(named: "meh_logo")!
+        let imageView = UIImageView(frame: CGRect.zero)
+        imageView.contentMode = .Center
+        imageView.image = image
+
+        shimmerView.contentView = imageView
+        view.addSubview(shimmerView)
+
         dealCollectionView.backgroundColor = UIColor.clearColor()
         dealCollectionView.dataSource = self
         dealCollectionView.delegate = self
@@ -114,17 +129,13 @@ class DealViewController: UIViewController {
         NSLayoutConstraint.activateConstraints(dealCollectionViewConstraints)
     }
 
-    private func configureTheme() {
-        view.backgroundColor = viewModel.deal?.theme.backgroundColor ?? UIColor.whiteColor()
-    }
-
     // MARK: - Actions
 
     private func bounceContentOffset() {
         let bounceAnimation = POPSpringAnimation(propertyNamed: kPOPCollectionViewContentOffset)
-        bounceAnimation.toValue = NSValue(CGPoint: CGPoint(x: 0.0, y: 10.0))
-        bounceAnimation.autoreverses = true
-        bounceAnimation.beginTime = CACurrentMediaTime() + 0.75
+        bounceAnimation.toValue = NSValue(CGPoint: CGPoint.zero)
+        bounceAnimation.springBounciness = 5.0
+        bounceAnimation.springSpeed = 1.0
 
         dealCollectionView.pop_addAnimation(bounceAnimation, forKey: "bounce")
     }
@@ -134,7 +145,7 @@ class DealViewController: UIViewController {
 
 extension DealViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
+        return viewModel.deal != nil ? 1 : 0
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -249,12 +260,38 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
 
 extension DealViewController: DealViewModelDelegate {
     func didUpdateDeal() {
-        dealCollectionView.reloadData()
-        configureTheme()
+        shimmerView.shimmering = false
 
         if let videoID = viewModel.deal?.videoURL?.absoluteString.youtubeVideoID() {
             playerView.loadWithVideoId(videoID, playerVars: playerVariables)
         }
+
+        let animations = { () -> Void in
+            self.view.backgroundColor = self.viewModel.deal?.theme.backgroundColor ?? UIColor.whiteColor()
+            self.shimmerView.alpha = 0.0
+
+            UIView.performWithoutAnimation({ () -> Void in
+                self.dealCollectionView.alpha = 0.0
+                self.dealCollectionView.reloadData()
+            })
+        }
+
+        let completion = { (finished: Bool) -> Void in
+            var contentOffset = self.dealCollectionView.contentOffset
+            contentOffset.y = -ButtonHeaderView.heightWithDeal(self.viewModel.deal, width: self.dealCollectionView.bounds.width)
+            self.dealCollectionView.setContentOffset(contentOffset, animated: false)
+
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.dealCollectionView.alpha = 1.0
+                self.bounceContentOffset()
+
+                if let infoHeaderView = self.dealCollectionView.supplementaryViewForElementKind(DealCollectionViewLayout.infoHeaderElementKind, atIndexPath: NSIndexPath(forItem: 0, inSection: 0)) as? InfoHeaderView {
+                    infoHeaderView.showPageControlAnimated(true)
+                }
+            })
+        }
+
+        UIView.animateWithDuration(0.75, animations: animations, completion: completion)
     }
 }
 

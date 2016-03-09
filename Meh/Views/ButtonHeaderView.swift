@@ -20,6 +20,21 @@ class ButtonHeaderView: UICollectionReusableView {
     private let button = UIButton(type: .System)
     private var deal: Deal?
 
+    private static var titleAttributes: Dictionary<String, AnyObject> {
+        get {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineBreakMode = .ByWordWrapping
+            paragraphStyle.alignment = .Center
+
+            let attributes = [
+                NSFontAttributeName: UIFont.dealTitleFont(),
+                NSParagraphStyleAttributeName: paragraphStyle
+            ]
+
+            return attributes
+        }
+    }
+
     var delegate: ButtonHeaderViewDelegate?
 
     // MARK: - Lifecycle
@@ -89,15 +104,8 @@ class ButtonHeaderView: UICollectionReusableView {
 
         let title = deal?.title ?? "No Name"
 
-        let titleParagraphStyle = NSMutableParagraphStyle()
-        titleParagraphStyle.lineBreakMode = .ByWordWrapping
-        titleParagraphStyle.alignment = .Center
-
-        let titleAttributes = [
-            NSFontAttributeName: UIFont.dealTitleFont(),
-            NSForegroundColorAttributeName: deal?.theme.foregroundColor ?? UIColor.blackColor(),
-            NSParagraphStyleAttributeName: titleParagraphStyle
-        ]
+        var titleAttributes = ButtonHeaderView.titleAttributes
+        titleAttributes[NSForegroundColorAttributeName] = deal?.theme.foregroundColor ?? UIColor.blackColor()
 
         titleLabel.attributedText = NSAttributedString(string: title, attributes: titleAttributes)
 
@@ -131,21 +139,10 @@ class ButtonHeaderView: UICollectionReusableView {
     static func heightWithDeal(deal: Deal?, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 20.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
+        let options: NSStringDrawingOptions = .UsesLineFragmentOrigin
 
-        let title = deal?.title ?? "No Name"
-
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .ByWordWrapping
-        paragraphStyle.alignment = .Center
-
-        let attributes = [
-            NSFontAttributeName: UIFont.dealTitleFont(),
-            NSForegroundColorAttributeName: deal?.theme.foregroundColor ?? UIColor.blackColor(),
-            NSParagraphStyleAttributeName: paragraphStyle
-        ]
-
-        let boundingRect = (title as NSString).boundingRectWithSize(size, options: options, attributes: attributes, context: nil)
+        let title: NSString = deal?.title ?? "No Name"
+        let boundingRect = title.boundingRectWithSize(size, options: options, attributes: titleAttributes, context: nil)
         let titleLabelHeight = ceil(boundingRect.size.height)
 
         return titleLabelHeight + 20.0 + 64.0

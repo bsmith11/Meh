@@ -10,7 +10,8 @@ import UIKit
 
 extension UIFont {
     static func mehFontWithSize(size: CGFloat) -> UIFont {
-        return UIFont(name: "AvenirNext-Medium", size: size)!
+//        return UIFont(name: "AvenirNext-Medium", size: size)!
+        return UIFont(name: "TsukuARdGothic-Regular", size: size)!
     }
 
     static func buyCellFont() -> UIFont {

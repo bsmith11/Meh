@@ -106,7 +106,12 @@ class ImageViewController: UIViewController {
         view.addSubview(scrollView)
 
         imageView.contentMode = .ScaleAspectFill
-        imageView.af_setImageWithURL(URL)
+        let width = UIScreen.mainScreen().bounds.width
+        let height = width - 40.0
+        let size = CGSize(width: width, height: height)
+        let imageFilter = AspectScaledToFitSizeFilter.init(size: size)
+
+        imageView.af_setImageWithURL(URL, placeholderImage: nil, filter: imageFilter, imageTransition: .None, runImageTransitionIfCached: false, completion: nil)
         scrollView.addSubview(imageView)
     }
 

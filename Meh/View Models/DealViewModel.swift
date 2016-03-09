@@ -24,13 +24,15 @@ class DealViewModel {
 
     init() {
         dealService = DealService(client: APIClient.sharedInstance)
-        dealService.mockFetchDeal { (deal: Deal?, error: NSError?) -> Void in
+        dealService.fetchDeal { (deal: Deal?, error: NSError?) -> Void in
             self.deal = deal
 
+            if error != nil {
+                print("Failed with error: \(error)")
+            }
+            else {
+                print("Success")
+            }
         }
-    }
-
-    private func downloadDeal(completion: DealCompletion?) {
-        dealService.mockFetchDeal(completion)
     }
 }

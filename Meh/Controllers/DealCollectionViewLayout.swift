@@ -111,14 +111,18 @@ class DealCollectionViewLayout: UICollectionViewLayout {
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var layoutAttributes = [UICollectionViewLayoutAttributes]()
 
-        var allLayoutAttributes = itemLayoutAttributesCache
-        allLayoutAttributes.append(infoHeaderLayoutAttributes)
-        allLayoutAttributes.append(buttonHeaderLayoutAttributes)
-        allLayoutAttributes.append(footerLayoutAttributes)
+        if let collectionView = collectionView {
+            if collectionView.numberOfSections() > 0 {
+                var allLayoutAttributes = itemLayoutAttributesCache
+                allLayoutAttributes.append(infoHeaderLayoutAttributes)
+                allLayoutAttributes.append(buttonHeaderLayoutAttributes)
+                allLayoutAttributes.append(footerLayoutAttributes)
 
-        for attributes in allLayoutAttributes {
-            if CGRectIntersectsRect(attributes.frame, rect) {
-                layoutAttributes.append(attributes)
+                for attributes in allLayoutAttributes {
+                    if CGRectIntersectsRect(attributes.frame, rect) {
+                        layoutAttributes.append(attributes)
+                    }
+                }
             }
         }
 
@@ -173,10 +177,14 @@ class DealCollectionViewLayout: UICollectionViewLayout {
     override func invalidationContextForBoundsChange(newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
         let context: UICollectionViewLayoutInvalidationContext = super.invalidationContextForBoundsChange(newBounds)
 
-        let indexPath: NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
-        context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.infoHeaderElementKind, atIndexPaths: [indexPath])
-        context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.buttonHeaderElementKind, atIndexPaths: [indexPath])
-        context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.footerElementKind, atIndexPaths: [indexPath])
+        if let collectionView = collectionView {
+            if collectionView.numberOfSections() > 0 {
+                let indexPath: NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
+                context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.infoHeaderElementKind, atIndexPaths: [indexPath])
+                context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.buttonHeaderElementKind, atIndexPaths: [indexPath])
+                context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.footerElementKind, atIndexPaths: [indexPath])
+            }
+        }
 
         return context
     }

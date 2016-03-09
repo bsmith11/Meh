@@ -97,7 +97,7 @@ class VideoCell: UICollectionViewCell {
 
     func configureWithDeal(deal: Deal?) {
         if let URL = deal?.videoURLThumbnail {
-            videoImageView.af_setImageWithURL(URL)
+            videoImageView.af_setImageWithURL(URL, placeholderImage: nil, filter: nil, imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: false, completion: nil)
         }
         else {
             videoImageView.image = nil

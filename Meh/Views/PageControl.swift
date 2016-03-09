@@ -7,16 +7,21 @@
 //
 
 import UIKit
+import pop
 
 class PageControl: UIView {
 
     // MARK: - Properties
 
     private static let pageIndicatorSize = CGSize(width: 10.0, height: 10.0)
+    private let animationInterval = 0.05
+    private lazy var pageIndicatorLayers = [CAShapeLayer]()
 
     var currentPage = 0 {
         didSet {
-            setNeedsDisplay()
+            for (index, shapeLayer) in pageIndicatorLayers.enumerate() {
+                shapeLayer.fillColor = (index == currentPage) ? currentPageIndicatorTintColor?.CGColor : UIColor.clearColor().CGColor
+            }
         }
     }
 
@@ -24,7 +29,29 @@ class PageControl: UIView {
         didSet {
             hidden = (numberOfPages == 1) && hidesForSinglePage
 
-            setNeedsDisplay()
+            pageIndicatorLayers.removeAll()
+            layer.sublayers?.removeAll()
+
+            var origin = CGPoint(x: 1.0, y: 1.0)
+            for _ in 0 ..< numberOfPages {
+                let shapeLayer = CAShapeLayer()
+                shapeLayer.strokeColor = pageIndicatorTintColor?.CGColor
+                shapeLayer.fillColor = UIColor.clearColor().CGColor
+                shapeLayer.lineWidth = 1.0
+
+                let frame = CGRect(origin: origin, size: PageControl.pageIndicatorSize)
+                shapeLayer.frame = frame
+
+                let path = UIBezierPath(ovalInRect: shapeLayer.bounds)
+                shapeLayer.path = path.CGPath
+
+                pageIndicatorLayers.append(shapeLayer)
+                layer.addSublayer(shapeLayer)
+
+                origin.x = frame.maxX + PageControl.pageIndicatorSize.width
+            }
+
+            invalidateIntrinsicContentSize()
         }
     }
 
@@ -41,13 +68,17 @@ class PageControl: UIView {
 
     var pageIndicatorTintColor: UIColor? {
         didSet {
-            setNeedsDisplay()
+            for shapeLayer in pageIndicatorLayers {
+                shapeLayer.strokeColor = pageIndicatorTintColor?.CGColor
+            }
         }
     }
 
     var currentPageIndicatorTintColor: UIColor? {
         didSet {
-            setNeedsDisplay()
+            if currentPage < pageIndicatorLayers.count {
+                pageIndicatorLayers[currentPage].fillColor = currentPageIndicatorTintColor?.CGColor
+            }
         }
     }
 
@@ -63,36 +94,42 @@ class PageControl: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
+    override func intrinsicContentSize() -> CGSize {
+        let count = max(0, (2 * numberOfPages) - 1)
 
-        let context = UIGraphicsGetCurrentContext()
-        CGContextClearRect(context, rect)
-        var origin = CGPoint(x: 1.0, y: 1.0)
+        if count > 0 {
+            let width = CGFloat(count) * PageControl.pageIndicatorSize.width + 2.0
+            let height = PageControl.pageIndicatorSize.height + 2.0
 
-        (pageIndicatorTintColor ?? UIColor.grayColor()).setStroke()
-        (currentPageIndicatorTintColor ?? UIColor.blackColor()).setFill()
-
-        for page in 0 ..< numberOfPages {
-            let rect = CGRect(origin: origin, size: PageControl.pageIndicatorSize)
-            let path = UIBezierPath(ovalInRect: rect)
-            path.lineWidth = 1.0
-            path.stroke()
-
-            if page == currentPage {
-                path.fill()
-            }
-
-            origin.x += (2.0 * PageControl.pageIndicatorSize.width)
+            return CGSize(width: width, height: height)
+        }
+        else {
+            return CGSize.zero
         }
     }
 
-    override func intrinsicContentSize() -> CGSize {
-        let count = CGFloat((2 * numberOfPages) - 1)
-        let width = count * PageControl.pageIndicatorSize.width + 2.0
-        let height = PageControl.pageIndicatorSize.height + 2.0
+    // MARK: - Actions
 
-        return CGSize(width: width, height: height)
+    func showAnimated(animated: Bool) {
+        for (index, shapeLayer) in pageIndicatorLayers.enumerate() {
+            if animated {
+                let animation = POPSpringAnimation(propertyNamed: kPOPLayerScaleXY)
+                animation.toValue = NSValue(CGPoint: CGPoint(x: 1.0, y: 1.0))
+                animation.springBounciness = 12.0
+                animation.beginTime = CACurrentMediaTime() + (animationInterval * Double(index))
+
+                shapeLayer.pop_addAnimation(animation, forKey: "scale")
+            }
+            else {
+                shapeLayer.transform = CATransform3DIdentity
+            }
+        }
+    }
+
+    func hide() {
+        for shapeLayer in pageIndicatorLayers {
+            shapeLayer.transform = CATransform3DMakeScale(0.1, 0.1, 1.0)
+        }
     }
 
     class func height() -> CGFloat {
