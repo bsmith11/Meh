@@ -25,7 +25,7 @@ class ImageViewController: UIViewController {
     private let URL: NSURL
     private let originalRect: CGRect
     private let originalAlpha: CGFloat
-    private let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .Dark))
+    private let backgroundView = UIVisualEffectView(effect: nil)
     private let scrollView = UIScrollView(frame: CGRect.zero)
     private let imageView = UIImageView(frame: CGRect.zero)
     private let panGesture = UIPanGestureRecognizer(target: nil, action: nil)
@@ -33,6 +33,7 @@ class ImageViewController: UIViewController {
     private var isDismissing = false
     private var animationCount = 0
     private var previousLocation = CGPoint.zero
+    private var timeOffset = 0.0
 
     var delegate: ImageViewControllerDelegate?
 
@@ -70,7 +71,6 @@ class ImageViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: "handleTap")
         view.addGestureRecognizer(tapGesture)
 
-        backgroundView.alpha = 0.0
         scrollView.alpha = originalAlpha
     }
 
@@ -85,7 +85,7 @@ class ImageViewController: UIViewController {
 
         delegate?.imageViewControllerWillStartPresentAnimation(self)
 
-        performPresentAnimation()
+        performPresentAnimation(true)
     }
 
     // MARK: - Setup
@@ -153,7 +153,8 @@ class ImageViewController: UIViewController {
     }
 
     func handleTap() {
-        performDismissAnimation()
+        timeOffset = 0.0
+        performDismissAnimation(true)
 
         scrollView.setZoomScale(minimumZoom, animated: true)
     }
@@ -165,7 +166,15 @@ class ImageViewController: UIViewController {
 
         switch gesture.state {
         case .Began:
-            //no-op
+//            UIView.animateWithDuration(0.75, animations: { () -> Void in
+//                self.backgroundView.effect = nil
+//                self.backgroundView.layer.speed = 0.0
+//                self.backgroundView.layer.timeOffset = 0.0
+//                }, completion: { _ -> Void in
+//                    self.backgroundView.layer.speed = 1.0
+//                    self.backgroundView.layer.timeOffset = 0.0
+//            })
+
             break
         case .Changed:
             scrollView.center.x += deltaX
@@ -174,17 +183,24 @@ class ImageViewController: UIViewController {
             let delta = fabs(scrollView.center.y - view.center.y)
             let percent = min(delta / view.frame.midY, 100.0)
 
-            backgroundView.alpha = 1.0 - percent
+            backgroundView.layer.timeOffset = Double(percent)
         case .Ended: fallthrough
         case .Cancelled: fallthrough
         case .Failed:
+//            timeOffset = backgroundView.layer.timeOffset
+//            backgroundView.layer.timeOffset = 1.0
+
             let velocity = gesture.velocityInView(gesture.view)
 
             if fabs(velocity.x) > 150.0 || fabs(velocity.y) > 150.0 {
-                performDismissAnimationWithVelocity(velocity)
+                performDismissAnimationWithVelocity(velocity, animateBackground: true)
+//                backgroundView.layer.speed = 1.0
             }
             else {
-                performPresentAnimation()
+                performPresentAnimation(true)
+//                backgroundView.layer.removeAllAnimations()
+//                backgroundView.layer.timeOffset = 0.0
+//                backgroundView.layer.speed = 1.0
             }
         default:
             break
@@ -219,30 +235,42 @@ class ImageViewController: UIViewController {
         view.pop_addAnimation(animation, forKey: "alpha")
     }
 
-    private func performPresentAnimation() {
+    private func performPresentAnimation(animateBackground: Bool) {
         view.userInteractionEnabled = false
 
         animateCenter(view.center, view: scrollView)
         animateAlpha(1.0, view: scrollView)
-        animateAlpha(1.0, view: backgroundView)
 
-        animationCount = 3
+        if animateBackground {
+            UIView.animateWithDuration(0.3) { () -> Void in
+                self.backgroundView.effect = UIBlurEffect(style: .Dark)
+//                self.backgroundView.layer.timeOffset = self.timeOffset
+            }
+        }
+
+        animationCount = 2
     }
 
-    private func performDismissAnimation() {
-        performDismissAnimationWithVelocity(CGPoint.zero)
+    private func performDismissAnimation(animateBackground: Bool) {
+        performDismissAnimationWithVelocity(CGPoint.zero, animateBackground: animateBackground)
     }
 
-    private func performDismissAnimationWithVelocity(velocity: CGPoint) {
+    private func performDismissAnimationWithVelocity(velocity: CGPoint, animateBackground: Bool) {
         view.userInteractionEnabled = false
         isDismissing = true
 
         let center = CGPoint(x: originalRect.midX, y: originalRect.midY)
         animateCenter(center, view: scrollView)
         animateAlpha(originalAlpha, view: scrollView)
-        animateAlpha(0.0, view: backgroundView)
 
-        animationCount = 3
+        if animateBackground {
+            UIView.animateWithDuration(0.3) { () -> Void in
+                self.backgroundView.effect = nil
+//                self.backgroundView.layer.timeOffset = self.timeOffset
+            }
+        }
+
+        animationCount = 2
     }
 }
 

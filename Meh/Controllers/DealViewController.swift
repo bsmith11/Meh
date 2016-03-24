@@ -312,9 +312,14 @@ extension DealViewController: InfoHeaderViewDelegate {
 
 extension DealViewController: ButtonHeaderViewDelegate {
     func didSelectButton() {
-        if let URL = viewModel.deal?.URL {
-            let safariViewController = SFSafariViewController(URL: URL)
-            presentViewController(safariViewController, animated: true, completion: nil)
+        if viewModel.deal?.soldOutDate == nil {
+            if let URL = viewModel.deal?.URL {
+                let safariViewController = SFSafariViewController(URL: URL)
+                presentViewController(safariViewController, animated: true, completion: nil)
+            }
+        }
+        else {
+            //Do something because it's sold out
         }
     }
 }

@@ -89,6 +89,7 @@ class InfoHeaderView: UICollectionReusableView {
     }
 
     func configureWithDeal(deal: Deal?) {
+        photoCollectionView.alpha = 0.0
         self.deal = deal
 
         pageControl.numberOfPages = deal?.photoURLs.count ?? 0
@@ -96,6 +97,12 @@ class InfoHeaderView: UICollectionReusableView {
         pageControl.currentPageIndicatorTintColor = deal?.theme.accentColor
 
         hidePageControl()
+
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            UIView.animateWithDuration(0.5, delay: 1.5, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                self.photoCollectionView.alpha = 1.0
+                }, completion: nil)
+        }
     }
 
     // MARK: - Actions

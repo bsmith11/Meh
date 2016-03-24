@@ -111,7 +111,10 @@ class ButtonHeaderView: UICollectionReusableView {
 
         var buttonTitle = "No price"
 
-        if let prices = deal?.prices {
+        if let _ = deal?.soldOutDate {
+            buttonTitle = "Sold Out"
+        }
+        else if let prices = deal?.prices {
             if prices.count > 0 {
                 var lowestPrice = Int.max
                 var highestPrice = 0

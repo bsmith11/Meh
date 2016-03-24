@@ -58,6 +58,12 @@ struct Deal {
                 }
             }
 
+            if let dateString = dealDictionary["soldOutAt"] as? String {
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSS'Z'"
+                soldOutDate = dateFormatter.dateFromString(dateString)
+            }
+
             specifications = dealDictionary["specifications"] as? String
 
             if let storyDictionary = dealDictionary["story"] as? Dictionary<String, String> {
