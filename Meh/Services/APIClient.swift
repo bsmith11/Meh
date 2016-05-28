@@ -12,22 +12,19 @@ import Alamofire
 typealias APICompletion = Result<AnyObject, NSError> -> Void
 
 class APIClient {
-
-    // MARK: - Properties
+    private let manager: Alamofire.Manager
 
     static let sharedInstance = APIClient()
 
-    private let manager: Alamofire.Manager
-
-    // MARK: - Lifecycle
-
     init() {
-        let config: NSURLSessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        manager = Alamofire.Manager(configuration: config, serverTrustPolicyManager: nil)
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        manager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: nil)
     }
+}
 
-    // MARK: - Actions
+// MARK: - Public
 
+extension APIClient {
     func request(route: URLRequestConvertible, completion: APICompletion?) {
         manager.request(route).validate(statusCode: 200...399).responseJSON { response -> Void in
             completion?(response.result)

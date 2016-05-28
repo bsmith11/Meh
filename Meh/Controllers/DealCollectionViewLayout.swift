@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol DealCollectionViewLayoutDelegate: class {
+protocol DealCollectionViewLayoutDelegate: NSObjectProtocol {
     func collectionView(collectionView: UICollectionView, heightForItemAtIndexPath indexPath: NSIndexPath,
         withWidth width: CGFloat) -> CGFloat
     func collectionView(collectionView: UICollectionView,
@@ -16,25 +16,21 @@ protocol DealCollectionViewLayoutDelegate: class {
 }
 
 class DealCollectionViewLayout: UICollectionViewLayout {
-
-    // MARK: Properties
-
-    static let infoHeaderElementKind = "info_header_element_kind"
-    static let buttonHeaderElementKind = "button_header_element_kind"
+    static let photosHeaderElementKind = "photos_header_element_kind"
+    static let buyHeaderElementKind = "buy_header_element_kind"
     static let footerElementKind = "footer_element_kind"
-
-    var delegate: DealCollectionViewLayoutDelegate?
-    var pinnedBuyHeaderOffset: CGFloat = 0.0
 
     private lazy var itemLayoutAttributesCache = [UICollectionViewLayoutAttributes]()
 
-    private var infoHeaderLayoutAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: DealCollectionViewLayout.infoHeaderElementKind, withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
-    private var buttonHeaderLayoutAttributes = HeaderCollectionViewLayoutAttributes(forSupplementaryViewOfKind: DealCollectionViewLayout.buttonHeaderElementKind, withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
+    private var photosHeaderLayoutAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: DealCollectionViewLayout.photosHeaderElementKind, withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
+    private var buyHeaderLayoutAttributes = HeaderCollectionViewLayoutAttributes(forSupplementaryViewOfKind: DealCollectionViewLayout.buyHeaderElementKind, withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
     private var footerLayoutAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: DealCollectionViewLayout.footerElementKind, withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
     private var contentHeight: CGFloat = 0.0
     private var contentWidth: CGFloat  = 0.0
 
-    // MARK: Lifecycle
+    weak var delegate: DealCollectionViewLayoutDelegate?
+
+    var pinnedBuyHeaderOffset: CGFloat = 0.0
 
     override class func layoutAttributesClass() -> AnyClass {
         return HeaderCollectionViewLayoutAttributes.self
@@ -52,29 +48,29 @@ class DealCollectionViewLayout: UICollectionViewLayout {
                 var yOffset: CGFloat = 0.0
                 var indexPath = NSIndexPath(forItem: 0, inSection: 0)
 
-                //configure info supplementary view
-                var infoHeight: CGFloat = 0.0
+                //configure photos supplementary view
+                var photosHeight: CGFloat = 0.0
                 if let delegate = delegate {
-                    infoHeight = delegate.collectionView(collectionView, heightForSupplementaryViewOfKind: DealCollectionViewLayout.infoHeaderElementKind, atIndexPath: indexPath, withWidth: contentWidth)
+                    photosHeight = delegate.collectionView(collectionView, heightForSupplementaryViewOfKind: DealCollectionViewLayout.photosHeaderElementKind, atIndexPath: indexPath, withWidth: contentWidth)
                 }
 
-                var frame = CGRect(x: xOffset, y: yOffset, width: contentWidth, height: infoHeight)
-                infoHeaderLayoutAttributes.frame = frame
-                infoHeaderLayoutAttributes.zIndex = 0
+                var frame = CGRect(x: xOffset, y: yOffset, width: contentWidth, height: photosHeight)
+                photosHeaderLayoutAttributes.frame = frame
+                photosHeaderLayoutAttributes.zIndex = 0
 
                 //configure button supplementary view
                 var buttonHeight: CGFloat = 0.0
                 if let delegate = delegate {
-                    buttonHeight = delegate.collectionView(collectionView, heightForSupplementaryViewOfKind: DealCollectionViewLayout.buttonHeaderElementKind, atIndexPath: indexPath, withWidth: contentWidth)
+                    buttonHeight = delegate.collectionView(collectionView, heightForSupplementaryViewOfKind: DealCollectionViewLayout.buyHeaderElementKind, atIndexPath: indexPath, withWidth: contentWidth)
                 }
 
                 yOffset += (collectionView.bounds.height - buttonHeight)
 
                 frame = CGRect(x: xOffset, y: yOffset, width: contentWidth, height: buttonHeight)
-                buttonHeaderLayoutAttributes.frame = frame
-                buttonHeaderLayoutAttributes.zIndex = 2
+                buyHeaderLayoutAttributes.frame = frame
+                buyHeaderLayoutAttributes.zIndex = 2
 
-                yOffset = buttonHeaderLayoutAttributes.frame.maxY
+                yOffset = buyHeaderLayoutAttributes.frame.maxY
 
                 //configure items
                 for item in 0 ..< collectionView.numberOfItemsInSection(section) {
@@ -114,8 +110,8 @@ class DealCollectionViewLayout: UICollectionViewLayout {
         if let collectionView = collectionView {
             if collectionView.numberOfSections() > 0 {
                 var allLayoutAttributes = itemLayoutAttributesCache
-                allLayoutAttributes.append(infoHeaderLayoutAttributes)
-                allLayoutAttributes.append(buttonHeaderLayoutAttributes)
+                allLayoutAttributes.append(photosHeaderLayoutAttributes)
+                allLayoutAttributes.append(buyHeaderLayoutAttributes)
                 allLayoutAttributes.append(footerLayoutAttributes)
 
                 for attributes in allLayoutAttributes {
@@ -130,24 +126,24 @@ class DealCollectionViewLayout: UICollectionViewLayout {
     }
 
     override func layoutAttributesForSupplementaryViewOfKind(elementKind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        if elementKind == DealCollectionViewLayout.infoHeaderElementKind {
+        if elementKind == DealCollectionViewLayout.photosHeaderElementKind {
             if let collectionView = collectionView {
-                infoHeaderLayoutAttributes.frame.origin.y = collectionView.contentOffset.y
+                photosHeaderLayoutAttributes.frame.origin.y = collectionView.contentOffset.y
 
                 let modifier: CGFloat = 2.0
-                let value = (min(collectionView.contentOffset.y, infoHeaderLayoutAttributes.frame.height) * modifier) / infoHeaderLayoutAttributes.frame.height
+                let value = (min(collectionView.contentOffset.y, photosHeaderLayoutAttributes.frame.height) * modifier) / photosHeaderLayoutAttributes.frame.height
                 let alpha = min(1, 1 - value)
-                infoHeaderLayoutAttributes.alpha = alpha
+                photosHeaderLayoutAttributes.alpha = alpha
             }
 
-            return infoHeaderLayoutAttributes
+            return photosHeaderLayoutAttributes
         }
-        else if elementKind == DealCollectionViewLayout.buttonHeaderElementKind {
+        else if elementKind == DealCollectionViewLayout.buyHeaderElementKind {
             if let collectionView = collectionView {
-                buttonHeaderLayoutAttributes.frame = buttonHeaderFrameForContentOffset(collectionView.contentOffset)
+                buyHeaderLayoutAttributes.frame = buyHeaderFrameForContentOffset(collectionView.contentOffset)
             }
 
-            return buttonHeaderLayoutAttributes
+            return buyHeaderLayoutAttributes
         }
         else if elementKind == DealCollectionViewLayout.footerElementKind {
             footerLayoutAttributes.frame = footerFrame()
@@ -180,8 +176,8 @@ class DealCollectionViewLayout: UICollectionViewLayout {
         if let collectionView = collectionView {
             if collectionView.numberOfSections() > 0 {
                 let indexPath: NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
-                context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.infoHeaderElementKind, atIndexPaths: [indexPath])
-                context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.buttonHeaderElementKind, atIndexPaths: [indexPath])
+                context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.photosHeaderElementKind, atIndexPaths: [indexPath])
+                context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.buyHeaderElementKind, atIndexPaths: [indexPath])
                 context.invalidateSupplementaryElementsOfKind(DealCollectionViewLayout.footerElementKind, atIndexPaths: [indexPath])
             }
         }
@@ -197,26 +193,28 @@ class DealCollectionViewLayout: UICollectionViewLayout {
 
         super.invalidateLayout()
     }
+}
 
-    // MARK: Frames
+// MARK: - Private
 
-    private func buttonHeaderFrameForContentOffset(contentOffset: CGPoint) -> CGRect {
-        var frame = buttonHeaderLayoutAttributes.frame
+private extension DealCollectionViewLayout {
+    func buyHeaderFrameForContentOffset(contentOffset: CGPoint) -> CGRect {
+        var frame = buyHeaderLayoutAttributes.frame
 
         if contentOffset.y > (collectionView!.bounds.height - frame.height) {
             frame.origin.y = contentOffset.y
-            buttonHeaderLayoutAttributes.isPinned = true
+            buyHeaderLayoutAttributes.isPinned = true
         }
         else {
             frame.origin.y = collectionView!.bounds.height - frame.height
-            buttonHeaderLayoutAttributes.isPinned = false
+            buyHeaderLayoutAttributes.isPinned = false
         }
 
         return frame
     }
 
-    private func footerFrame() -> CGRect {
-        var frame: CGRect = CGRect.zero
+    func footerFrame() -> CGRect {
+        var frame: CGRect = .zero
 
         if let collectionView = collectionView {
             let threshold = collectionView.contentOffset.y + collectionView.bounds.height

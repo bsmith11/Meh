@@ -7,18 +7,13 @@
 //
 
 import UIKit
-//import Argo
-//import Curry
 
 struct Theme {
-
-    // MARK: - Properties
-
     private(set) var accentColor = UIColor.grayColor()
     private(set) var foregroundColor = UIColor.blackColor()
     private(set) var backgroundColor = UIColor.whiteColor()
 
-    init(dictionary: Dictionary<String, String>) {
+    init(dictionary: [String: String]) {
         if let accent = dictionary["accentColor"] {
             accentColor = UIColor(hexString: accent)
         }
@@ -41,14 +36,3 @@ struct Theme {
 
     }
 }
-
-//// MARK: - Decodable
-//
-//extension Theme: Decodable {
-//    static func decode(json: JSON) -> Decoded<Theme> {
-//        return curry(Theme.init)
-//            <^> json <| "accentColor"
-//            <*> json <| "foreground"
-//            <*> json <| "backgroundColor"
-//    }
-//}

@@ -9,21 +9,16 @@
 import UIKit
 import AlamofireImage
 
-protocol VideoCellDelegate {
-    func didSelectVideo()
+protocol VideoCellDelegate: NSObjectProtocol {
+    func videoCellDidSelectVideo(cell: VideoCell)
 }
 
 class VideoCell: UICollectionViewCell {
-
-    // MARK: - Properties
-
-    private let videoImageView = UIImageView(frame: CGRect.zero)
+    private let videoImageView = UIImageView(frame: .zero)
     private let videoButton = UIButton(type: .System)
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
 
-    var delegate: VideoCellDelegate?
-
-    // MARK: - Lifecycle
+    private weak var delegate: VideoCellDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,10 +38,27 @@ class VideoCell: UICollectionViewCell {
 
         videoImageView.af_cancelImageRequest()
     }
+}
 
-    // MARK: - Setup
+// MARK: - Public
 
-    private func configureViews() {
+extension VideoCell {
+    func configureWithViewModel(viewModel: VideoViewModel, delegate: VideoCellDelegate?) {
+        if let thumbnailURL = viewModel.videoThumbnailURL {
+            videoImageView.af_setImageWithURL(thumbnailURL, placeholderImage: nil, filter: nil, imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: false, completion: nil)
+        }
+        else {
+            videoImageView.image = nil
+        }
+
+        self.delegate = delegate
+    }
+}
+
+// MARK: - Private
+
+private extension VideoCell {
+    func configureViews() {
         videoImageView.clipsToBounds = true
         videoImageView.contentMode = .ScaleAspectFill
         videoImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,57 +71,42 @@ class VideoCell: UICollectionViewCell {
 
         videoButton.tintColor = UIColor.blackColor()
         videoButton.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: 3.0, bottom: 0.0, right: 0.0)
-        videoButton.addTarget(self, action: "didSelectVideo", forControlEvents: .TouchUpInside)
+        videoButton.addTarget(self, action: #selector(VideoCell.didSelectVideo), forControlEvents: .TouchUpInside)
         let image = UIImage(named: "Play Icon")?.imageWithRenderingMode(.AlwaysTemplate)
         videoButton.setImage(image, forState: .Normal)
         videoButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(videoButton)
     }
 
-    private func configureLayout() {
-        let videoImageViewConstraints: [NSLayoutConstraint] = [
+    func configureLayout() {
+        let constraints: [NSLayoutConstraint] = [
             videoImageView.topAnchor.constraintEqualToAnchor(contentView.topAnchor),
             videoImageView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor),
             contentView.trailingAnchor.constraintEqualToAnchor(videoImageView.trailingAnchor),
-            contentView.bottomAnchor.constraintEqualToAnchor(videoImageView.bottomAnchor)
-        ]
+            contentView.bottomAnchor.constraintEqualToAnchor(videoImageView.bottomAnchor),
 
-        NSLayoutConstraint.activateConstraints(videoImageViewConstraints)
-
-        let blurViewConstraints: [NSLayoutConstraint] = [
             blurView.widthAnchor.constraintEqualToConstant(80.0),
             blurView.heightAnchor.constraintEqualToConstant(80.0),
             blurView.centerXAnchor.constraintEqualToAnchor(videoImageView.centerXAnchor),
-            blurView.centerYAnchor.constraintEqualToAnchor(videoImageView.centerYAnchor)
-        ]
+            blurView.centerYAnchor.constraintEqualToAnchor(videoImageView.centerYAnchor),
 
-        NSLayoutConstraint.activateConstraints(blurViewConstraints)
-
-        let videoButtonConstraints: [NSLayoutConstraint] = [
             videoButton.topAnchor.constraintEqualToAnchor(videoImageView.topAnchor),
             videoButton.leadingAnchor.constraintEqualToAnchor(videoImageView.leadingAnchor),
             videoImageView.trailingAnchor.constraintEqualToAnchor(videoButton.trailingAnchor),
             videoImageView.bottomAnchor.constraintEqualToAnchor(videoButton.bottomAnchor)
         ]
 
-        NSLayoutConstraint.activateConstraints(videoButtonConstraints)
+        NSLayoutConstraint.activateConstraints(constraints)
     }
 
-    func configureWithDeal(deal: Deal?) {
-        if let URL = deal?.videoURLThumbnail {
-            videoImageView.af_setImageWithURL(URL, placeholderImage: nil, filter: nil, imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: false, completion: nil)
-        }
-        else {
-            videoImageView.image = nil
-        }
+    @objc func didSelectVideo() {
+        delegate?.videoCellDidSelectVideo(self)
     }
+}
 
-    // MARK: - Actions
+// MARK: - Static
 
-    func didSelectVideo() {
-        delegate?.didSelectVideo()
-    }
-
+extension VideoCell {
     static func height() -> CGFloat {
         return 200.0
     }

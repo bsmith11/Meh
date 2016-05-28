@@ -9,9 +9,6 @@
 import UIKit
 
 class FooterView: UICollectionReusableView {
-
-    // MARK: - Lifecycle
-
     override init(frame: CGRect) {
         super.init(frame: frame)
 

@@ -9,12 +9,7 @@
 import UIKit
 
 class HeaderCollectionViewLayoutAttributes: UICollectionViewLayoutAttributes {
-
-    // MARK: - Properties
-
     var isPinned = false
-
-    // MARK: - Lifecycle
 
     override func copyWithZone(zone: NSZone) -> AnyObject {
         if let copy = super.copyWithZone(zone) as? HeaderCollectionViewLayoutAttributes {

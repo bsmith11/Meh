@@ -9,9 +9,6 @@
 import UIKit
 
 extension UIColor {
-
-    // MARK: Convenience
-
     public class func rgb(r: Int, _ g: Int, _ b: Int) -> UIColor {
         return UIColor.rgba(r, g, b, 1.0)
     }

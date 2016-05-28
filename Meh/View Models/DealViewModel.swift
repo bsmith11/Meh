@@ -8,31 +8,57 @@
 
 import UIKit
 
-protocol DealViewModelDelegate {
-    func didUpdateDeal()
+enum DealItem {
+    case Features
+    case Video
+    case Story
 }
 
 class DealViewModel {
     private let dealService: DealService
-    private(set) var deal: Deal? {
-        didSet {
-            delegate?.didUpdateDeal()
-        }
-    }
+    private let items: [DealItem] = [
+        .Features,
+        .Video,
+        .Story
+    ]
 
-    var delegate: DealViewModelDelegate?
+    private(set) var deal: Deal?
 
     init() {
         dealService = DealService(client: APIClient.sharedInstance)
-        dealService.fetchDeal { (deal: Deal?, error: NSError?) -> Void in
-            self.deal = deal
+    }
+}
 
-            if error != nil {
-                print("Failed with error: \(error)")
-            }
-            else {
-                print("Success")
-            }
+// MARK: - Public
+
+extension DealViewModel {
+    func numberOfSections() -> Int {
+        if let _ = deal {
+            return 1
+        }
+        else {
+            return 0
+        }
+    }
+
+    func numberOfItemsInSection(section: Int) -> Int {
+        return items.count
+    }
+
+    func itemAtIndexPath(indexPath: NSIndexPath) -> DealItem? {
+        if indexPath.item < items.count {
+            return items[indexPath.item]
+        }
+        else {
+            return nil
+        }
+    }
+
+    func fetchDealWithCompletion(completion: DealCompletion?) {
+        dealService.fetchDeal { [weak self] (deal: Deal?, error: NSError?) in
+            self?.deal = deal
+
+            completion?(deal, error)
         }
     }
 }

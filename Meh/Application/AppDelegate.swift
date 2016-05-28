@@ -14,9 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        let viewModel = DealViewModel()
-        window?.rootViewController = DealViewController(viewModel: viewModel)
-
+        window?.rootViewController = RootViewController(nibName: nil, bundle: nil)
         window?.makeKeyAndVisible()
 
         return true

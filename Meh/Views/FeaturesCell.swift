@@ -9,35 +9,12 @@
 import UIKit
 
 class FeaturesCell: UICollectionViewCell {
-
-    // MARK: - Properties
-
-    private let textLabel = UILabel(frame: CGRect.zero)
-
-    private static var textAttributes: Dictionary<String, AnyObject> {
-        get {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineBreakMode = .ByWordWrapping
-            paragraphStyle.headIndent = 10.0
-
-            let attributes = [
-                NSFontAttributeName: UIFont.dealFeaturesFont(),
-                NSForegroundColorAttributeName: UIColor.blackColor(),
-                NSParagraphStyleAttributeName: paragraphStyle
-            ]
-
-            return attributes
-        }
-    }
-
-    // MARK: - Lifecycle
+    private let textLabel = UILabel(frame: .zero)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         backgroundColor = UIColor.whiteColor()
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.mainScreen().scale
 
         configureViews()
         configureLayout()
@@ -46,40 +23,48 @@ class FeaturesCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - Setup
+// MARK: - Public
 
-    private func configureViews() {
+extension FeaturesCell {
+    func configureWithViewModel(viewModel: FeaturesViewModel) {
+        textLabel.attributedText = viewModel.featuresAttributedString
+    }
+}
+
+// MARK: - Private
+
+private extension FeaturesCell {
+    func configureViews() {
         textLabel.numberOfLines = 0
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(textLabel)
     }
 
-    private func configureLayout() {
-        let textLabelConstraints: [NSLayoutConstraint] = [
+    func configureLayout() {
+        let constraints: [NSLayoutConstraint] = [
             textLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 20.0),
             textLabel.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor, constant: 20.0),
             contentView.trailingAnchor.constraintEqualToAnchor(textLabel.trailingAnchor, constant: 20.0),
             contentView.bottomAnchor.constraintEqualToAnchor(textLabel.bottomAnchor, constant: 20.0)
         ]
 
-        NSLayoutConstraint.activateConstraints(textLabelConstraints)
+        NSLayoutConstraint.activateConstraints(constraints)
     }
+}
 
-    func configureWithFeatures(features: String?) {
-        let text = features ?? "No Features"
+// MARK: - Static
 
-        textLabel.attributedText = NSAttributedString(string: text, attributes: FeaturesCell.textAttributes)
-    }
-
-    static func heightWithFeatures(features: String?, width: CGFloat) -> CGFloat {
+extension FeaturesCell {
+    static func heightWithViewModel(viewModel: FeaturesViewModel, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 40.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = .UsesLineFragmentOrigin
+        let options: NSStringDrawingOptions = [.UsesFontLeading, .UsesLineFragmentOrigin]
 
-        let text: NSString = features ?? "No Features"
-        let boundingRect = text.boundingRectWithSize(size, options: options, attributes: textAttributes, context: nil)
+        let featuresBoundingRect = viewModel.featuresAttributedString.boundingRectWithSize(size, options: options, context: nil)
+        let featuresHeight = ceil(featuresBoundingRect.height)
 
-        return ceil(boundingRect.size.height) + 40.0
+        return 20.0 + featuresHeight + 20.0
     }
 }

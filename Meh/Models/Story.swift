@@ -6,17 +6,11 @@
 //  Copyright © 2016 Brad Smith. All rights reserved.
 //
 
-//import Argo
-//import Curry
-
 struct Story {
-
-    // MARK: - Properties
-
     let title: String
     let body: String
 
-    init?(dictionary: Dictionary<String, String>) {
+    init?(dictionary: [String: String]) {
         if let title = dictionary["title"], body = dictionary["body"] {
             self.title = title
             self.body = body
@@ -26,13 +20,3 @@ struct Story {
         }
     }
 }
-
-//// MARK: - Decodable
-//
-//extension Story: Decodable {
-//    static func decode(json: JSON) -> Decoded<Story> {
-//        return curry(Story.init)
-//            <^> json <| "title"
-//            <*> json <| "body"
-//    }
-//}

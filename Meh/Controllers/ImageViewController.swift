@@ -10,34 +10,26 @@ import UIKit
 import AlamofireImage
 import pop
 
-protocol ImageViewControllerDelegate {
+protocol ImageViewControllerDelegate: NSObjectProtocol {
     func imageViewControllerWillStartPresentAnimation(imageViewController: ImageViewController)
     func imageViewControllerDidFinishDismissAnimation(imageViewController: ImageViewController)
 }
 
 class ImageViewController: UIViewController {
-
-    // MARK: - Properties
-
     private let minimumZoom: CGFloat = 1.0
     private let maximumZoom: CGFloat = 2.0
 
     private let URL: NSURL
     private let originalRect: CGRect
     private let originalAlpha: CGFloat
-    private let backgroundView = UIVisualEffectView(effect: nil)
-    private let scrollView = UIScrollView(frame: CGRect.zero)
-    private let imageView = UIImageView(frame: CGRect.zero)
+    private let scrollView = UIScrollView(frame: .zero)
+    private let imageView = UIImageView(frame: .zero)
     private let panGesture = UIPanGestureRecognizer(target: nil, action: nil)
 
-    private var isDismissing = false
-    private var animationCount = 0
-    private var previousLocation = CGPoint.zero
-    private var timeOffset = 0.0
+    private var previousLocation: CGPoint = .zero
+    private var interactionController: UIPercentDrivenInteractiveTransition?
 
-    var delegate: ImageViewControllerDelegate?
-
-    // MARK: - Lifecycle
+    weak var delegate: ImageViewControllerDelegate?
 
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -49,6 +41,9 @@ class ImageViewController: UIViewController {
         self.originalAlpha = originalAlpha
 
         super.init(nibName: nil, bundle: nil)
+
+        transitioningDelegate = self
+        modalPresentationStyle = .OverCurrentContext
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -65,10 +60,10 @@ class ImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        panGesture.addTarget(self, action: "handlePan:")
+        panGesture.addTarget(self, action: #selector(ImageViewController.handlePan(_:)))
         scrollView.addGestureRecognizer(panGesture)
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: "handleTap")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ImageViewController.handleTap))
         view.addGestureRecognizer(tapGesture)
 
         scrollView.alpha = originalAlpha
@@ -80,19 +75,45 @@ class ImageViewController: UIViewController {
         configureLayout()
     }
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
 
-        delegate?.imageViewControllerWillStartPresentAnimation(self)
+        let animations = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+            self.delegate?.imageViewControllerWillStartPresentAnimation(self)
 
-        performPresentAnimation(true)
+            self.scrollView.center = self.view.center
+            self.scrollView.alpha = 1.0
+        }
+
+        let completion = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+
+        }
+
+        transitionCoordinator()?.animateAlongsideTransition(animations, completion: completion)
     }
 
-    // MARK: - Setup
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
 
-    private func configureViews() {
-        view.addSubview(backgroundView)
+        let animations = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+            if self.interactionController == nil {
+                self.scrollView.center = CGPoint(x: self.originalRect.midX, y: self.originalRect.midY)
+                self.scrollView.alpha = self.originalAlpha
+            }
+        }
 
+        let completion = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+            self.delegate?.imageViewControllerDidFinishDismissAnimation(self)
+        }
+
+        transitionCoordinator()?.animateAlongsideTransition(animations, completion: completion)
+    }
+}
+
+// MARK: - Private
+
+private extension ImageViewController {
+    func configureViews() {
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.alwaysBounceHorizontal = true
@@ -115,9 +136,8 @@ class ImageViewController: UIViewController {
         scrollView.addSubview(imageView)
     }
 
-    private func configureLayout() {
-        if CGRectEqualToRect(scrollView.frame, CGRect.zero) {
-            backgroundView.frame = CGRect(x: 0.0, y: 0.0, width: view.bounds.width, height: view.bounds.height)
+    func configureLayout() {
+        if CGRectEqualToRect(scrollView.frame, .zero) {
             scrollView.frame = CGRect(x: 0.0, y: 0.0, width: view.bounds.width, height: view.bounds.height)
             imageView.frame = CGRect(x: 0.0, y: 0.0, width: originalRect.width, height: originalRect.height)
 
@@ -129,9 +149,7 @@ class ImageViewController: UIViewController {
         }
     }
 
-    // MARK: - Actions
-
-    private func centerScrollViewContents() {
+    func centerScrollViewContents() {
         var horizontalInset: CGFloat = 0.0
         var verticalInset: CGFloat = 0.0
 
@@ -152,125 +170,45 @@ class ImageViewController: UIViewController {
         scrollView.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
     }
 
-    func handleTap() {
-        timeOffset = 0.0
-        performDismissAnimation(true)
+    @objc func handleTap() {
+        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
 
         scrollView.setZoomScale(minimumZoom, animated: true)
     }
 
-    func handlePan(gesture: UIPanGestureRecognizer) {
+    @objc func handlePan(gesture: UIPanGestureRecognizer) {
         let location = gesture.locationInView(view)
-        let deltaX = location.x - previousLocation.x
-        let deltaY = location.y - previousLocation.y
 
         switch gesture.state {
         case .Began:
-//            UIView.animateWithDuration(0.75, animations: { () -> Void in
-//                self.backgroundView.effect = nil
-//                self.backgroundView.layer.speed = 0.0
-//                self.backgroundView.layer.timeOffset = 0.0
-//                }, completion: { _ -> Void in
-//                    self.backgroundView.layer.speed = 1.0
-//                    self.backgroundView.layer.timeOffset = 0.0
-//            })
-
-            break
+            interactionController = UIPercentDrivenInteractiveTransition()
+            presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
         case .Changed:
-            scrollView.center.x += deltaX
-            scrollView.center.y += deltaY
+            scrollView.center.x += (location.x - previousLocation.x)
+            scrollView.center.y += (location.y - previousLocation.y)
 
-            let delta = fabs(scrollView.center.y - view.center.y)
+            let delta = fabs(scrollView.frame.midY - view.frame.midY)
             let percent = min(delta / view.frame.midY, 100.0)
 
-            backgroundView.layer.timeOffset = Double(percent)
+            interactionController?.updateInteractiveTransition(percent)
         case .Ended: fallthrough
         case .Cancelled: fallthrough
         case .Failed:
-//            timeOffset = backgroundView.layer.timeOffset
-//            backgroundView.layer.timeOffset = 1.0
-
             let velocity = gesture.velocityInView(gesture.view)
 
             if fabs(velocity.x) > 150.0 || fabs(velocity.y) > 150.0 {
-                performDismissAnimationWithVelocity(velocity, animateBackground: true)
-//                backgroundView.layer.speed = 1.0
+                interactionController?.finishInteractiveTransition()
             }
             else {
-                performPresentAnimation(true)
-//                backgroundView.layer.removeAllAnimations()
-//                backgroundView.layer.timeOffset = 0.0
-//                backgroundView.layer.speed = 1.0
+                interactionController?.cancelInteractiveTransition()
             }
+
+            interactionController = nil
         default:
             break
         }
 
         previousLocation = location
-    }
-
-    // MARK: - Animations
-
-    private func animateCenter(center: CGPoint, view: UIView) {
-        var animation = view.pop_animationForKey("center") as? POPSpringAnimation
-        if animation == nil {
-            animation = POPSpringAnimation(propertyNamed: kPOPViewCenter)
-        }
-
-        animation!.toValue = NSValue(CGPoint: center)
-        animation!.delegate = self
-
-        view.pop_addAnimation(animation, forKey: "center")
-    }
-
-    private func animateAlpha(alpha: CGFloat, view: UIView) {
-        var animation = view.pop_animationForKey("alpha") as? POPSpringAnimation
-        if animation == nil {
-            animation = POPSpringAnimation(propertyNamed: kPOPViewAlpha)
-        }
-
-        animation!.toValue = NSNumber(double: Double(alpha))
-        animation!.delegate = self
-
-        view.pop_addAnimation(animation, forKey: "alpha")
-    }
-
-    private func performPresentAnimation(animateBackground: Bool) {
-        view.userInteractionEnabled = false
-
-        animateCenter(view.center, view: scrollView)
-        animateAlpha(1.0, view: scrollView)
-
-        if animateBackground {
-            UIView.animateWithDuration(0.3) { () -> Void in
-                self.backgroundView.effect = UIBlurEffect(style: .Dark)
-//                self.backgroundView.layer.timeOffset = self.timeOffset
-            }
-        }
-
-        animationCount = 2
-    }
-
-    private func performDismissAnimation(animateBackground: Bool) {
-        performDismissAnimationWithVelocity(CGPoint.zero, animateBackground: animateBackground)
-    }
-
-    private func performDismissAnimationWithVelocity(velocity: CGPoint, animateBackground: Bool) {
-        view.userInteractionEnabled = false
-        isDismissing = true
-
-        let center = CGPoint(x: originalRect.midX, y: originalRect.midY)
-        animateCenter(center, view: scrollView)
-        animateAlpha(originalAlpha, view: scrollView)
-
-        if animateBackground {
-            UIView.animateWithDuration(0.3) { () -> Void in
-                self.backgroundView.effect = nil
-//                self.backgroundView.layer.timeOffset = self.timeOffset
-            }
-        }
-
-        animationCount = 2
     }
 }
 
@@ -288,19 +226,28 @@ extension ImageViewController: UIScrollViewDelegate {
     }
 }
 
-// MARK: - POPAnimationDelegate
+// MARK: - UIViewControllerTransitioningDelegate
 
-extension ImageViewController: POPAnimationDelegate {
-    func pop_animationDidStop(anim: POPAnimation!, finished: Bool) {
-        animationCount = animationCount - 1
+extension ImageViewController: UIViewControllerTransitioningDelegate {
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let animationController = ImageAnimationController()
+        animationController.positive = true
 
-        if animationCount == 0 {
-            if isDismissing {
-                delegate?.imageViewControllerDidFinishDismissAnimation(self)
-            }
-            else {
-                view.userInteractionEnabled = true
-            }
-        }
+        return animationController
+    }
+
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let animationController = ImageAnimationController()
+        animationController.positive = false
+
+        return animationController
+    }
+
+    func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactionController
+    }
+
+    func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactionController
     }
 }

@@ -9,50 +9,14 @@
 import UIKit
 
 class StoryCell: UICollectionViewCell {
-
-    // MARK: - Properties
-
-    private let titleLabel = UILabel(frame: CGRect.zero)
-    private let bodyLabel = UILabel(frame: CGRect.zero)
-
-    private static var titleAttributes: Dictionary<String, AnyObject> {
-        get {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineBreakMode = .ByWordWrapping
-
-            let attributes = [
-                NSFontAttributeName: UIFont.storyTitleFont(),
-                NSForegroundColorAttributeName: UIColor.blackColor(),
-                NSParagraphStyleAttributeName: paragraphStyle
-            ]
-
-            return attributes
-        }
-    }
-
-    private static var bodyAttributes: Dictionary<String, AnyObject> {
-        get {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineBreakMode = .ByWordWrapping
-
-            let attributes = [
-                NSFontAttributeName: UIFont.storyBodyFont(),
-                NSForegroundColorAttributeName: UIColor.blackColor(),
-                NSParagraphStyleAttributeName: paragraphStyle
-            ]
-
-            return attributes
-        }
-    }
-
-    // MARK: - Lifecycle
+    private let contentStackView = UIStackView(frame: .zero)
+    private let titleLabel = UILabel(frame: .zero)
+    private let bodyLabel = UILabel(frame: .zero)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         backgroundColor = UIColor.whiteColor()
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.mainScreen().scale
 
         configureViews()
         configureLayout()
@@ -61,59 +25,58 @@ class StoryCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - Setup
+// MARK: - Public
 
-    private func configureViews() {
+extension StoryCell {
+    func configureWithViewModel(viewModel: StoryViewModel) {
+        titleLabel.attributedText = viewModel.titleAttributedString
+        bodyLabel.attributedText = viewModel.bodyAttributedString
+    }
+}
+
+// MARK: - Private
+
+private extension StoryCell {
+    func configureViews() {
+        contentStackView.axis = .Vertical
+        contentStackView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(contentStackView)
+
         titleLabel.numberOfLines = 0
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(titleLabel)
+        contentStackView.addArrangedSubview(titleLabel)
 
         bodyLabel.numberOfLines = 0
-        bodyLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(bodyLabel)
+        contentStackView.addArrangedSubview(bodyLabel)
     }
 
-    private func configureLayout() {
-        let titleLabelConstraints: [NSLayoutConstraint] = [
-            titleLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 20.0),
-            titleLabel.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor, constant: 20.0),
-            contentView.trailingAnchor.constraintEqualToAnchor(titleLabel.trailingAnchor, constant: 20.0)
+    func configureLayout() {
+        let constraints: [NSLayoutConstraint] = [
+            contentStackView.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 20.0),
+            contentStackView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor, constant: 20.0),
+            contentView.trailingAnchor.constraintEqualToAnchor(contentStackView.trailingAnchor, constant: 20.0),
+            contentView.bottomAnchor.constraintEqualToAnchor(contentStackView.bottomAnchor, constant: 20.0)
         ]
 
-        NSLayoutConstraint.activateConstraints(titleLabelConstraints)
-
-        let bodyLabelConstraints: [NSLayoutConstraint] = [
-            bodyLabel.topAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 20.0),
-            bodyLabel.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor, constant: 20.0),
-            contentView.trailingAnchor.constraintEqualToAnchor(bodyLabel.trailingAnchor, constant: 20.0),
-            contentView.bottomAnchor.constraintEqualToAnchor(bodyLabel.bottomAnchor, constant: 20.0)
-        ]
-
-        NSLayoutConstraint.activateConstraints(bodyLabelConstraints)
+        NSLayoutConstraint.activateConstraints(constraints)
     }
+}
 
-    func configureWithDeal(deal: Deal?) {
-        let title = deal?.story?.title ?? "No Title"
+// MARK: - Static
 
-        titleLabel.attributedText = NSAttributedString(string: title, attributes: StoryCell.titleAttributes)
-
-        let body = deal?.story?.body ?? "No Body"
-
-        bodyLabel.attributedText = NSAttributedString(string: body, attributes: StoryCell.bodyAttributes)
-    }
-
-    static func heightWithDeal(deal: Deal?, width: CGFloat) -> CGFloat {
+extension StoryCell {
+    static func heightWithViewModel(viewModel: StoryViewModel, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 40.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = .UsesLineFragmentOrigin
+        let options: NSStringDrawingOptions = [.UsesFontLeading, .UsesLineFragmentOrigin]
 
-        let title: NSString = deal?.story?.title ?? "No Title"
-        let titleBoundingRect = title.boundingRectWithSize(size, options: options, attributes: titleAttributes, context: nil)
+        let titleBoundingRect = viewModel.titleAttributedString.boundingRectWithSize(size, options: options, context: nil)
+        let titleHeight = ceil(titleBoundingRect.height)
 
-        let body: NSString = deal?.story?.body ?? "No Body"
-        let bodyBoundingRect = body.boundingRectWithSize(size, options: options, attributes: bodyAttributes, context: nil)
+        let bodyBoundingRect = viewModel.bodyAttributedString.boundingRectWithSize(size, options: options, context: nil)
+        let bodyHeight = ceil(bodyBoundingRect.height)
 
-        return ceil(titleBoundingRect.height) + 20.0 + ceil(bodyBoundingRect.height) + 40.0
+        return 20.0 + titleHeight + bodyHeight + 20.0
     }
 }

@@ -7,13 +7,8 @@
 //
 
 import UIKit
-//import Argo
-//import Curry
 
 struct Deal {
-
-    // MARK: - Properties
-
     private(set) var id: String
     private(set) var title: String?
     private(set) var features: String?
@@ -39,10 +34,7 @@ struct Deal {
         }
     }
 
-    // MARK: - Lifecycle
-
-    init?(dictionary: Dictionary<String, AnyObject>) {
-
+    init?(dictionary: [String: AnyObject]) {
         if let dealDictionary = dictionary["deal"], id = dealDictionary["id"] as? String {
             self.id = id
             title = dealDictionary["title"] as? String
@@ -100,15 +92,3 @@ struct Deal {
         }
     }
 }
-
-//// MARK: - Decodable
-//
-//extension Deal: Decodable {
-//    static func decode(json: JSON) -> Decoded<Deal> {
-//        return curry(Deal.init)
-//        <^> json <| "id"
-//        <*> json <|? "title"
-//        <*> json <|? "features"
-//        <*> json <|? "specifications"
-//    }
-//}

@@ -13,13 +13,16 @@ import AlamofireImage
 typealias DealCompletion = (Deal?, NSError?) -> Void
 
 class DealService {
-
-    let client: APIClient
+    private let client: APIClient
 
     init(client: APIClient) {
         self.client = client
     }
+}
 
+// MARK: - Public
+
+extension DealService {
     func fetchDeal(completion: DealCompletion?) {
         let baseURL = NSURL(string: "https://api.meh.com")!
         let path = "1/current.json"
@@ -35,7 +38,7 @@ class DealService {
 
         client.request(route) { (result: Result) -> Void in
             if result.isSuccess {
-                if let dictionary = result.value as? Dictionary<String, AnyObject> {
+                if let dictionary = result.value as? [String: AnyObject] {
                     let deal = Deal(dictionary: dictionary)
 
                     //Pre-fetch photo URLs
@@ -80,7 +83,7 @@ class DealService {
         if let path = NSBundle.mainBundle().pathForResource("meh", ofType: ".json") {
             if let data = NSData(contentsOfFile: path) {
                 do {
-                    if let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? Dictionary<String, AnyObject> {
+                    if let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
                         deal = Deal(dictionary: json)
                     }
                 }

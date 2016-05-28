@@ -10,11 +10,10 @@ import UIKit
 import pop
 
 class PageControl: UIView {
-
-    // MARK: - Properties
-
     private static let pageIndicatorSize = CGSize(width: 10.0, height: 10.0)
+
     private let animationInterval = 0.05
+
     private lazy var pageIndicatorLayers = [CAShapeLayer]()
 
     var currentPage = 0 {
@@ -82,8 +81,6 @@ class PageControl: UIView {
         }
     }
 
-    // MARK: - Lifecycle
-
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -104,12 +101,14 @@ class PageControl: UIView {
             return CGSize(width: width, height: height)
         }
         else {
-            return CGSize.zero
+            return .zero
         }
     }
+}
 
-    // MARK: - Actions
+// MARK: - Public
 
+extension PageControl {
     func showAnimated(animated: Bool) {
         for (index, shapeLayer) in pageIndicatorLayers.enumerate() {
             if animated {
@@ -131,7 +130,11 @@ class PageControl: UIView {
             shapeLayer.transform = CATransform3DMakeScale(0.1, 0.1, 1.0)
         }
     }
+}
 
+// MARK: - Static
+
+extension PageControl {
     class func height() -> CGFloat {
         return PageControl.pageIndicatorSize.height + 2.0
     }

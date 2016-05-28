@@ -7,11 +7,10 @@ inhibit_all_warnings!
 
 pod 'Alamofire', '~> 3.2'
 pod 'AlamofireImage', '~> 2.3'
-pod 'Curry', '~> 2.0'
-pod 'Argo', '~> 2.2'
+pod 'SwiftyMarkdown', :git => 'https://github.com/mightea/SwiftyMarkdown', :commit => '235ba9808bb9fa357f68c45611360de895e1dbbf'
 pod 'pop', '~> 1.0'
 pod 'Shimmer', '~> 1.0'
-pod 'youtube-ios-player-helper', :git=>'https://github.com/youtube/youtube-ios-player-helper', :commit=>'head'
+pod 'youtube-ios-player-helper', :git => 'https://github.com/youtube/youtube-ios-player-helper', :commit => 'head'
 
 target :unit_tests, :exclusive => true do
   link_with 'UnitTests'

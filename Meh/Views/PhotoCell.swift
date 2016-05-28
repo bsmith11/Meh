@@ -11,12 +11,7 @@ import Alamofire
 import AlamofireImage
 
 class PhotoCell: UICollectionViewCell {
-
-    // MARK: - Properties
-
-    private let photoImageView = UIImageView(frame: CGRect.zero)
-
-    // MARK: - Lifecycle
+    private let photoImageView = UIImageView(frame: .zero)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,26 +30,11 @@ class PhotoCell: UICollectionViewCell {
         photoImageView.af_cancelImageRequest()
         photoImageView.image = nil
     }
+}
 
-    // MARK - Setup
+// MARK: - Public
 
-    private func configureViews() {
-        photoImageView.contentMode = .ScaleAspectFill
-        photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(photoImageView)
-    }
-
-    private func configureLayout() {
-        let photoImageViewConstraints: [NSLayoutConstraint] = [
-            photoImageView.topAnchor.constraintEqualToAnchor(contentView.topAnchor),
-            photoImageView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor),
-            contentView.trailingAnchor.constraintEqualToAnchor(photoImageView.trailingAnchor),
-            contentView.bottomAnchor.constraintEqualToAnchor(photoImageView.bottomAnchor)
-        ]
-
-        NSLayoutConstraint.activateConstraints(photoImageViewConstraints)
-    }
-
+extension PhotoCell {
     func configureWithURL(URL: NSURL?, runImageTransitionIfCached: Bool) {
         if let URL = URL {
             let width = UIScreen.mainScreen().bounds.width
@@ -67,5 +47,27 @@ class PhotoCell: UICollectionViewCell {
         else {
             photoImageView.image = nil
         }
+    }
+}
+
+// MARK: - Private
+
+private extension PhotoCell {
+    func configureViews() {
+        photoImageView.contentMode = .ScaleAspectFill
+        photoImageView.clipsToBounds = true
+        photoImageView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(photoImageView)
+    }
+
+    func configureLayout() {
+        let constraints: [NSLayoutConstraint] = [
+            photoImageView.topAnchor.constraintEqualToAnchor(contentView.topAnchor),
+            photoImageView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor),
+            contentView.trailingAnchor.constraintEqualToAnchor(photoImageView.trailingAnchor),
+            contentView.bottomAnchor.constraintEqualToAnchor(photoImageView.bottomAnchor)
+        ]
+
+        NSLayoutConstraint.activateConstraints(constraints)
     }
 }

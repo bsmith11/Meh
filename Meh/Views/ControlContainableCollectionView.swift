@@ -9,11 +9,8 @@
 import UIKit
 
 class ControlContainableCollectionView: UICollectionView {
-
-    //MARK: - Overrides
-
     override func touchesShouldCancelInContentView(view: UIView) -> Bool {
-        if let _ = view as? UIControl {
+        if view is UIControl {
             return true
         }
         else {
