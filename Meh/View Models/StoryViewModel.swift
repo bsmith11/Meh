@@ -6,7 +6,7 @@
 //  Copyright © 2016 Brad Smith. All rights reserved.
 //
 
-import SwiftyMarkdown
+import TSMarkdownParser
 
 struct StoryViewModel {
     let title: String
@@ -16,12 +16,12 @@ struct StoryViewModel {
 
     init(story: Story?) {
         title = story?.title ?? "No Title"
-        body = story?.body.stringByReplacingOccurrencesOfString("\r\n\r\n", withString: "\n\n") ?? "No Body"
+        body = story?.body ?? "No Body"
 
-        let titleMarkdown = SwiftyMarkdown.markdownWithString(title, fontSize: 30.0)
-        titleAttributedString = titleMarkdown.attributedString().attributedStringByApplyingLineBreakMode(.ByWordWrapping)
+        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(30.0)
+        titleAttributedString = titleMarkdownParser.attributedStringFromMarkdown(title)
 
-        let bodyMarkdown = SwiftyMarkdown.markdownWithString(body, fontSize: 16.0)
-        bodyAttributedString = bodyMarkdown.attributedString().attributedStringByApplyingLineBreakMode(.ByWordWrapping)
+        let bodyMarkdownParser = TSMarkdownParser.parserWithFontSize(16.0)
+        bodyAttributedString = bodyMarkdownParser.attributedStringFromMarkdown(body)
     }
 }

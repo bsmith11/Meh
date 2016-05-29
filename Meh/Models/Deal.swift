@@ -22,15 +22,13 @@ struct Deal {
     private(set) var photoURLs = [NSURL]()
 
     var videoURLThumbnail: NSURL? {
-        get {
-            if let videoID = videoURL?.absoluteString.youtubeVideoID() {
-                let string = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg"
+        if let videoID = videoURL?.absoluteString.youtubeVideoID() {
+            let string = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg"
 
-                return NSURL(string: string)
-            }
-            else {
-                return nil
-            }
+            return NSURL(string: string)
+        }
+        else {
+            return nil
         }
     }
 
@@ -38,9 +36,25 @@ struct Deal {
         if let dealDictionary = dictionary["deal"], id = dealDictionary["id"] as? String {
             self.id = id
             title = dealDictionary["title"] as? String
-            features = dealDictionary["features"] as? String
-            features = features?.stringByReplacingOccurrencesOfString("\r", withString: "\n")
-            features = features?.stringByReplacingOccurrencesOfString("- ", withString: "\u{2022} ")
+
+            if let featuresString = dealDictionary["features"] as? NSString {
+                features = featuresString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                var featuresCompoundString = ""
+
+                let range = NSRange(location: 0, length: featuresString.length)
+                let block = { (substring: String?, substringRange: NSRange, enclosingRange: NSRange, stop: UnsafeMutablePointer<ObjCBool>) in
+                    if var substring = substring where !substring.isEmpty {
+                        substring = substring.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                        substring.appendContentsOf("\n")
+
+                        featuresCompoundString.appendContentsOf(substring)
+                    }
+                }
+
+                (featuresString as NSString).enumerateSubstringsInRange(range, options: .ByParagraphs, usingBlock: block)
+
+                features = featuresCompoundString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            }
 
             if let items = dealDictionary["items"] as? [Dictionary<String, AnyObject>] {
                 for item in items {

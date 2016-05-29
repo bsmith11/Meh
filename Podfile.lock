@@ -20,7 +20,7 @@ PODS:
   - pop (1.0.9)
   - Shimmer (1.0.2)
   - Specta (1.0.5)
-  - SwiftyMarkdown (0.2.3)
+  - TSMarkdownParser (2.1.0)
   - youtube-ios-player-helper (0.1.5)
 
 DEPENDENCIES:
@@ -32,22 +32,16 @@ DEPENDENCIES:
   - pop (~> 1.0)
   - Shimmer (~> 1.0)
   - Specta
-  - SwiftyMarkdown (from `https://github.com/mightea/SwiftyMarkdown`, commit `235ba9808bb9fa357f68c45611360de895e1dbbf`)
+  - TSMarkdownParser (~> 2.1)
   - youtube-ios-player-helper (from `https://github.com/youtube/youtube-ios-player-helper`,
     commit `head`)
 
 EXTERNAL SOURCES:
-  SwiftyMarkdown:
-    :commit: 235ba9808bb9fa357f68c45611360de895e1dbbf
-    :git: https://github.com/mightea/SwiftyMarkdown
   youtube-ios-player-helper:
     :commit: head
     :git: https://github.com/youtube/youtube-ios-player-helper
 
 CHECKOUT OPTIONS:
-  SwiftyMarkdown:
-    :commit: 235ba9808bb9fa357f68c45611360de895e1dbbf
-    :git: https://github.com/mightea/SwiftyMarkdown
   youtube-ios-player-helper:
     :commit: head
     :git: https://github.com/youtube/youtube-ios-player-helper
@@ -61,7 +55,7 @@ SPEC CHECKSUMS:
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
-  SwiftyMarkdown: 62920e177bbd441f2e4427e164e1674b1be46b39
+  TSMarkdownParser: 4b3cec2a11d9c70d9dce265e7ec7347166c70fe8
   youtube-ios-player-helper: 921da8927a575debc293a94c678c658f38cde150
 
 COCOAPODS: 0.39.0

@@ -9,17 +9,24 @@
 import UIKit
 
 extension NSAttributedString {
-    func attributedStringByApplyingLineBreakMode(lineBreakMode: NSLineBreakMode, headIndent: CGFloat = 0.0, alignment: NSTextAlignment = .Left) -> NSAttributedString {
-        let mutableAttributedString = NSMutableAttributedString(attributedString: self)
+    func heightForSize(size: CGSize) -> CGFloat {
+        let textContainer = NSTextContainer(size: size)
+        textContainer.lineFragmentPadding = 0.0
+        textContainer.lineBreakMode = .ByWordWrapping
+        textContainer.maximumNumberOfLines = 0
 
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = lineBreakMode
-        paragraphStyle.headIndent = headIndent
-        paragraphStyle.alignment = alignment
+        let layoutManager = NSLayoutManager()
+        layoutManager.usesFontLeading = false
+        layoutManager.addTextContainer(textContainer)
 
-        let range = NSRange(location: 0, length: mutableAttributedString.length)
-        mutableAttributedString.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: range)
+        let textStorage = NSTextStorage(attributedString: self)
+        textStorage.addLayoutManager(layoutManager)
 
-        return mutableAttributedString
+        layoutManager.ensureLayoutForTextContainer(textContainer)
+
+        let usedRect = layoutManager.usedRectForTextContainer(textContainer)
+        let height = ceil(usedRect.height)
+
+        return height
     }
 }

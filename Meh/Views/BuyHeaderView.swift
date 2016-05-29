@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftyMarkdown
 
 protocol BuyHeaderViewDelegate: NSObjectProtocol {
     func buyHeaderViewDidSelectBuy(headerView: BuyHeaderView)
@@ -100,10 +99,7 @@ extension BuyHeaderView {
     static func heightWithViewModel(viewModel: BuyHeaderViewModel, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 20.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
-
-        let titleBoundingRect = viewModel.titleAttributedString.boundingRectWithSize(size, options: options, context: nil)
-        let titleHeight = ceil(titleBoundingRect.height)
+        let titleHeight = viewModel.titleAttributedString.heightForSize(size)
 
         return 10.0 + titleHeight + 10.0 + 64.0
     }

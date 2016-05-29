@@ -60,10 +60,7 @@ extension FeaturesCell {
     static func heightWithViewModel(viewModel: FeaturesViewModel, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 40.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesFontLeading, .UsesLineFragmentOrigin]
-
-        let featuresBoundingRect = viewModel.featuresAttributedString.boundingRectWithSize(size, options: options, context: nil)
-        let featuresHeight = ceil(featuresBoundingRect.height)
+        let featuresHeight = viewModel.featuresAttributedString.heightForSize(size)
 
         return 20.0 + featuresHeight + 20.0
     }

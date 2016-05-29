@@ -6,7 +6,7 @@
 //  Copyright © 2016 Brad Smith. All rights reserved.
 //
 
-import SwiftyMarkdown
+import TSMarkdownParser
 
 struct BuyHeaderViewModel {
     let title: String
@@ -16,10 +16,12 @@ struct BuyHeaderViewModel {
     let theme: Theme
 
     init(deal: Deal?) {
+        theme = deal?.theme ?? Theme()
+
         title = deal?.title ?? "No Title"
 
-        let titleMarkdown = SwiftyMarkdown.markdownWithString(title, fontSize: 20.0)
-        titleAttributedString = titleMarkdown.attributedString().attributedStringByApplyingLineBreakMode(.ByWordWrapping, alignment: .Center)
+        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(20.0, alignment: .Center, color: theme.foregroundColor)
+        titleAttributedString = titleMarkdownParser.attributedStringFromMarkdown(title)
 
         if let _ = deal?.soldOutDate {
             buyButtonTitle = "Sold Out"
@@ -44,10 +46,8 @@ struct BuyHeaderViewModel {
             buyButtonTitle = "No Price"
         }
 
-        theme = deal?.theme ?? Theme()
-
         let buyButtonTitleColor = theme.backgroundColor ?? UIColor.blackColor()
-        let buyButtonTitleMarkdown = SwiftyMarkdown.markdownWithString(buyButtonTitle, fontSize: 50.0, color: buyButtonTitleColor)
-        buyButtonAttributedString = buyButtonTitleMarkdown.attributedString()
+        let buyButtonTitleMarkdownParser = TSMarkdownParser.parserWithFontSize(50.0, color: buyButtonTitleColor)
+        buyButtonAttributedString = buyButtonTitleMarkdownParser.attributedStringFromMarkdown(buyButtonTitle)
     }
 }

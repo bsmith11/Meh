@@ -41,6 +41,7 @@ extension StoryCell {
 private extension StoryCell {
     func configureViews() {
         contentStackView.axis = .Vertical
+        contentStackView.spacing = 10.0
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(contentStackView)
 
@@ -48,6 +49,7 @@ private extension StoryCell {
         contentStackView.addArrangedSubview(titleLabel)
 
         bodyLabel.numberOfLines = 0
+        bodyLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, forAxis: .Vertical)
         contentStackView.addArrangedSubview(bodyLabel)
     }
 
@@ -69,14 +71,9 @@ extension StoryCell {
     static func heightWithViewModel(viewModel: StoryViewModel, width: CGFloat) -> CGFloat {
         let constrainedWidth = width - 40.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesFontLeading, .UsesLineFragmentOrigin]
+        let titleHeight = viewModel.titleAttributedString.heightForSize(size)
+        let bodyHeight = viewModel.bodyAttributedString.heightForSize(size)
 
-        let titleBoundingRect = viewModel.titleAttributedString.boundingRectWithSize(size, options: options, context: nil)
-        let titleHeight = ceil(titleBoundingRect.height)
-
-        let bodyBoundingRect = viewModel.bodyAttributedString.boundingRectWithSize(size, options: options, context: nil)
-        let bodyHeight = ceil(bodyBoundingRect.height)
-
-        return 20.0 + titleHeight + bodyHeight + 20.0
+        return 20.0 + titleHeight + 10.0 + bodyHeight + 20.0
     }
 }
