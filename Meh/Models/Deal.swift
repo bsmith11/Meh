@@ -45,7 +45,7 @@ struct Deal {
                 let block = { (substring: String?, substringRange: NSRange, enclosingRange: NSRange, stop: UnsafeMutablePointer<ObjCBool>) in
                     if var substring = substring where !substring.isEmpty {
                         substring = substring.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-                        substring.appendContentsOf("\n")
+                        substring.appendContentsOf("\n\n")
 
                         featuresCompoundString.appendContentsOf(substring)
                     }

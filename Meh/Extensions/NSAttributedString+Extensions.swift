@@ -29,4 +29,26 @@ extension NSAttributedString {
 
         return height
     }
+
+    func singleLineWidth() -> CGFloat {
+        let size = CGSize(width: CGFloat.max, height: CGFloat.max)
+        let textContainer = NSTextContainer(size: size)
+        textContainer.lineFragmentPadding = 0.0
+        textContainer.lineBreakMode = .ByWordWrapping
+        textContainer.maximumNumberOfLines = 0
+
+        let layoutManager = NSLayoutManager()
+        layoutManager.usesFontLeading = false
+        layoutManager.addTextContainer(textContainer)
+
+        let textStorage = NSTextStorage(attributedString: self)
+        textStorage.addLayoutManager(layoutManager)
+
+        layoutManager.ensureLayoutForTextContainer(textContainer)
+
+        let usedRect = layoutManager.usedRectForTextContainer(textContainer)
+        let width = ceil(usedRect.width)
+
+        return width
+    }
 }
