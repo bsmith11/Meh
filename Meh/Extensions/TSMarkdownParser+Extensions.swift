@@ -11,6 +11,7 @@ import TSMarkdownParser
 extension TSMarkdownParser {
     class func parserWithFontSize(fontSize: CGFloat, alignment: NSTextAlignment = .Left, color: UIColor = UIColor.blackColor()) -> TSMarkdownParser {
         let markdownParser = TSMarkdownParser()
+        markdownParser.skipLinkAttribute = true
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = alignment
@@ -38,9 +39,10 @@ extension TSMarkdownParser {
         let linkBlock = { (mutableAttributedString: NSMutableAttributedString, range: NSRange, link: String?) in
             let color = UIColor.blueColor()
             mutableAttributedString.addAttribute(NSForegroundColorAttributeName, value: color, range: range)
+            mutableAttributedString.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.StyleSingle.rawValue, range: range)
 
             if let link = link {
-                mutableAttributedString.addAttribute(NSLinkAttributeName, value: link, range: range)
+                mutableAttributedString.addAttribute(LinkLabel.linkAttributeName, value: link, range: range)
             }
         }
 

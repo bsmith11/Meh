@@ -38,6 +38,7 @@
 		06E0A8FB1CF82C6F0061EEB2 /* PhotosHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A8FA1CF82C6F0061EEB2 /* PhotosHeaderView.swift */; };
 		06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9041CF929480061EEB2 /* PhotosHeaderViewModel.swift */; };
 		06E0A9071CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */; };
+		06E0A9091CFBDC920061EEB2 /* LinkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9081CFBDC920061EEB2 /* LinkLabel.swift */; };
 		06F803B71C8C072600E486EA /* HeaderCollectionViewLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F803B61C8C072500E486EA /* HeaderCollectionViewLayoutAttributes.swift */; };
 		06F803C11C8D2C9C00E486EA /* meh_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 06F803C01C8D2C9C00E486EA /* meh_logo.png */; };
 		06F803CB1C9007BC00E486EA /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F803CA1C9007BC00E486EA /* Story.swift */; };
@@ -93,6 +94,7 @@
 		06E0A8FA1CF82C6F0061EEB2 /* PhotosHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHeaderView.swift; sourceTree = "<group>"; };
 		06E0A9041CF929480061EEB2 /* PhotosHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHeaderViewModel.swift; sourceTree = "<group>"; };
 		06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Extensions.swift"; sourceTree = "<group>"; };
+		06E0A9081CFBDC920061EEB2 /* LinkLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLabel.swift; sourceTree = "<group>"; };
 		06F803B61C8C072500E486EA /* HeaderCollectionViewLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCollectionViewLayoutAttributes.swift; sourceTree = "<group>"; };
 		06F803C01C8D2C9C00E486EA /* meh_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meh_logo.png; sourceTree = "<group>"; };
 		06F803CA1C9007BC00E486EA /* Story.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				067750061C89586600ECC221 /* VideoCell.swift */,
 				0646A6101C8A3C8C000E6827 /* StoryCell.swift */,
 				06774FFF1C89007400ECC221 /* ControlContainableCollectionView.swift */,
+				06E0A9081CFBDC920061EEB2 /* LinkLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -580,6 +583,7 @@
 				06ABFCAA1CF6B37C00A7E690 /* FeaturesViewModel.swift in Sources */,
 				06E0A8FB1CF82C6F0061EEB2 /* PhotosHeaderView.swift in Sources */,
 				067750031C89553700ECC221 /* FeaturesCell.swift in Sources */,
+				06E0A9091CFBDC920061EEB2 /* LinkLabel.swift in Sources */,
 				0646A6091C8A0C8E000E6827 /* DealService.swift in Sources */,
 				0646A60F1C8A22B4000E6827 /* String+Extensions.swift in Sources */,
 				06BBE0D01CF8216E00954722 /* BuyHeaderViewModel.swift in Sources */,

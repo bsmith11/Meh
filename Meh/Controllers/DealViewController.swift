@@ -141,6 +141,11 @@ private extension DealViewController {
 
         collectionView.pop_addAnimation(bounceAnimation, forKey: "bounce")
     }
+
+    func handleURL(URL: NSURL) {
+        let safariViewController = SFSafariViewController(URL: URL)
+        presentViewController(safariViewController, animated: true, completion: nil)
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -164,6 +169,9 @@ extension DealViewController: UICollectionViewDataSource {
             let featuresViewModel = FeaturesViewModel(deal: viewModel.deal)
             let cell: FeaturesCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(featuresViewModel)
+            cell.linkHandler = { [weak self] (URL: NSURL) in
+                self?.handleURL(URL)
+            }
 
             return cell
         case .Video:
@@ -176,6 +184,9 @@ extension DealViewController: UICollectionViewDataSource {
             let storyViewModel = StoryViewModel(story: viewModel.deal?.story)
             let cell: StoryCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(storyViewModel)
+            cell.linkHandler = { [weak self] (URL: NSURL) in
+                self?.handleURL(URL)
+            }
 
             return cell
         }
@@ -269,12 +280,11 @@ extension DealViewController: BuyHeaderViewDelegate {
     func buyHeaderViewDidSelectBuy(headerView: BuyHeaderView) {
         if viewModel.deal?.soldOutDate == nil {
             if let URL = viewModel.deal?.URL {
-                let safariViewController = SFSafariViewController(URL: URL)
-                presentViewController(safariViewController, animated: true, completion: nil)
+                handleURL(URL)
             }
         }
         else {
-            //Do something because it's sold out
+            //TODO: Handle sold out case
         }
     }
 }

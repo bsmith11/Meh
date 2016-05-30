@@ -8,8 +8,12 @@
 
 import UIKit
 
+typealias FeaturesCellLinkHandlerBlock = (NSURL) -> Void
+
 class FeaturesCell: UICollectionViewCell {
-    private let textLabel = UILabel(frame: .zero)
+    private let textLabel = LinkLabel(frame: .zero)
+
+    var linkHandler: FeaturesCellLinkHandlerBlock?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,6 +42,7 @@ extension FeaturesCell {
 private extension FeaturesCell {
     func configureViews() {
         textLabel.numberOfLines = 0
+        textLabel.delegate = self
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(textLabel)
     }
@@ -63,5 +68,13 @@ extension FeaturesCell {
         let featuresHeight = viewModel.featuresAttributedString.heightForSize(size)
 
         return 20.0 + featuresHeight + 20.0
+    }
+}
+
+// MARK: - LinkLabelDelegate
+
+extension FeaturesCell: LinkLabelDelegate {
+    func linkLabel(linkLabel: LinkLabel, didSelectLinkWithURL URL: NSURL) {
+        linkHandler?(URL)
     }
 }

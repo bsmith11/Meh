@@ -8,10 +8,14 @@
 
 import UIKit
 
+typealias StoryCellLinkHandlerBlock = (NSURL) -> Void
+
 class StoryCell: UICollectionViewCell {
     private let contentStackView = UIStackView(frame: .zero)
-    private let titleLabel = UILabel(frame: .zero)
-    private let bodyLabel = UILabel(frame: .zero)
+    private let titleLabel = LinkLabel(frame: .zero)
+    private let bodyLabel = LinkLabel(frame: .zero)
+
+    var linkHandler: StoryCellLinkHandlerBlock?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,9 +50,11 @@ private extension StoryCell {
         contentView.addSubview(contentStackView)
 
         titleLabel.numberOfLines = 0
+        titleLabel.delegate = self
         contentStackView.addArrangedSubview(titleLabel)
 
         bodyLabel.numberOfLines = 0
+        bodyLabel.delegate = self
         bodyLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, forAxis: .Vertical)
         contentStackView.addArrangedSubview(bodyLabel)
     }
@@ -75,5 +81,13 @@ extension StoryCell {
         let bodyHeight = viewModel.bodyAttributedString.heightForSize(size)
 
         return 20.0 + titleHeight + 10.0 + bodyHeight + 20.0
+    }
+}
+
+// MARK: - LinkLabelDelegate
+
+extension StoryCell: LinkLabelDelegate {
+    func linkLabel(linkLabel: LinkLabel, didSelectLinkWithURL URL: NSURL) {
+        linkHandler?(URL)
     }
 }

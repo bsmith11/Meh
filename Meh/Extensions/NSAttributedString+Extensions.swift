@@ -51,4 +51,23 @@ extension NSAttributedString {
 
         return width
     }
+
+    func characterIndexForPoint(point: CGPoint, bounds: CGRect) -> Int {
+        let size = CGSize(width: bounds.width, height: bounds.height)
+        let textContainer = NSTextContainer(size: size)
+        textContainer.lineFragmentPadding = 0.0
+        textContainer.lineBreakMode = .ByWordWrapping
+        textContainer.maximumNumberOfLines = 0
+
+        let layoutManager = NSLayoutManager()
+        layoutManager.usesFontLeading = false
+        layoutManager.addTextContainer(textContainer)
+
+        let textStorage = NSTextStorage(attributedString: self)
+        textStorage.addLayoutManager(layoutManager)
+
+        layoutManager.ensureLayoutForTextContainer(textContainer)
+
+        return layoutManager.characterIndexForPoint(point, inTextContainer: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
+    }
 }
