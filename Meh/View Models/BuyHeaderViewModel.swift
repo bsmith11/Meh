@@ -9,6 +9,13 @@
 import TSMarkdownParser
 
 struct BuyHeaderViewModel {
+    private let soldOutTitles = [
+        "Sold Out",
+        "Gone",
+        "Too Late",
+        "Too Slow"
+    ]
+
     let title: String
     let titleAttributedString: NSAttributedString
     let buyButtonTitle: String
@@ -24,7 +31,8 @@ struct BuyHeaderViewModel {
         titleAttributedString = titleMarkdownParser.attributedStringFromMarkdown(title)
 
         if let _ = deal?.soldOutDate {
-            buyButtonTitle = "Sold Out"
+            let randomIndex = Int(arc4random_uniform(UInt32(soldOutTitles.count)))
+            buyButtonTitle = soldOutTitles[randomIndex]
         }
         else if let prices = deal?.prices where !prices.isEmpty {
             var lowestPrice = Int.max

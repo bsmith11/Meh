@@ -22,6 +22,9 @@ class FeaturesCell: UICollectionViewCell {
 
         configureViews()
         configureLayout()
+
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.mainScreen().scale
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -33,7 +36,8 @@ class FeaturesCell: UICollectionViewCell {
 
 extension FeaturesCell {
     func configureWithViewModel(viewModel: FeaturesViewModel) {
-        textLabel.attributedText = viewModel.featuresAttributedString
+        textLabel.linkColor = viewModel.theme.accentColor
+        textLabel.attributedString = viewModel.featuresAttributedString
     }
 }
 
@@ -49,7 +53,7 @@ private extension FeaturesCell {
 
     func configureLayout() {
         let constraints: [NSLayoutConstraint] = [
-            textLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 20.0),
+            textLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 0.0),
             textLabel.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor, constant: 20.0),
             contentView.trailingAnchor.constraintEqualToAnchor(textLabel.trailingAnchor, constant: 20.0),
             contentView.bottomAnchor.constraintEqualToAnchor(textLabel.bottomAnchor, constant: 20.0)
@@ -67,7 +71,7 @@ extension FeaturesCell {
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
         let featuresHeight = viewModel.featuresAttributedString.heightForSize(size)
 
-        return 20.0 + featuresHeight + 20.0
+        return featuresHeight + 20.0
     }
 }
 

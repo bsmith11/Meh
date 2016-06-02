@@ -9,10 +9,13 @@
 import TSMarkdownParser
 
 struct FeaturesViewModel {
+    let theme: Theme
     let features: String
     let featuresAttributedString: NSAttributedString
 
     init(deal: Deal?) {
+        theme = deal?.theme ?? Theme()
+
         features = deal?.features ?? "No Features"
 
         let markdownParser = TSMarkdownParser.parserWithFontSize(16.0)

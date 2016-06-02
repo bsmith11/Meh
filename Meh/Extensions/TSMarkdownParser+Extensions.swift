@@ -37,10 +37,6 @@ extension TSMarkdownParser {
         markdownParser.addEmphasisParsingWithFormattingBlock(emphasisBlock)
 
         let linkBlock = { (mutableAttributedString: NSMutableAttributedString, range: NSRange, link: String?) in
-            let color = UIColor.blueColor()
-            mutableAttributedString.addAttribute(NSForegroundColorAttributeName, value: color, range: range)
-            mutableAttributedString.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.StyleSingle.rawValue, range: range)
-
             if let link = link {
                 mutableAttributedString.addAttribute(LinkLabel.linkAttributeName, value: link, range: range)
             }

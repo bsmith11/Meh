@@ -35,6 +35,7 @@ class RootViewController: UIViewController {
                 print("Failed to fetch deal with error: \(error)")
             }
             else if let strongSelf = self {
+                print("Successfully fetched deal")
                 strongSelf.displayViewController(strongSelf.dealViewController)
             }
         }

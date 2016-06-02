@@ -10,6 +10,7 @@ import UIKit
 
 enum DealItem {
     case Features
+    case Specs
     case Video
     case Story
 }
@@ -17,6 +18,7 @@ enum DealItem {
 class DealViewModel {
     private let dealService: DealService
     private let items: [DealItem] = [
+        .Specs,
         .Features,
         .Video,
         .Story

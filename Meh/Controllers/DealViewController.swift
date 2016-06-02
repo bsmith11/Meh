@@ -62,6 +62,8 @@ class DealViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
+        print("Deal: viewDidAppear")
+
         if !didAppear {
             didAppear = true
 
@@ -85,6 +87,7 @@ private extension DealViewController {
         collectionView.alwaysBounceVertical = true
         collectionView.delaysContentTouches = false
         collectionView.registerClass(FeaturesCell.self)
+        collectionView.registerClass(SpecsCell.self)
         collectionView.registerClass(VideoCell.self)
         collectionView.registerClass(StoryCell.self)
         collectionView.registerClass(PhotosHeaderView.self, elementKind: DealCollectionViewLayout.photosHeaderElementKind)
@@ -174,6 +177,12 @@ extension DealViewController: UICollectionViewDataSource {
             }
 
             return cell
+        case .Specs:
+            let specsViewModel = SpecsViewModel(deal: viewModel.deal)
+            let cell: SpecsCell = collectionView.dequeueCellForIndexPath(indexPath)
+            cell.configureWithViewModel(specsViewModel)
+
+            return cell
         case .Video:
             let videoViewModel = VideoViewModel(deal: viewModel.deal)
             let cell: VideoCell = collectionView.dequeueCellForIndexPath(indexPath)
@@ -181,7 +190,7 @@ extension DealViewController: UICollectionViewDataSource {
 
             return cell
         case .Story:
-            let storyViewModel = StoryViewModel(story: viewModel.deal?.story)
+            let storyViewModel = StoryViewModel(deal: viewModel.deal)
             let cell: StoryCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(storyViewModel)
             cell.linkHandler = { [weak self] (URL: NSURL) in
@@ -221,6 +230,17 @@ extension DealViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension DealViewController: UICollectionViewDelegate {
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if let item = viewModel.itemAtIndexPath(indexPath) {
+            if case .Specs = item {
+                let specsViewModel = SpecsViewModel(deal: viewModel.deal)
+                let specsViewController = SpecsViewController(viewModel: specsViewModel)
+
+                presentViewController(specsViewController, animated: true, completion: nil)
+            }
+        }
+    }
+
     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
         collectionView.pop_removeAnimationForKey("bounce")
     }
@@ -239,10 +259,14 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
             let featuresViewModel = FeaturesViewModel(deal: viewModel.deal)
 
             return FeaturesCell.heightWithViewModel(featuresViewModel, width: width)
+        case .Specs:
+            let specsViewModel = SpecsViewModel(deal: viewModel.deal)
+
+            return SpecsCell.heightWithViewModel(specsViewModel, width: width)
         case .Video:
             return VideoCell.height()
         case .Story:
-            let storyViewModel = StoryViewModel(story: viewModel.deal?.story)
+            let storyViewModel = StoryViewModel(deal: viewModel.deal)
 
             return StoryCell.heightWithViewModel(storyViewModel, width: width)
         }

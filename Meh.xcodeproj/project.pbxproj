@@ -39,6 +39,10 @@
 		06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9041CF929480061EEB2 /* PhotosHeaderViewModel.swift */; };
 		06E0A9071CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */; };
 		06E0A9091CFBDC920061EEB2 /* LinkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9081CFBDC920061EEB2 /* LinkLabel.swift */; };
+		06E0A90B1CFCFAEA0061EEB2 /* SpecsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A90A1CFCFAEA0061EEB2 /* SpecsViewController.swift */; };
+		06E0A90D1CFCFBF10061EEB2 /* SpecsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A90C1CFCFBF10061EEB2 /* SpecsViewModel.swift */; };
+		06E0A90F1CFD0D630061EEB2 /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */; };
+		06E0A9111CFD43AE0061EEB2 /* SpecsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9101CFD43AE0061EEB2 /* SpecsCell.swift */; };
 		06F803B71C8C072600E486EA /* HeaderCollectionViewLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F803B61C8C072500E486EA /* HeaderCollectionViewLayoutAttributes.swift */; };
 		06F803C11C8D2C9C00E486EA /* meh_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 06F803C01C8D2C9C00E486EA /* meh_logo.png */; };
 		06F803CB1C9007BC00E486EA /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F803CA1C9007BC00E486EA /* Story.swift */; };
@@ -95,6 +99,10 @@
 		06E0A9041CF929480061EEB2 /* PhotosHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHeaderViewModel.swift; sourceTree = "<group>"; };
 		06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Extensions.swift"; sourceTree = "<group>"; };
 		06E0A9081CFBDC920061EEB2 /* LinkLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkLabel.swift; sourceTree = "<group>"; };
+		06E0A90A1CFCFAEA0061EEB2 /* SpecsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecsViewController.swift; sourceTree = "<group>"; };
+		06E0A90C1CFCFBF10061EEB2 /* SpecsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecsViewModel.swift; sourceTree = "<group>"; };
+		06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
+		06E0A9101CFD43AE0061EEB2 /* SpecsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecsCell.swift; sourceTree = "<group>"; };
 		06F803B61C8C072500E486EA /* HeaderCollectionViewLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCollectionViewLayoutAttributes.swift; sourceTree = "<group>"; };
 		06F803C01C8D2C9C00E486EA /* meh_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meh_logo.png; sourceTree = "<group>"; };
 		06F803CA1C9007BC00E486EA /* Story.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
@@ -144,9 +152,11 @@
 				06BBE0C71CF7B6B300954722 /* SplashViewController.swift */,
 				06774FDF1C8784DD00ECC221 /* DealViewController.swift */,
 				06774FF51C881D3300ECC221 /* DealCollectionViewLayout.swift */,
+				06E0A90A1CFCFAEA0061EEB2 /* SpecsViewController.swift */,
 				06F803B61C8C072500E486EA /* HeaderCollectionViewLayoutAttributes.swift */,
 				0646A6141C8AAC31000E6827 /* ImageViewController.swift */,
 				0649E20D1CA450280070047C /* ImageAnimationController.swift */,
+				06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -174,6 +184,7 @@
 				06E0A8FA1CF82C6F0061EEB2 /* PhotosHeaderView.swift */,
 				06BBE0CD1CF81D2B00954722 /* BuyHeaderView.swift */,
 				0646A6041C89EF3F000E6827 /* FooterView.swift */,
+				06E0A9101CFD43AE0061EEB2 /* SpecsCell.swift */,
 				06774FE31C8790C300ECC221 /* PhotoCell.swift */,
 				067750021C89553700ECC221 /* FeaturesCell.swift */,
 				067750061C89586600ECC221 /* VideoCell.swift */,
@@ -306,6 +317,7 @@
 				06ABFCA91CF6B37C00A7E690 /* FeaturesViewModel.swift */,
 				06BBE0CF1CF8216E00954722 /* BuyHeaderViewModel.swift */,
 				06E0A9041CF929480061EEB2 /* PhotosHeaderViewModel.swift */,
+				06E0A90C1CFCFBF10061EEB2 /* SpecsViewModel.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -398,6 +410,11 @@
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Brad Smith";
+				TargetAttributes = {
+					AE64E37B92C590D71ADAFB44 = {
+						DevelopmentTeam = Q9WZ7ZSJK2;
+					};
+				};
 			};
 			buildConfigurationList = 22641473059B61392CD67C76 /* Build configuration list for PBXProject "Meh" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -585,8 +602,10 @@
 				067750031C89553700ECC221 /* FeaturesCell.swift in Sources */,
 				06E0A9091CFBDC920061EEB2 /* LinkLabel.swift in Sources */,
 				0646A6091C8A0C8E000E6827 /* DealService.swift in Sources */,
+				06E0A90F1CFD0D630061EEB2 /* SlideAnimationController.swift in Sources */,
 				0646A60F1C8A22B4000E6827 /* String+Extensions.swift in Sources */,
 				06BBE0D01CF8216E00954722 /* BuyHeaderViewModel.swift in Sources */,
+				06E0A90D1CFCFBF10061EEB2 /* SpecsViewModel.swift in Sources */,
 				06774FE41C8790C300ECC221 /* PhotoCell.swift in Sources */,
 				06BBE0CC1CF7FD8A00954722 /* UICollectionView+Extensions.swift in Sources */,
 				06774FF01C87B2BA00ECC221 /* UIFont+Extensions.swift in Sources */,
@@ -596,6 +615,7 @@
 				06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */,
 				069283A31CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift in Sources */,
 				06F803CD1C9008B600E486EA /* Theme.swift in Sources */,
+				06E0A90B1CFCFAEA0061EEB2 /* SpecsViewController.swift in Sources */,
 				06774FEA1C87A60900ECC221 /* PageControl.swift in Sources */,
 				06F803CB1C9007BC00E486EA /* Story.swift in Sources */,
 				0646A6151C8AAC31000E6827 /* ImageViewController.swift in Sources */,
@@ -607,6 +627,7 @@
 				06F803B71C8C072600E486EA /* HeaderCollectionViewLayoutAttributes.swift in Sources */,
 				06BBE0C81CF7B6B300954722 /* SplashViewController.swift in Sources */,
 				06ABFCA41CF6A62900A7E690 /* StoryViewModel.swift in Sources */,
+				06E0A9111CFD43AE0061EEB2 /* SpecsCell.swift in Sources */,
 				06774FE21C87870C00ECC221 /* DealViewModel.swift in Sources */,
 				06774FE01C8784DD00ECC221 /* DealViewController.swift in Sources */,
 				06BBE0CE1CF81D2B00954722 /* BuyHeaderView.swift in Sources */,
@@ -733,6 +754,7 @@
 			baseConfigurationReference = 5E1CF919C490E04B0EE18585 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -741,6 +763,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bradsmith.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -750,6 +773,7 @@
 			baseConfigurationReference = 5C28A8E188BA5EC308E52CD8 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				INFOPLIST_FILE = Meh/Resources/Info.plist;
@@ -757,6 +781,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bradsmith.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;

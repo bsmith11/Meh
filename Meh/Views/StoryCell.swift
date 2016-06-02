@@ -24,6 +24,9 @@ class StoryCell: UICollectionViewCell {
 
         configureViews()
         configureLayout()
+
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.mainScreen().scale
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -35,8 +38,9 @@ class StoryCell: UICollectionViewCell {
 
 extension StoryCell {
     func configureWithViewModel(viewModel: StoryViewModel) {
-        titleLabel.attributedText = viewModel.titleAttributedString
-        bodyLabel.attributedText = viewModel.bodyAttributedString
+        bodyLabel.linkColor = viewModel.theme.accentColor
+        titleLabel.attributedString = viewModel.titleAttributedString
+        bodyLabel.attributedString = viewModel.bodyAttributedString
     }
 }
 

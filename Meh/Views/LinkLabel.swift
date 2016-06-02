@@ -29,42 +29,53 @@ class LinkLabel: UILabel {
         willSet {
             if let activeLink = activeLink {
                 if let newValue = newValue where !NSEqualRanges(newValue.range, activeLink.range) {
-                    applyNormalLinkColorInRange(activeLink.range)
+                    applyLinkColor(linkColor, range: activeLink.range)
                 }
                 else if newValue == nil {
-                    applyNormalLinkColorInRange(activeLink.range)
+                    applyLinkColor(linkColor, range: activeLink.range)
                 }
             }
         }
 
         didSet {
             if let activeLink = activeLink {
-                applyHighlightedLinkColorInRange(activeLink.range)
+                applyLinkColor(highlightedLinkColor, range: activeLink.range)
             }
         }
     }
 
-    private var normalLinkColor: UIColor?
+    var attributedString: NSAttributedString? {
+        get {
+            return attributedText
+        }
 
-    var highlightedLinkColor: UIColor? = UIColor.grayColor()
+        set {
+            if let newValue = newValue {
+                self.links.removeAll()
 
-    override var attributedText: NSAttributedString? {
-        didSet {
-            if let attributedText = attributedText {
-                let range = NSRange(location: 0, length: attributedText.length)
+                let mutableAttributedText = NSMutableAttributedString(attributedString: newValue)
+                let range = NSRange(location: 0, length: mutableAttributedText.length)
                 let block = { (value: AnyObject?, attributeRange: NSRange, stop: UnsafeMutablePointer<ObjCBool>) in
-                    self.links.removeAll()
-
                     if let value = value {
                         let link = Link(value: value, range: attributeRange)
                         self.links.append(link)
+
+                        mutableAttributedText.addAttribute(NSForegroundColorAttributeName, value: self.linkColor, range: attributeRange)
                     }
                 }
 
-                attributedText.enumerateAttribute(LinkLabel.linkAttributeName, inRange: range, options: .LongestEffectiveRangeNotRequired, usingBlock: block)
+                mutableAttributedText.enumerateAttribute(LinkLabel.linkAttributeName, inRange: range, options: .LongestEffectiveRangeNotRequired, usingBlock: block)
+
+                attributedText = mutableAttributedText
+            }
+            else {
+                attributedText = newValue
             }
         }
     }
+
+    var linkColor = UIColor.blueColor()
+    var highlightedLinkColor = UIColor.grayColor()
 
     weak var delegate: LinkLabelDelegate?
 
@@ -147,26 +158,11 @@ class LinkLabel: UILabel {
 // MARK: - Private
 
 private extension LinkLabel {
-    func applyNormalLinkColorInRange(range: NSRange) {
-        if let linkColor = normalLinkColor {
-            applyLinkColor(linkColor, range: range)
-        }
-    }
-
-    func applyHighlightedLinkColorInRange(range: NSRange) {
-        if let previousLinkColor = attributedText?.attribute(NSForegroundColorAttributeName, atIndex: range.location, effectiveRange: nil) as? UIColor {
-            normalLinkColor = previousLinkColor
-        }
-
-        if let linkColor = highlightedLinkColor {
-            applyLinkColor(linkColor, range: range)
-        }
-    }
-
     func applyLinkColor(linkColor: UIColor, range: NSRange) {
         if let attributedText = attributedText {
             let mutableAttributedText = NSMutableAttributedString(attributedString: attributedText)
             mutableAttributedText.addAttribute(NSForegroundColorAttributeName, value: linkColor, range: range)
+
             self.attributedText = mutableAttributedText
         }
     }
