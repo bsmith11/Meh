@@ -11,6 +11,8 @@ import youtube_ios_player_helper
 import SafariServices
 import pop
 
+typealias AnimationCompletion = (Bool) -> Void
+
 class DealViewController: UIViewController {
     private let viewModel: DealViewModel
     private let collectionView: ControlContainableCollectionView
@@ -21,6 +23,16 @@ class DealViewController: UIViewController {
     ]
 
     private var didAppear = false
+    private var animationsComplete = false
+    private var videoLoading = false {
+        didSet {
+            if let indexPath = viewModel.indexPathForItem(.Video) where videoLoading != oldValue {
+                if animationsComplete {
+                    self.collectionView.reloadItemsAtIndexPaths([indexPath])
+                }
+            }
+        }
+    }
 
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -54,6 +66,8 @@ class DealViewController: UIViewController {
 
         if let videoID = viewModel.deal?.videoURL?.absoluteString.youtubeVideoID() {
             playerView.loadWithVideoId(videoID, playerVars: playerVariables)
+
+            videoLoading = true
         }
 
         self.collectionView.alpha = 0.0
@@ -62,16 +76,12 @@ class DealViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        print("Deal: viewDidAppear")
-
         if !didAppear {
             didAppear = true
 
-            if let videoID = viewModel.deal?.videoURL?.absoluteString.youtubeVideoID() {
-                playerView.loadWithVideoId(videoID, playerVars: playerVariables)
-            }
-
-            displayContentAnimated(true)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.displayContentAnimated(true)
+            })
         }
     }
 }
@@ -125,7 +135,9 @@ private extension DealViewController {
 
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.collectionView.alpha = 1.0
-                self.bounceContentOffset()
+                self.bounceContentOffsetWithCompletion({ [weak self] (finished: Bool) in
+                    self?.animationsComplete = true
+                })
 
                 if let photosHeaderView = self.collectionView.supplementaryViewForElementKind(DealCollectionViewLayout.photosHeaderElementKind, atIndexPath: NSIndexPath(forItem: 0, inSection: 0)) as? PhotosHeaderView {
                     photosHeaderView.showPageControlAnimated(true)
@@ -136,11 +148,14 @@ private extension DealViewController {
         UIView.animateWithDuration(0.75, animations: animations, completion: completion)
     }
 
-    func bounceContentOffset() {
+    func bounceContentOffsetWithCompletion(completion: AnimationCompletion?) {
         let bounceAnimation = POPSpringAnimation(propertyNamed: kPOPCollectionViewContentOffset)
         bounceAnimation.toValue = NSValue(CGPoint: .zero)
         bounceAnimation.springBounciness = 5.0
         bounceAnimation.springSpeed = 1.0
+        bounceAnimation.completionBlock = { (animation: POPAnimation?, finished: Bool) in
+            completion?(finished)
+        }
 
         collectionView.pop_addAnimation(bounceAnimation, forKey: "bounce")
     }
@@ -184,7 +199,7 @@ extension DealViewController: UICollectionViewDataSource {
 
             return cell
         case .Video:
-            let videoViewModel = VideoViewModel(deal: viewModel.deal)
+            let videoViewModel = VideoViewModel(deal: viewModel.deal, loading: videoLoading)
             let cell: VideoCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(videoViewModel, delegate: self)
 
@@ -317,6 +332,8 @@ extension DealViewController: BuyHeaderViewDelegate {
 
 extension DealViewController: VideoCellDelegate {
     func videoCellDidSelectVideo(cell: VideoCell) {
+        videoLoading = true
+
         playerView.playVideo()
     }
 }
@@ -325,15 +342,20 @@ extension DealViewController: VideoCellDelegate {
 
 extension DealViewController: YTPlayerViewDelegate {
     func playerViewDidBecomeReady(playerView: YTPlayerView!) {
-        print("Ready...")
+        videoLoading = false
     }
 
     func playerView(playerView: YTPlayerView!, didChangeToState state: YTPlayerState) {
-        print("State: \(state.rawValue)")
+        switch state {
+        case .Buffering:
+            videoLoading = true
+        default:
+            videoLoading = false
+        }
     }
 
     func playerView(playerView: YTPlayerView!, receivedError error: YTPlayerError) {
-        print("Error: \(error)")
+        videoLoading = false
     }
 }
 

@@ -10,8 +10,9 @@ import Foundation
 
 struct VideoViewModel {
     let videoThumbnailURL: NSURL?
+    let loading: Bool
 
-    init(deal: Deal?) {
+    init(deal: Deal?, loading: Bool) {
         if let videoID = deal?.videoURL?.absoluteString.youtubeVideoID() {
             let string = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg"
 
@@ -20,5 +21,7 @@ struct VideoViewModel {
         else {
             videoThumbnailURL = nil
         }
+
+        self.loading = loading
     }
 }

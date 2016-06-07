@@ -68,55 +68,14 @@ extension DealService {
                     completion?(deal, nil)
                 }
                 else {
-                    completion?(nil, nil)
+                    let error = NSError(domain: "com.Meh.error", code: 0, userInfo: nil)
+
+                    completion?(nil, error)
                 }
             }
             else {
                 completion?(nil, result.error)
             }
         }
-    }
-
-    func mockFetchDeal(completion: DealCompletion?) {
-        var deal: Deal?
-
-        if let path = NSBundle.mainBundle().pathForResource("meh", ofType: ".json") {
-            if let data = NSData(contentsOfFile: path) {
-                do {
-                    if let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject] {
-                        deal = Deal(dictionary: json)
-                    }
-                }
-                catch _ {
-                    print("Failed to serialize JSON")
-                }
-            }
-        }
-
-        //Pre-fetch photo URLs
-        if let photoURLs = deal?.photoURLs {
-            var requests = [URLRequestConvertible]()
-
-            for photoURL in photoURLs {
-                let request = NSURLRequest(URL: photoURL)
-                requests.append(request)
-            }
-
-            let width = UIScreen.mainScreen().bounds.width
-            let height = width - 40.0
-            let size = CGSize(width: width, height: height)
-            let imageFilter = AspectScaledToFitSizeFilter.init(size: size)
-
-            ImageDownloader.defaultInstance.downloadImages(URLRequests: requests, filter: imageFilter, completion: nil)
-        }
-
-        //Pre-fetch video URL thumbnail
-        if let videoURLThumbnail = deal?.videoURLThumbnail {
-            let request = NSURLRequest(URL: videoURLThumbnail)
-
-            ImageDownloader.defaultInstance.downloadImage(URLRequest: request)
-        }
-
-        completion?(deal, nil)
     }
 }

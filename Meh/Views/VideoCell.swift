@@ -16,6 +16,7 @@ protocol VideoCellDelegate: NSObjectProtocol {
 class VideoCell: UICollectionViewCell {
     private let videoImageView = UIImageView(frame: .zero)
     private let videoButton = UIButton(type: .System)
+    private let spinner = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
 
     private weak var delegate: VideoCellDelegate?
@@ -51,6 +52,16 @@ extension VideoCell {
             videoImageView.image = nil
         }
 
+        videoButton.hidden = viewModel.loading
+        videoButton.enabled = !viewModel.loading
+
+        if viewModel.loading {
+            spinner.startAnimating()
+        }
+        else {
+            spinner.stopAnimating()
+        }
+
         self.delegate = delegate
     }
 }
@@ -76,6 +87,11 @@ private extension VideoCell {
         videoButton.setImage(image, forState: .Normal)
         videoButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(videoButton)
+
+        spinner.color = UIColor.blackColor()
+        spinner.hidesWhenStopped = true
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(spinner)
     }
 
     func configureLayout() {
@@ -93,7 +109,10 @@ private extension VideoCell {
             videoButton.topAnchor.constraintEqualToAnchor(videoImageView.topAnchor),
             videoButton.leadingAnchor.constraintEqualToAnchor(videoImageView.leadingAnchor),
             videoImageView.trailingAnchor.constraintEqualToAnchor(videoButton.trailingAnchor),
-            videoImageView.bottomAnchor.constraintEqualToAnchor(videoButton.bottomAnchor)
+            videoImageView.bottomAnchor.constraintEqualToAnchor(videoButton.bottomAnchor),
+
+            spinner.centerXAnchor.constraintEqualToAnchor(blurView.centerXAnchor),
+            spinner.centerYAnchor.constraintEqualToAnchor(blurView.centerYAnchor)
         ]
 
         NSLayoutConstraint.activateConstraints(constraints)

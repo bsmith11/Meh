@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import pop
 
 class RootViewController: UIViewController {
     private let splashViewController: SplashViewController
@@ -30,13 +31,34 @@ class RootViewController: UIViewController {
 
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        let completion = { [weak self] (deal: Deal?, error: NSError?) in
+        let completion = { (deal: Deal?, error: NSError?) in
             if let error = error {
                 print("Failed to fetch deal with error: \(error)")
+
+                self.displayViewController(nil)
+
+                let errorView = ErrorView(error: error)
+                errorView.translatesAutoresizingMaskIntoConstraints = false
+                self.view.addSubview(errorView)
+
+                let constraints: [NSLayoutConstraint] = [
+                    errorView.leadingAnchor.constraintEqualToAnchor(self.view.leadingAnchor),
+                    self.view.trailingAnchor.constraintEqualToAnchor(errorView.trailingAnchor),
+                    self.view.bottomAnchor.constraintEqualToAnchor(errorView.bottomAnchor)
+                ]
+
+                NSLayoutConstraint.activateConstraints(constraints)
+
+                errorView.setNeedsLayout()
+                errorView.layoutIfNeeded()
+
+                self.displayErrorView(errorView, displayed: false, animated: false)
+                self.displayErrorView(errorView, displayed: true, animated: true)
             }
-            else if let strongSelf = self {
+            else {
                 print("Successfully fetched deal")
-                strongSelf.displayViewController(strongSelf.dealViewController)
+
+                self.displayViewController(self.dealViewController)
             }
         }
 
@@ -59,7 +81,7 @@ class RootViewController: UIViewController {
 // MARK: - Private
 
 private extension RootViewController {
-    func displayViewController(viewController: UIViewController) {
+    func displayViewController(viewController: UIViewController?) {
         if let displayedViewController = displayedViewController {
             displayedViewController.willMoveToParentViewController(nil)
             displayedViewController.view.removeFromSuperview()
@@ -68,19 +90,45 @@ private extension RootViewController {
 
         displayedViewController = viewController
 
-        addChildViewController(viewController)
-        viewController.view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(viewController.view)
+        if let viewController = viewController {
+            addChildViewController(viewController)
+            viewController.view.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(viewController.view)
 
-        let constraints: [NSLayoutConstraint] = [
-            viewController.view.topAnchor.constraintEqualToAnchor(view.topAnchor),
-            viewController.view.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor),
-            view.trailingAnchor.constraintEqualToAnchor(viewController.view.trailingAnchor),
-            view.bottomAnchor.constraintEqualToAnchor(viewController.view.bottomAnchor)
-        ]
+            let constraints: [NSLayoutConstraint] = [
+                viewController.view.topAnchor.constraintEqualToAnchor(view.topAnchor),
+                viewController.view.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor),
+                view.trailingAnchor.constraintEqualToAnchor(viewController.view.trailingAnchor),
+                view.bottomAnchor.constraintEqualToAnchor(viewController.view.bottomAnchor)
+            ]
 
-        NSLayoutConstraint.activateConstraints(constraints)
+            NSLayoutConstraint.activateConstraints(constraints)
 
-        viewController.didMoveToParentViewController(self)
+            viewController.didMoveToParentViewController(self)
+        }
+    }
+
+    func displayErrorView(errorView: ErrorView, displayed: Bool, animated: Bool) {
+        let translation = displayed ? 0.0 : errorView.bounds.height
+        let toValue = NSValue(CGSize: CGSize(width: 0.0, height: translation))
+        let animation: POPAnimation
+
+        if animated {
+            let springAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY)
+            springAnimation.springBounciness = 5.0
+            springAnimation.springSpeed = 1.0
+            springAnimation.toValue = toValue
+
+            animation = springAnimation
+        }
+        else {
+            let basicAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
+            basicAnimation.duration = 0.0
+            basicAnimation.toValue = toValue
+
+            animation = basicAnimation
+        }
+
+        errorView.layer.pop_addAnimation(animation, forKey: "display")
     }
 }

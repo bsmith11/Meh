@@ -56,6 +56,17 @@ extension DealViewModel {
         }
     }
 
+    func indexPathForItem(item: DealItem) -> NSIndexPath? {
+        let index = items.indexOf(item)
+
+        if let index = index {
+            return NSIndexPath(forItem: index, inSection: 0)
+        }
+        else {
+            return nil
+        }
+    }
+
     func fetchDealWithCompletion(completion: DealCompletion?) {
         dealService.fetchDeal { [weak self] (deal: Deal?, error: NSError?) in
             self?.deal = deal
