@@ -9,34 +9,53 @@
 import UIKit
 
 private struct AssociatedKeys {
-    static var visualEffectViewAssociatedKey = "visual_effect_view"
+    static var tintViewAssociatedKey = "tint_view"
 }
 
 class ImageAnimationController: NSObject {
     private let duration = 0.5
 
-    var positive = true
-    var effect = UIBlurEffect(style: .Light)
+    var positive: Bool
+    var interactive = false
+    var context: UIViewControllerContextTransitioning?
+
+    init(positive: Bool) {
+        self.positive = positive
+
+        super.init()
+    }
+}
+
+// MARK: - Public
+
+extension ImageAnimationController {
+    func finishTransition() {
+        context?.completeTransition(true)
+    }
+
+    func cancelTransition() {
+        context?.completeTransition(false)
+    }
 }
 
 // MARK: - Private
 
 private extension ImageAnimationController {
-    func visualEffectViewFromObject(object: NSObject?) -> UIVisualEffectView {
-        if let visualEffectView = objc_getAssociatedObject(object, &AssociatedKeys.visualEffectViewAssociatedKey) as? UIVisualEffectView {
-            return visualEffectView
+    func tintViewFromObject(object: NSObject?) -> UIView {
+        if let tintView = objc_getAssociatedObject(object, &AssociatedKeys.tintViewAssociatedKey) as? UIView {
+            return tintView
         }
         else {
-            let visualEffectView = UIVisualEffectView(effect: nil)
-            visualEffectView.translatesAutoresizingMaskIntoConstraints = false
-            objc_setAssociatedObject(object, &AssociatedKeys.visualEffectViewAssociatedKey, visualEffectView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let tintView = UIView(frame: .zero)
+            tintView.backgroundColor = UIColor.blackColor()
+            objc_setAssociatedObject(object, &AssociatedKeys.tintViewAssociatedKey, tintView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
-            return visualEffectView
+            return tintView
         }
     }
 
-    func removeVisualEffectViewFromObject(object: NSObject?) {
-        objc_setAssociatedObject(object, &AssociatedKeys.visualEffectViewAssociatedKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    func removeTintViewFromObject(object: NSObject?) {
+        objc_setAssociatedObject(object, &AssociatedKeys.tintViewAssociatedKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 }
 
@@ -44,18 +63,21 @@ private extension ImageAnimationController {
 
 extension ImageAnimationController: UIViewControllerAnimatedTransitioning {
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+        context = transitionContext
+
         if let container = transitionContext.containerView(),
            let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
            let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) {
 
             let object = positive ? toViewController : fromViewController
-            let visualEffectView = self.visualEffectViewFromObject(object)
+            let tintView = self.tintViewFromObject(object)
 
             if positive {
                 toViewController.view.frame = fromViewController.view.bounds
-                visualEffectView.frame = fromViewController.view.bounds
+                tintView.frame = fromViewController.view.bounds
+                tintView.alpha = 0.0
 
-                container.addSubview(visualEffectView)
+                container.addSubview(tintView)
                 container.addSubview(toViewController.view)
 
                 toViewController.view.setNeedsLayout()
@@ -63,17 +85,19 @@ extension ImageAnimationController: UIViewControllerAnimatedTransitioning {
             }
 
             let animations = {
-                visualEffectView.effect = self.positive ? self.effect : nil
+                tintView.alpha = self.positive ? 1.0 : 0.0
             }
 
             let completion = { (finished: Bool) in
-                if !self.positive {
-                    visualEffectView.removeFromSuperview()
-                    self.removeVisualEffectViewFromObject(fromViewController)
+                let completed = !transitionContext.transitionWasCancelled()
+                if completed && !self.positive {
+                    tintView.removeFromSuperview()
+                    self.removeTintViewFromObject(object)
                 }
 
-                let completed = !transitionContext.transitionWasCancelled()
-                transitionContext.completeTransition(completed)
+                if !self.interactive {
+                    transitionContext.completeTransition(completed)
+                }
             }
 
             UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: animations, completion: completion)

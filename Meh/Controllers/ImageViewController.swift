@@ -18,15 +18,14 @@ protocol ImageViewControllerDelegate: NSObjectProtocol {
 class ImageViewController: UIViewController {
     private let minimumZoom: CGFloat = 1.0
     private let maximumZoom: CGFloat = 2.0
-
     private let URL: NSURL
     private let originalRect: CGRect
-    private let originalAlpha: CGFloat
     private let scrollView = UIScrollView(frame: .zero)
     private let imageView = UIImageView(frame: .zero)
     private let panGesture = UIPanGestureRecognizer(target: nil, action: nil)
 
     private var previousLocation: CGPoint = .zero
+    private var animationController = ImageAnimationController(positive: true)
     private var interactionController: UIPercentDrivenInteractiveTransition?
 
     weak var delegate: ImageViewControllerDelegate?
@@ -35,15 +34,14 @@ class ImageViewController: UIViewController {
         return true
     }
 
-    init(URL: NSURL, originalRect: CGRect, originalAlpha: CGFloat) {
+    init(URL: NSURL, originalRect: CGRect) {
         self.URL = URL
         self.originalRect = originalRect
-        self.originalAlpha = originalAlpha
 
         super.init(nibName: nil, bundle: nil)
 
         transitioningDelegate = self
-        modalPresentationStyle = .OverCurrentContext
+        modalPresentationStyle = .Custom
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -65,8 +63,6 @@ class ImageViewController: UIViewController {
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ImageViewController.handleTap))
         view.addGestureRecognizer(tapGesture)
-
-        scrollView.alpha = originalAlpha
     }
 
     override func viewDidLayoutSubviews() {
@@ -82,7 +78,6 @@ class ImageViewController: UIViewController {
             self.delegate?.imageViewControllerWillStartPresentAnimation(self)
 
             self.scrollView.center = self.view.center
-            self.scrollView.alpha = 1.0
         }
 
         let completion = { (context: UIViewControllerTransitionCoordinatorContext) in
@@ -98,12 +93,13 @@ class ImageViewController: UIViewController {
         let animations = { (context: UIViewControllerTransitionCoordinatorContext) in
             if self.interactionController == nil {
                 self.scrollView.center = CGPoint(x: self.originalRect.midX, y: self.originalRect.midY)
-                self.scrollView.alpha = self.originalAlpha
             }
         }
 
         let completion = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
-            self.delegate?.imageViewControllerDidFinishDismissAnimation(self)
+            if !context.isCancelled() {
+                self.delegate?.imageViewControllerDidFinishDismissAnimation(self)
+            }
         }
 
         transitionCoordinator()?.animateAlongsideTransition(animations, completion: completion)
@@ -195,11 +191,28 @@ private extension ImageViewController {
         case .Cancelled: fallthrough
         case .Failed:
             let velocity = gesture.velocityInView(gesture.view)
+            let animation = POPSpringAnimation(propertyNamed: kPOPViewCenter)
+            animation.velocity = NSValue(CGPoint: velocity)
 
             if fabs(velocity.x) > 150.0 || fabs(velocity.y) > 150.0 {
+                let center = CGPoint(x: self.originalRect.midX, y: self.originalRect.midY)
+                animation.toValue = NSValue(CGPoint: center)
+                animation.completionBlock = { [weak self] (popAnimation: POPAnimation?, finished: Bool) in
+                    self?.animationController.finishTransition()
+                }
+
+                scrollView.pop_addAnimation(animation, forKey: "spring")
+
                 interactionController?.finishInteractiveTransition()
             }
             else {
+                animation.toValue = NSValue(CGPoint: view.center)
+                animation.completionBlock = { [weak self] (popAnimation: POPAnimation?, finished: Bool) in
+                    self?.animationController.cancelTransition()
+                }
+
+                scrollView.pop_addAnimation(animation, forKey: "spring")
+
                 interactionController?.cancelInteractiveTransition()
             }
 
@@ -230,21 +243,14 @@ extension ImageViewController: UIScrollViewDelegate {
 
 extension ImageViewController: UIViewControllerTransitioningDelegate {
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let animationController = ImageAnimationController()
-        animationController.positive = true
-
         return animationController
     }
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let animationController = ImageAnimationController()
         animationController.positive = false
+        animationController.interactive = (interactionController != nil)
 
         return animationController
-    }
-
-    func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return interactionController
     }
 
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {

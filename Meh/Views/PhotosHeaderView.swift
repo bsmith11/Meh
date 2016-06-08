@@ -9,7 +9,7 @@
 import UIKit
 
 protocol PhotosHeaderViewDelegate: NSObjectProtocol {
-    func photosHeaderView(headerView: PhotosHeaderView, didSelectPhotoWithURL URL: NSURL, rect: CGRect, alpha: CGFloat)
+    func photosHeaderView(headerView: PhotosHeaderView, didSelectPhotoWithURL URL: NSURL, rect: CGRect)
 }
 
 class PhotosHeaderView: UICollectionReusableView {
@@ -164,7 +164,7 @@ extension PhotosHeaderView: UICollectionViewDelegate {
             if let rect = window?.convertRect(cell.frame, fromView: cell.superview),
                 URL = viewModel?.itemAtIndexPath(indexPath) {
                 selectedCell = cell
-                delegate?.photosHeaderView(self, didSelectPhotoWithURL: URL, rect: rect, alpha: alpha)
+                delegate?.photosHeaderView(self, didSelectPhotoWithURL: URL, rect: rect)
             }
         }
     }

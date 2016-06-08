@@ -22,6 +22,7 @@ class DealViewController: UIViewController {
         "showinfo": 0
     ]
 
+    private var selectedPhotoHeaderView: PhotosHeaderView?
     private var didAppear = false
     private var animationsComplete = false
     private var videoLoading = false {
@@ -320,9 +321,11 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
 // MARK: - PhotosHeaderViewDelegate
 
 extension DealViewController: PhotosHeaderViewDelegate {
-    func photosHeaderView(headerView: PhotosHeaderView, didSelectPhotoWithURL URL: NSURL, rect: CGRect, alpha: CGFloat) {
+    func photosHeaderView(headerView: PhotosHeaderView, didSelectPhotoWithURL URL: NSURL, rect: CGRect) {
+        selectedPhotoHeaderView = headerView
+
         let originalRect = view.convertRect(rect, fromView: view.window)
-        let imageViewController = ImageViewController(URL: URL, originalRect: originalRect, originalAlpha: alpha)
+        let imageViewController = ImageViewController(URL: URL, originalRect: originalRect)
         imageViewController.delegate = self
 
         presentViewController(imageViewController, animated: true, completion: nil)
@@ -379,16 +382,11 @@ extension DealViewController: YTPlayerViewDelegate {
 
 extension DealViewController: ImageViewControllerDelegate {
     func imageViewControllerWillStartPresentAnimation(imageViewController: ImageViewController) {
-        if let photosHeaderView = collectionView.supplementaryViewForElementKind(DealCollectionViewLayout.photosHeaderElementKind, atIndexPath: NSIndexPath(forItem: 0, inSection: 0)) as? PhotosHeaderView {
-            photosHeaderView.hideSelectedCell()
-        }
+        selectedPhotoHeaderView?.hideSelectedCell()
     }
 
     func imageViewControllerDidFinishDismissAnimation(imageViewController: ImageViewController) {
-        if let photosHeaderView = collectionView.supplementaryViewForElementKind(DealCollectionViewLayout.photosHeaderElementKind, atIndexPath: NSIndexPath(forItem: 0, inSection: 0)) as? PhotosHeaderView {
-            photosHeaderView.showSelectedCell()
-        }
-
-        dismissViewControllerAnimated(false, completion: nil)
+        selectedPhotoHeaderView?.showSelectedCell()
+        selectedPhotoHeaderView = nil
     }
 }
