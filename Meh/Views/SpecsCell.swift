@@ -40,8 +40,9 @@ class SpecsCell: UICollectionViewCell {
 
 extension SpecsCell {
     func configureWithViewModel(viewModel: SpecsViewModel) {
+        backgroundColor = viewModel.theme.accentColor
         titleLabel.attributedText = viewModel.titleAttributedString
-        disclosureImageView.tintColor = viewModel.theme.accentColor
+        disclosureImageView.tintColor = viewModel.theme.backgroundColor
     }
 }
 

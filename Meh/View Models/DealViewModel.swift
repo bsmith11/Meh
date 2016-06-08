@@ -18,7 +18,7 @@ enum DealItem {
 class DealViewModel {
     private let dealService: DealService
     private let items: [DealItem] = [
-        .Specs,
+//        .Specs,
         .Features,
         .Video,
         .Story

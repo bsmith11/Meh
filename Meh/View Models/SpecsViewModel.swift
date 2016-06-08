@@ -21,7 +21,7 @@ struct SpecsViewModel {
         title = "Specifications"
 
         let attributes = [
-            NSForegroundColorAttributeName: UIColor.blackColor(),
+            NSForegroundColorAttributeName: theme.backgroundColor,
             NSFontAttributeName: UIFont.mehFontWithSize(30.0, style: .Bold)
         ]
 

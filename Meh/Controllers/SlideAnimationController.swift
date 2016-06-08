@@ -44,7 +44,7 @@ extension SlideAnimationController: UIViewControllerAnimatedTransitioning {
             toViewController.view.transform = CGAffineTransformMakeTranslation(toViewController.view.bounds.width, 0.0)
         }
 
-        let animations = { () -> Void in
+        let animations = {
             if self.positive {
                 toViewController.view.transform = CGAffineTransformIdentity
             }
@@ -53,7 +53,7 @@ extension SlideAnimationController: UIViewControllerAnimatedTransitioning {
             }
         }
 
-        let completion = { (finished: Bool) -> Void in
+        let completion = { (finished: Bool) in
             let completed = !transitionContext.transitionWasCancelled()
             transitionContext.completeTransition(completed)
         }

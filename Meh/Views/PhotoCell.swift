@@ -40,7 +40,7 @@ extension PhotoCell {
             let width = UIScreen.mainScreen().bounds.width
             let height = width - 40.0
             let size = CGSize(width: width, height: height)
-            let imageFilter = AspectScaledToFitSizeFilter.init(size: size)
+            let imageFilter = AspectScaledToFitSizeFilter(size: size)
 
             photoImageView.af_setImageWithURL(URL, placeholderImage: nil, filter: imageFilter, imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: runImageTransitionIfCached, completion: nil)
         }

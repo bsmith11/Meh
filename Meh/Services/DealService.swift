@@ -36,42 +36,39 @@ extension DealService {
 
         let route = encoding.encode(request, parameters: parameters).0
 
-        client.request(route) { (result: Result) -> Void in
+        client.request(route) { (result: Result) in
             if result.isSuccess {
-                if let dictionary = result.value as? [String: AnyObject] {
-                    let deal = Deal(dictionary: dictionary)
-
-                    //Pre-fetch photo URLs
-                    if let photoURLs = deal?.photoURLs {
-                        var requests = [URLRequestConvertible]()
-
-                        for photoURL in photoURLs {
-                            let request = NSURLRequest(URL: photoURL)
-                            requests.append(request)
-                        }
-
-                        let width = UIScreen.mainScreen().bounds.width
-                        let height = width - 40.0
-                        let size = CGSize(width: width, height: height)
-                        let imageFilter = AspectScaledToFitSizeFilter.init(size: size)
-
-                        ImageDownloader.defaultInstance.downloadImages(URLRequests: requests, filter: imageFilter, completion: nil)
-                    }
-
-                    //Pre-fetch video URL thumbnail
-                    if let videoURLThumbnail = deal?.videoURLThumbnail {
-                        let request = NSURLRequest(URL: videoURLThumbnail)
-
-                        ImageDownloader.defaultInstance.downloadImage(URLRequest: request)
-                    }
-
-                    completion?(deal, nil)
-                }
-                else {
+                guard let dictionary = result.value as? [String: AnyObject],
+                      let deal = Deal(dictionary: dictionary) else {
                     let error = NSError(domain: "com.Meh.error", code: 0, userInfo: nil)
 
                     completion?(nil, error)
+                    return
                 }
+
+                //Pre-fetch photo URLs
+                var requests = [URLRequestConvertible]()
+
+                for photoURL in deal.photoURLs {
+                    let request = NSURLRequest(URL: photoURL)
+                    requests.append(request)
+                }
+
+                let width = UIScreen.mainScreen().bounds.width
+                let height = width - 40.0
+                let size = CGSize(width: width, height: height)
+                let imageFilter = AspectScaledToFitSizeFilter(size: size)
+
+                ImageDownloader.defaultInstance.downloadImages(URLRequests: requests, filter: imageFilter, completion: nil)
+
+                //Pre-fetch video URL thumbnail
+                if let videoURLThumbnail = deal.videoURLThumbnail {
+                    let request = NSURLRequest(URL: videoURLThumbnail)
+
+                    ImageDownloader.defaultInstance.downloadImages(URLRequests: [request])
+                }
+
+                completion?(deal, nil)
             }
             else {
                 completion?(nil, result.error)

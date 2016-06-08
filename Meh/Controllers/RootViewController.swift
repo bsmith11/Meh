@@ -55,10 +55,13 @@ class RootViewController: UIViewController {
                 self.displayErrorView(errorView, displayed: false, animated: false)
                 self.displayErrorView(errorView, displayed: true, animated: true)
             }
-            else {
+            else if let _ = deal {
                 print("Successfully fetched deal")
 
                 self.displayViewController(self.dealViewController)
+            }
+            else {
+                print("Deal is nil")
             }
         }
 

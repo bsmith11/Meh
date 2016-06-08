@@ -13,10 +13,7 @@ protocol BuyHeaderViewDelegate: NSObjectProtocol {
 }
 
 class BuyHeaderView: UICollectionReusableView {
-    private let titleLabel = UILabel(frame: .zero)
     private let buyButton = UIButton(type: .System)
-
-    private var theme: Theme?
 
     weak var delegate: BuyHeaderViewDelegate?
 
@@ -25,25 +22,13 @@ class BuyHeaderView: UICollectionReusableView {
 
         configureViews()
         configureLayout()
+
+        layer.cornerRadius = 25.0
+        clipsToBounds = true
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
-        if let layoutAttributes = layoutAttributes as? HeaderCollectionViewLayoutAttributes {
-            if layoutAttributes.isPinned {
-                if backgroundColor == nil {
-                    backgroundColor = theme?.backgroundColor
-                }
-            }
-            else {
-                if backgroundColor != nil {
-                    backgroundColor = nil
-                }
-            }
-        }
     }
 }
 
@@ -51,11 +36,8 @@ class BuyHeaderView: UICollectionReusableView {
 
 extension BuyHeaderView {
     func configureWithViewModel(viewModel: BuyHeaderViewModel) {
-        titleLabel.attributedText = viewModel.titleAttributedString
         buyButton.setAttributedTitle(viewModel.buyButtonAttributedString, forState: .Normal)
-
-        theme = viewModel.theme
-        buyButton.backgroundColor = theme?.accentColor
+        buyButton.backgroundColor = UIColor.whiteColor()
     }
 }
 
@@ -63,23 +45,16 @@ extension BuyHeaderView {
 
 private extension BuyHeaderView {
     func configureViews() {
-        titleLabel.numberOfLines = 0
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(titleLabel)
-
-        buyButton.addTarget(self, action: #selector(BuyHeaderView.didSelectButton), forControlEvents: .TouchUpInside)
+        buyButton.addTarget(self, action: #selector(BuyHeaderView.didSelectBuyButton), forControlEvents: .TouchUpInside)
         buyButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(buyButton)
     }
 
     func configureLayout() {
         let constraints: [NSLayoutConstraint] = [
-            titleLabel.topAnchor.constraintEqualToAnchor(topAnchor, constant: 10.0),
-            titleLabel.leadingAnchor.constraintEqualToAnchor(leadingAnchor, constant: 10.0),
-            trailingAnchor.constraintEqualToAnchor(titleLabel.trailingAnchor, constant: 10.0),
-
-            buyButton.heightAnchor.constraintEqualToConstant(64.0),
-            buyButton.topAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 10.0),
+            buyButton.widthAnchor.constraintEqualToConstant(50.0),
+            buyButton.heightAnchor.constraintEqualToConstant(50.0),
+            buyButton.topAnchor.constraintEqualToAnchor(topAnchor),
             buyButton.leadingAnchor.constraintEqualToAnchor(leadingAnchor),
             trailingAnchor.constraintEqualToAnchor(buyButton.trailingAnchor),
             bottomAnchor.constraintEqualToAnchor(buyButton.bottomAnchor)
@@ -88,7 +63,7 @@ private extension BuyHeaderView {
         NSLayoutConstraint.activateConstraints(constraints)
     }
 
-    @objc func didSelectButton() {
+    @objc func didSelectBuyButton() {
         delegate?.buyHeaderViewDidSelectBuy(self)
     }
 }
@@ -96,11 +71,7 @@ private extension BuyHeaderView {
 // MARK: - Static
 
 extension BuyHeaderView {
-    static func heightWithViewModel(viewModel: BuyHeaderViewModel, width: CGFloat) -> CGFloat {
-        let constrainedWidth = width - 20.0
-        let size = CGSize(width: constrainedWidth, height: CGFloat.max)
-        let titleHeight = viewModel.titleAttributedString.heightForSize(size)
-
-        return 10.0 + titleHeight + 10.0 + 64.0
+    static func sizeWithViewModel(viewModel: BuyHeaderViewModel) -> CGSize {
+        return CGSize(width: 50.0, height: 50.0)
     }
 }

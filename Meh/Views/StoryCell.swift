@@ -38,6 +38,7 @@ class StoryCell: UICollectionViewCell {
 
 extension StoryCell {
     func configureWithViewModel(viewModel: StoryViewModel) {
+        backgroundColor = viewModel.theme.accentColor
         bodyLabel.linkColor = viewModel.theme.accentColor
         titleLabel.attributedString = viewModel.titleAttributedString
         bodyLabel.attributedString = viewModel.bodyAttributedString

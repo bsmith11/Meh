@@ -62,11 +62,11 @@ extension ImageAnimationController: UIViewControllerAnimatedTransitioning {
                 toViewController.view.layoutIfNeeded()
             }
 
-            let animations = { () -> Void in
+            let animations = {
                 visualEffectView.effect = self.positive ? self.effect : nil
             }
 
-            let completion = { (finished: Bool) -> Void in
+            let completion = { (finished: Bool) in
                 if !self.positive {
                     visualEffectView.removeFromSuperview()
                     self.removeVisualEffectViewFromObject(fromViewController)

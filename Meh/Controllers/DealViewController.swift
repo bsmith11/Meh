@@ -101,6 +101,7 @@ private extension DealViewController {
         collectionView.registerClass(VideoCell.self)
         collectionView.registerClass(StoryCell.self)
         collectionView.registerClass(PhotosHeaderView.self, elementKind: DealCollectionViewLayout.photosHeaderElementKind)
+        collectionView.registerClass(TitleHeaderView.self, elementKind: DealCollectionViewLayout.titleHeaderElementKind)
         collectionView.registerClass(BuyHeaderView.self, elementKind: DealCollectionViewLayout.buyHeaderElementKind)
         collectionView.registerClass(FooterView.self, elementKind: DealCollectionViewLayout.footerElementKind)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -122,26 +123,27 @@ private extension DealViewController {
     }
 
     func displayContentAnimated(animated: Bool) {
-        let animations = { () -> Void in
+        let animations = {
             self.view.backgroundColor = self.viewModel.deal?.theme.backgroundColor ?? UIColor.whiteColor()
         }
 
-        let completion = { (finished: Bool) -> Void in
+        let completion = { (finished: Bool) in
             var contentOffset = self.collectionView.contentOffset
-            let buyHeaderViewModel = BuyHeaderViewModel(deal: self.viewModel.deal)
+            let titleHeaderViewModel = TitleHeaderViewModel(deal: self.viewModel.deal)
 
-            contentOffset.y = -BuyHeaderView.heightWithViewModel(buyHeaderViewModel, width: self.collectionView.bounds.width)
+            contentOffset.y = -TitleHeaderView.heightWithViewModel(titleHeaderViewModel, width: self.collectionView.bounds.width)
             self.collectionView.setContentOffset(contentOffset, animated: false)
 
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+            let photosHeaderView = self.collectionView.supplementaryViewForElementKind(DealCollectionViewLayout.photosHeaderElementKind, atIndexPath: indexPath) as? PhotosHeaderView
+
+            dispatch_async(dispatch_get_main_queue(), {
                 self.collectionView.alpha = 1.0
                 self.bounceContentOffsetWithCompletion({ [weak self] (finished: Bool) in
                     self?.animationsComplete = true
                 })
 
-                if let photosHeaderView = self.collectionView.supplementaryViewForElementKind(DealCollectionViewLayout.photosHeaderElementKind, atIndexPath: NSIndexPath(forItem: 0, inSection: 0)) as? PhotosHeaderView {
-                    photosHeaderView.showPageControlAnimated(true)
-                }
+                photosHeaderView?.showPageControlAnimated(true)
             })
         }
 
@@ -151,8 +153,8 @@ private extension DealViewController {
     func bounceContentOffsetWithCompletion(completion: AnimationCompletion?) {
         let bounceAnimation = POPSpringAnimation(propertyNamed: kPOPCollectionViewContentOffset)
         bounceAnimation.toValue = NSValue(CGPoint: .zero)
-        bounceAnimation.springBounciness = 5.0
-        bounceAnimation.springSpeed = 1.0
+        bounceAnimation.springBounciness = 15.0
+        bounceAnimation.springSpeed = 4.0
         bounceAnimation.completionBlock = { (animation: POPAnimation?, finished: Bool) in
             completion?(finished)
         }
@@ -225,6 +227,12 @@ extension DealViewController: UICollectionViewDataSource {
             header.delegate = self
 
             return header
+        case DealCollectionViewLayout.titleHeaderElementKind:
+            let header: TitleHeaderView = collectionView.dequeueSupplementaryViewForElementKind(kind, indexPath: indexPath)
+            let titleHeaderViewModel = TitleHeaderViewModel(deal: viewModel.deal)
+            header.configureWithViewModel(titleHeaderViewModel)
+
+            return header
         case DealCollectionViewLayout.buyHeaderElementKind:
             let header: BuyHeaderView = collectionView.dequeueSupplementaryViewForElementKind(kind, indexPath: indexPath)
             let buyHeaderViewModel = BuyHeaderViewModel(deal: viewModel.deal)
@@ -234,6 +242,7 @@ extension DealViewController: UICollectionViewDataSource {
             return header
         case DealCollectionViewLayout.footerElementKind:
             let footer: FooterView = collectionView.dequeueSupplementaryViewForElementKind(kind, indexPath: indexPath)
+            footer.configureWithTheme(viewModel.deal?.theme ?? Theme())
 
             return footer
         default:
@@ -264,7 +273,7 @@ extension DealViewController: UICollectionViewDelegate {
 // MARK: - DealCollectionViewLayoutDelegate
 
 extension DealViewController: DealCollectionViewLayoutDelegate {
-    func collectionView(collectionView: UICollectionView, heightForItemAtIndexPath indexPath: NSIndexPath, withWidth width: CGFloat) -> CGFloat {
+    func collectionView(collectionView: UICollectionView, heightForItemAtIndexPath indexPath: NSIndexPath, width: CGFloat) -> CGFloat {
         guard let item = viewModel.itemAtIndexPath(indexPath) else {
             preconditionFailure("Item is nil")
         }
@@ -287,16 +296,23 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
         }
     }
 
-    func collectionView(collectionView: UICollectionView, heightForSupplementaryViewOfKind kind: String, atIndexPath indexPath: NSIndexPath, withWidth width: CGFloat) -> CGFloat {
+    func collectionView(collectionView: UICollectionView, sizeForSupplementaryViewOfKind kind: String, width: CGFloat) -> CGSize {
         switch kind {
         case DealCollectionViewLayout.photosHeaderElementKind:
-            return PhotosHeaderView.height()
+            let height = PhotosHeaderView.height()
+
+            return CGSize(width: width, height: height)
+        case DealCollectionViewLayout.titleHeaderElementKind:
+            let titleHeaderViewModel = TitleHeaderViewModel(deal: viewModel.deal)
+            let height = TitleHeaderView.heightWithViewModel(titleHeaderViewModel, width: width)
+
+            return CGSize(width: width, height: height)
         case DealCollectionViewLayout.buyHeaderElementKind:
             let buyHeaderViewModel = BuyHeaderViewModel(deal: viewModel.deal)
 
-            return BuyHeaderView.heightWithViewModel(buyHeaderViewModel, width: width)
+            return BuyHeaderView.sizeWithViewModel(buyHeaderViewModel)
         default:
-            return 0.0
+            return .zero
         }
     }
 }
