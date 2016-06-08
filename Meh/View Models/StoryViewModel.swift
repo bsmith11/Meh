@@ -21,10 +21,10 @@ struct StoryViewModel {
         title = deal?.story?.title ?? "No Title"
         body = deal?.story?.body ?? "No Body"
 
-        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(30.0)
+        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(30.0, color: theme.backgroundColor)
         titleAttributedString = titleMarkdownParser.attributedStringFromMarkdown(title)
 
-        let bodyMarkdownParser = TSMarkdownParser.parserWithFontSize(16.0)
+        let bodyMarkdownParser = TSMarkdownParser.parserWithFontSize(16.0, color: theme.backgroundColor)
         bodyAttributedString = bodyMarkdownParser.attributedStringFromMarkdown(body)
     }
 }

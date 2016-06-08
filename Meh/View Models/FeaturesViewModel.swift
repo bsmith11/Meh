@@ -18,7 +18,7 @@ struct FeaturesViewModel {
 
         features = deal?.features ?? "No Features"
 
-        let markdownParser = TSMarkdownParser.parserWithFontSize(16.0)
+        let markdownParser = TSMarkdownParser.parserWithFontSize(16.0, color: theme.backgroundColor)
         featuresAttributedString = markdownParser.attributedStringFromMarkdown(features)
     }
 }

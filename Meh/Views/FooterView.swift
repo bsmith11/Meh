@@ -19,3 +19,11 @@ class FooterView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+//MARK: - Public
+
+extension FooterView {
+    func configureWithTheme(theme: Theme) {
+        backgroundColor = theme.accentColor
+    }
+}

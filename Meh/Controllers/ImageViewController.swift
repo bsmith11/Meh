@@ -78,14 +78,14 @@ class ImageViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
-        let animations = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+        let animations = { (context: UIViewControllerTransitionCoordinatorContext) in
             self.delegate?.imageViewControllerWillStartPresentAnimation(self)
 
             self.scrollView.center = self.view.center
             self.scrollView.alpha = 1.0
         }
 
-        let completion = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+        let completion = { (context: UIViewControllerTransitionCoordinatorContext) in
 
         }
 
@@ -95,7 +95,7 @@ class ImageViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
 
-        let animations = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+        let animations = { (context: UIViewControllerTransitionCoordinatorContext) in
             if self.interactionController == nil {
                 self.scrollView.center = CGPoint(x: self.originalRect.midX, y: self.originalRect.midY)
                 self.scrollView.alpha = self.originalAlpha
@@ -130,7 +130,7 @@ private extension ImageViewController {
         let width = UIScreen.mainScreen().bounds.width
         let height = width - 40.0
         let size = CGSize(width: width, height: height)
-        let imageFilter = AspectScaledToFitSizeFilter.init(size: size)
+        let imageFilter = AspectScaledToFitSizeFilter(size: size)
 
         imageView.af_setImageWithURL(URL, placeholderImage: nil, filter: imageFilter, imageTransition: .None, runImageTransitionIfCached: false, completion: nil)
         scrollView.addSubview(imageView)

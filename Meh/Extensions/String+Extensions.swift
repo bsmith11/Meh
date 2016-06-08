@@ -28,9 +28,9 @@ extension String {
         do {
             let regex = try NSRegularExpression(pattern: pattern, options: .CaseInsensitive)
             let options: NSMatchingOptions = .ReportProgress
-            let range = NSRange.init(location: 0, length: (self as NSString).length)
+            let range = NSRange(location: 0, length: (self as NSString).length)
 
-            regex.enumerateMatchesInString(self, options: options, range: range, usingBlock: { (result: NSTextCheckingResult?, flags: NSMatchingFlags, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            regex.enumerateMatchesInString(self, options: options, range: range, usingBlock: { (result: NSTextCheckingResult?, flags: NSMatchingFlags, stop: UnsafeMutablePointer<ObjCBool>) in
                 if let result = result {
                     let match = (self as NSString).substringWithRange(result.range)
                     strings.append(match)

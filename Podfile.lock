@@ -1,26 +1,26 @@
 PODS:
-  - Alamofire (3.2.1)
-  - AlamofireImage (2.3.1):
-    - Alamofire (~> 3.2)
+  - Alamofire (3.4.0)
+  - AlamofireImage (2.4.0):
+    - Alamofire (~> 3.3)
   - Expecta (1.0.5)
-  - OCMock (3.2.2)
-  - OHHTTPStubs (4.7.1):
-    - OHHTTPStubs/Default (= 4.7.1)
-  - OHHTTPStubs/Core (4.7.1)
-  - OHHTTPStubs/Default (4.7.1):
+  - OCMock (3.3)
+  - OHHTTPStubs (5.1.0):
+    - OHHTTPStubs/Default (= 5.1.0)
+  - OHHTTPStubs/Core (5.1.0)
+  - OHHTTPStubs/Default (5.1.0):
     - OHHTTPStubs/Core
     - OHHTTPStubs/JSON
     - OHHTTPStubs/NSURLSession
     - OHHTTPStubs/OHPathHelpers
-  - OHHTTPStubs/JSON (4.7.1):
+  - OHHTTPStubs/JSON (5.1.0):
     - OHHTTPStubs/Core
-  - OHHTTPStubs/NSURLSession (4.7.1):
+  - OHHTTPStubs/NSURLSession (5.1.0):
     - OHHTTPStubs/Core
-  - OHHTTPStubs/OHPathHelpers (4.7.1)
+  - OHHTTPStubs/OHPathHelpers (5.1.0)
   - pop (1.0.9)
   - Shimmer (1.0.2)
   - Specta (1.0.5)
-  - TSMarkdownParser (2.1.0)
+  - TSMarkdownParser (2.1.1)
   - youtube-ios-player-helper (0.1.5)
 
 DEPENDENCIES:
@@ -47,15 +47,15 @@ CHECKOUT OPTIONS:
     :git: https://github.com/youtube/youtube-ios-player-helper
 
 SPEC CHECKSUMS:
-  Alamofire: f11d8624a05f5d39e0c99309b3e600a3ba64298a
-  AlamofireImage: e52336282757bbe1644f075d6cb85f19c891f939
+  Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  AlamofireImage: 87408b652e0f5ae5fe364035f15aea8b9b24c77e
   Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
-  OCMock: 18c9b7e67d4c2770e95bb77a9cc1ae0c91fe3835
-  OHHTTPStubs: f7d1604d04d37d055460c0ef9af01bb249ded0fa
+  OCMock: d68685bde31f69cb61d518dcb39269080c78b5ed
+  OHHTTPStubs: 592f74439d2d72615115cf99a954237a3fbe26e5
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
-  TSMarkdownParser: 4b3cec2a11d9c70d9dce265e7ec7347166c70fe8
+  TSMarkdownParser: 64cb52fe5a518b4875a6167a650cb0ed4b18cea5
   youtube-ios-player-helper: 921da8927a575debc293a94c678c658f38cde150
 
 COCOAPODS: 0.39.0

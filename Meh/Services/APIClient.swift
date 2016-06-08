@@ -26,7 +26,7 @@ class APIClient {
 
 extension APIClient {
     func request(route: URLRequestConvertible, completion: APICompletion?) {
-        manager.request(route).validate(statusCode: 200...399).responseJSON { response -> Void in
+        manager.request(route).validate(statusCode: 200...399).responseJSON { response in
             completion?(response.result)
         }
     }
