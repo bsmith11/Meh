@@ -338,7 +338,10 @@ extension DealViewController: BuyHeaderViewDelegate {
     func buyHeaderViewDidSelectBuy(headerView: BuyHeaderView) {
         if viewModel.deal?.soldOutDate == nil {
             if let URL = viewModel.deal?.URL {
-                handleURL(URL)
+                let rect = view.convertRect(headerView.frame, fromView: headerView.superview)
+                let webViewController = WebViewController(rect: rect, URL: URL)
+
+                presentViewController(webViewController, animated: true, completion: nil)
             }
         }
         else {

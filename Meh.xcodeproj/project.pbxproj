@@ -29,6 +29,7 @@
 		069283A31CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069283A21CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift */; };
 		06AA6AC31D07B32400021130 /* TitleHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AA6AC21D07B32400021130 /* TitleHeaderView.swift */; };
 		06AA6AC51D07B35B00021130 /* TitleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AA6AC41D07B35B00021130 /* TitleHeaderViewModel.swift */; };
+		06AA6ACC1D08DE8800021130 /* BuyAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AA6ACB1D08DE8800021130 /* BuyAnimationController.swift */; };
 		06ABFCA41CF6A62900A7E690 /* StoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ABFCA31CF6A62900A7E690 /* StoryViewModel.swift */; };
 		06ABFCA81CF6B0E600A7E690 /* VideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ABFCA71CF6B0E600A7E690 /* VideoViewModel.swift */; };
 		06ABFCAA1CF6B37C00A7E690 /* FeaturesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ABFCA91CF6B37C00A7E690 /* FeaturesViewModel.swift */; };
@@ -37,6 +38,7 @@
 		06BBE0CC1CF7FD8A00954722 /* UICollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BBE0CB1CF7FD8A00954722 /* UICollectionView+Extensions.swift */; };
 		06BBE0CE1CF81D2B00954722 /* BuyHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BBE0CD1CF81D2B00954722 /* BuyHeaderView.swift */; };
 		06BBE0D01CF8216E00954722 /* BuyHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BBE0CF1CF8216E00954722 /* BuyHeaderViewModel.swift */; };
+		06BF30131D0914B60040C9F6 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BF30121D0914B60040C9F6 /* WebViewController.swift */; };
 		06E0A8FB1CF82C6F0061EEB2 /* PhotosHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A8FA1CF82C6F0061EEB2 /* PhotosHeaderView.swift */; };
 		06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9041CF929480061EEB2 /* PhotosHeaderViewModel.swift */; };
 		06E0A9071CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */; };
@@ -91,6 +93,7 @@
 		069283A21CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		06AA6AC21D07B32400021130 /* TitleHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleHeaderView.swift; sourceTree = "<group>"; };
 		06AA6AC41D07B35B00021130 /* TitleHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleHeaderViewModel.swift; sourceTree = "<group>"; };
+		06AA6ACB1D08DE8800021130 /* BuyAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyAnimationController.swift; sourceTree = "<group>"; };
 		06ABFCA31CF6A62900A7E690 /* StoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryViewModel.swift; sourceTree = "<group>"; };
 		06ABFCA71CF6B0E600A7E690 /* VideoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewModel.swift; sourceTree = "<group>"; };
 		06ABFCA91CF6B37C00A7E690 /* FeaturesViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturesViewModel.swift; sourceTree = "<group>"; };
@@ -99,6 +102,7 @@
 		06BBE0CB1CF7FD8A00954722 /* UICollectionView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extensions.swift"; sourceTree = "<group>"; };
 		06BBE0CD1CF81D2B00954722 /* BuyHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyHeaderView.swift; sourceTree = "<group>"; };
 		06BBE0CF1CF8216E00954722 /* BuyHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyHeaderViewModel.swift; sourceTree = "<group>"; };
+		06BF30121D0914B60040C9F6 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		06E0A8FA1CF82C6F0061EEB2 /* PhotosHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHeaderView.swift; sourceTree = "<group>"; };
 		06E0A9041CF929480061EEB2 /* PhotosHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHeaderViewModel.swift; sourceTree = "<group>"; };
 		06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Extensions.swift"; sourceTree = "<group>"; };
@@ -160,6 +164,8 @@
 				0646A6141C8AAC31000E6827 /* ImageViewController.swift */,
 				0649E20D1CA450280070047C /* ImageAnimationController.swift */,
 				06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */,
+				06AA6ACB1D08DE8800021130 /* BuyAnimationController.swift */,
+				06BF30121D0914B60040C9F6 /* WebViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -623,6 +629,7 @@
 				06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */,
 				069283A31CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift in Sources */,
 				06F803CD1C9008B600E486EA /* Theme.swift in Sources */,
+				06BF30131D0914B60040C9F6 /* WebViewController.swift in Sources */,
 				06E0A90B1CFCFAEA0061EEB2 /* SpecsViewController.swift in Sources */,
 				06774FEA1C87A60900ECC221 /* PageControl.swift in Sources */,
 				06F803CB1C9007BC00E486EA /* Story.swift in Sources */,
@@ -631,6 +638,7 @@
 				06AA6AC51D07B35B00021130 /* TitleHeaderViewModel.swift in Sources */,
 				06BBE0CA1CF7BC1B00954722 /* RootViewController.swift in Sources */,
 				067750071C89586600ECC221 /* VideoCell.swift in Sources */,
+				06AA6ACC1D08DE8800021130 /* BuyAnimationController.swift in Sources */,
 				06E0A9071CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift in Sources */,
 				0646A6111C8A3C8C000E6827 /* StoryCell.swift in Sources */,
 				06BBE0C81CF7B6B300954722 /* SplashViewController.swift in Sources */,
