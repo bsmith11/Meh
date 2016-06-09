@@ -18,6 +18,7 @@ class PhotosHeaderView: UICollectionReusableView {
 
     private let collectionView: UICollectionView
     private let pageControl = PageControl(frame: .zero)
+    private let titleLabel = UILabel(frame: .zero)
 
     private var viewModel: PhotosHeaderViewModel?
     private var selectedCell: UICollectionViewCell?
@@ -67,6 +68,8 @@ extension PhotosHeaderView {
         if isInitialDisplay {
             hidePageControl()
         }
+
+        titleLabel.attributedText = viewModel.titleAttributedString
     }
 
     func hideSelectedCell() {
@@ -105,6 +108,10 @@ private extension PhotosHeaderView {
         pageControl.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         addSubview(pageControl)
+
+        titleLabel.numberOfLines = 0
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(titleLabel)
     }
 
     func configureLayout() {
@@ -116,7 +123,11 @@ private extension PhotosHeaderView {
 
             pageControl.topAnchor.constraintEqualToAnchor(collectionView.bottomAnchor, constant: 20.0),
             pageControl.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
-            bottomAnchor.constraintEqualToAnchor(pageControl.bottomAnchor, constant: 20.0)
+
+            titleLabel.topAnchor.constraintEqualToAnchor(pageControl.bottomAnchor, constant: 20.0),
+            titleLabel.leadingAnchor.constraintEqualToAnchor(leadingAnchor, constant: 40.0),
+            trailingAnchor.constraintEqualToAnchor(titleLabel.trailingAnchor, constant: 40.0),
+            bottomAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 20.0)
         ]
 
         NSLayoutConstraint.activateConstraints(constraints)
@@ -126,8 +137,12 @@ private extension PhotosHeaderView {
 // MARK: - Static
 
 extension PhotosHeaderView {
-    static func height() -> CGFloat {
-        return PhotosHeaderView.photoCellWidth + PageControl.height() + (3 * 20.0)
+    static func heightWithViewModel(viewModel: PhotosHeaderViewModel, width: CGFloat) -> CGFloat {
+        let constrainedWidth = width - 80.0
+        let size = CGSize(width: constrainedWidth, height: CGFloat.max)
+        let titleHeight = viewModel.titleAttributedString.heightForSize(size)
+
+        return 20.0 + PhotosHeaderView.photoCellWidth + 20.0 + PageControl.height() + 20.0 + titleHeight + 20.0
     }
 }
 

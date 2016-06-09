@@ -300,7 +300,8 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
     func collectionView(collectionView: UICollectionView, sizeForSupplementaryViewOfKind kind: String, width: CGFloat) -> CGSize {
         switch kind {
         case DealCollectionViewLayout.photosHeaderElementKind:
-            let height = PhotosHeaderView.height()
+            let photosHeaderViewModel = PhotosHeaderViewModel(deal: viewModel.deal)
+            let height = PhotosHeaderView.heightWithViewModel(photosHeaderViewModel, width: width)
 
             return CGSize(width: width, height: height)
         case DealCollectionViewLayout.titleHeaderElementKind:

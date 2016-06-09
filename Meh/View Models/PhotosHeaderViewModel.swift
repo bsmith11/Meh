@@ -6,16 +6,23 @@
 //  Copyright © 2016 Brad Smith. All rights reserved.
 //
 
-import Foundation
+import TSMarkdownParser
 
 struct PhotosHeaderViewModel {
     private let photoURLs: [NSURL]
 
     let theme: Theme
+    let title: String
+    let titleAttributedString: NSAttributedString
 
     init(deal: Deal?) {
         photoURLs = deal?.photoURLs ?? []
         theme = deal?.theme ?? Theme()
+
+        title = deal?.title ?? "No Title"
+
+        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(20.0, alignment: .Center, color: theme.accentColor)
+        titleAttributedString = titleMarkdownParser.attributedStringFromMarkdown(title)
     }
 }
 
