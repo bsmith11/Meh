@@ -154,7 +154,7 @@ private extension DealViewController {
     func bounceContentOffsetWithCompletion(completion: AnimationCompletion?) {
         let bounceAnimation = POPSpringAnimation(propertyNamed: kPOPCollectionViewContentOffset)
         bounceAnimation.toValue = NSValue(CGPoint: .zero)
-        bounceAnimation.springBounciness = 15.0
+        bounceAnimation.springBounciness = 20.0
         bounceAnimation.springSpeed = 4.0
         bounceAnimation.completionBlock = { (animation: POPAnimation?, finished: Bool) in
             completion?(finished)

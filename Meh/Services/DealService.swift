@@ -40,7 +40,7 @@ extension DealService {
             if result.isSuccess {
                 guard let dictionary = result.value as? [String: AnyObject],
                       let deal = Deal(dictionary: dictionary) else {
-                    let error = NSError(domain: "com.Meh.error", code: 0, userInfo: nil)
+                    let error = NSError.errorWithCategory(.InvalidResponse)
 
                     completion?(nil, error)
                     return
@@ -71,7 +71,8 @@ extension DealService {
                 completion?(deal, nil)
             }
             else {
-                completion?(nil, result.error)
+                let error = result.error?.mehError()
+                completion?(nil, error)
             }
         }
     }

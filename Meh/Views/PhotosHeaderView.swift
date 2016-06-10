@@ -82,10 +82,16 @@ extension PhotosHeaderView {
 
     func showPageControlAnimated(animated: Bool) {
         pageControl.showAnimated(animated)
+
+        let duration = animated ? 0.5 : 0.0
+        UIView.animateWithDuration(duration) {
+            self.titleLabel.alpha = 1.0
+        }
     }
 
     func hidePageControl() {
         pageControl.hide()
+        titleLabel.alpha = 0.0
     }
 }
 

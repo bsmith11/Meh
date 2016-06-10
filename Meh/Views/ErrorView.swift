@@ -36,8 +36,8 @@ class ErrorView: UIView {
 
 extension ErrorView {
     func configureWithError(error: NSError) {
-        titleLabel.text = "Error"
-        messageLabel.text = error.localizedDescription ?? "No Message"
+        titleLabel.text = error.title
+        messageLabel.text = error.message
     }
 }
 

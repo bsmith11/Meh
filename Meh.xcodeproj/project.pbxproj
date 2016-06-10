@@ -27,6 +27,7 @@
 		067750031C89553700ECC221 /* FeaturesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067750021C89553700ECC221 /* FeaturesCell.swift */; };
 		067750071C89586600ECC221 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067750061C89586600ECC221 /* VideoCell.swift */; };
 		069283A31CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069283A21CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift */; };
+		06AA11331D0A6FDD0027D420 /* NSError+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AA11321D0A6FDD0027D420 /* NSError+Extensions.swift */; };
 		06AA6AC31D07B32400021130 /* TitleHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AA6AC21D07B32400021130 /* TitleHeaderView.swift */; };
 		06AA6AC51D07B35B00021130 /* TitleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AA6AC41D07B35B00021130 /* TitleHeaderViewModel.swift */; };
 		06AA6ACC1D08DE8800021130 /* BuyAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AA6ACB1D08DE8800021130 /* BuyAnimationController.swift */; };
@@ -91,6 +92,7 @@
 		067750021C89553700ECC221 /* FeaturesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturesCell.swift; sourceTree = "<group>"; };
 		067750061C89586600ECC221 /* VideoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		069283A21CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
+		06AA11321D0A6FDD0027D420 /* NSError+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+Extensions.swift"; sourceTree = "<group>"; };
 		06AA6AC21D07B32400021130 /* TitleHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleHeaderView.swift; sourceTree = "<group>"; };
 		06AA6AC41D07B35B00021130 /* TitleHeaderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleHeaderViewModel.swift; sourceTree = "<group>"; };
 		06AA6ACB1D08DE8800021130 /* BuyAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyAnimationController.swift; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 				06774FE71C87935700ECC221 /* UIColor+Extensions.swift */,
 				06774FEF1C87B2BA00ECC221 /* UIFont+Extensions.swift */,
 				0646A60E1C8A22B4000E6827 /* String+Extensions.swift */,
+				06AA11321D0A6FDD0027D420 /* NSError+Extensions.swift */,
 				069283A21CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift */,
 				06BBE0CB1CF7FD8A00954722 /* UICollectionView+Extensions.swift */,
 				06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */,
@@ -629,6 +632,7 @@
 				06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */,
 				069283A31CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift in Sources */,
 				06F803CD1C9008B600E486EA /* Theme.swift in Sources */,
+				06AA11331D0A6FDD0027D420 /* NSError+Extensions.swift in Sources */,
 				06BF30131D0914B60040C9F6 /* WebViewController.swift in Sources */,
 				06E0A90B1CFCFAEA0061EEB2 /* SpecsViewController.swift in Sources */,
 				06774FEA1C87A60900ECC221 /* PageControl.swift in Sources */,
