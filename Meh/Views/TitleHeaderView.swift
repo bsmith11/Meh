@@ -6,9 +6,8 @@
 //  Copyright © 2016 Brad Smith. All rights reserved.
 //
 
-import Foundation
-
 import UIKit
+import pop
 
 class TitleHeaderView: UICollectionReusableView {
     private let titleLabel = UILabel(frame: .zero)
@@ -31,6 +30,20 @@ extension TitleHeaderView {
     func configureWithViewModel(viewModel: TitleHeaderViewModel) {
         titleLabel.attributedText = viewModel.titleAttributedString
         backgroundColor = viewModel.theme.backgroundColor
+    }
+
+    func bounceTitle() {
+        if let animation = titleLabel.pop_animationForKey("bounce") as? POPSpringAnimation {
+            titleLabel.pop_addAnimation(animation, forKey: "bounce")
+        }
+        else {
+            let animation = POPSpringAnimation(propertyNamed: kPOPLayerPositionX)
+            animation.velocity = 485.0
+            animation.springBounciness = 20.0
+            animation.springSpeed = 20.0
+
+            titleLabel.pop_addAnimation(animation, forKey: "bounce")
+        }
     }
 }
 

@@ -65,12 +65,6 @@ class DealViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let videoID = viewModel.deal?.videoURL?.absoluteString.youtubeVideoID() {
-            playerView.loadWithVideoId(videoID, playerVars: playerVariables)
-
-            videoLoading = true
-        }
-
         self.collectionView.alpha = 0.0
     }
 
@@ -346,7 +340,10 @@ extension DealViewController: BuyHeaderViewDelegate {
             }
         }
         else {
-            //TODO: Handle sold out case
+            let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+            if let titleHeaderView = collectionView.supplementaryViewForElementKind(DealCollectionViewLayout.titleHeaderElementKind, atIndexPath: indexPath) as? TitleHeaderView {
+                titleHeaderView.bounceTitle()
+            }
         }
     }
 }
@@ -355,9 +352,16 @@ extension DealViewController: BuyHeaderViewDelegate {
 
 extension DealViewController: VideoCellDelegate {
     func videoCellDidSelectVideo(cell: VideoCell) {
-        videoLoading = true
+        if let videoID = viewModel.deal?.videoURL?.absoluteString.youtubeVideoID() {
+            videoLoading = true
 
-        playerView.playVideo()
+            if playerView.playerState() == .Unknown {
+                playerView.loadWithVideoId(videoID, playerVars: playerVariables)
+            }
+            else {
+                playerView.playVideo()
+            }
+        }
     }
 }
 
@@ -365,7 +369,7 @@ extension DealViewController: VideoCellDelegate {
 
 extension DealViewController: YTPlayerViewDelegate {
     func playerViewDidBecomeReady(playerView: YTPlayerView!) {
-        videoLoading = false
+        playerView.playVideo()
     }
 
     func playerView(playerView: YTPlayerView!, didChangeToState state: YTPlayerState) {
@@ -378,6 +382,8 @@ extension DealViewController: YTPlayerViewDelegate {
     }
 
     func playerView(playerView: YTPlayerView!, receivedError error: YTPlayerError) {
+        print("Failed with error: \(error)")
+
         videoLoading = false
     }
 }
