@@ -162,10 +162,10 @@
 				06774FF51C881D3300ECC221 /* DealCollectionViewLayout.swift */,
 				06E0A90A1CFCFAEA0061EEB2 /* SpecsViewController.swift */,
 				0646A6141C8AAC31000E6827 /* ImageViewController.swift */,
+				06BF30121D0914B60040C9F6 /* WebViewController.swift */,
 				0649E20D1CA450280070047C /* ImageAnimationController.swift */,
 				06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */,
 				06AA6ACB1D08DE8800021130 /* BuyAnimationController.swift */,
-				06BF30121D0914B60040C9F6 /* WebViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";

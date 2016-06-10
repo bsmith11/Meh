@@ -9,11 +9,36 @@
 import UIKit
 import pop
 
+private struct AssociatedKeys {
+    static var viewAssociatedKey = "alpha_view"
+}
+
 class BuyAnimationController: NSObject {
     private let duration = 0.5
 
     var positive = true
     var rect: CGRect = .zero
+}
+
+// MARK: - Private
+
+private extension BuyAnimationController {
+    func viewFromObject(object: NSObject?) -> UIView {
+        if let view = objc_getAssociatedObject(object, &AssociatedKeys.viewAssociatedKey) as? UIView {
+            return view
+        }
+        else {
+            let view = UIView(frame: .zero)
+            view.backgroundColor = UIColor.whiteColor()
+            objc_setAssociatedObject(object, &AssociatedKeys.viewAssociatedKey, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+
+            return view
+        }
+    }
+
+    func removeViewFromObject(object: NSObject?) {
+        objc_setAssociatedObject(object, &AssociatedKeys.viewAssociatedKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
 }
 
 // MARK: - UIViewControllerAnimatedTransitioning
@@ -27,46 +52,31 @@ extension BuyAnimationController: UIViewControllerAnimatedTransitioning {
                 return
         }
 
+        let alphaView = positive ? viewFromObject(toViewController) : viewFromObject(fromViewController)
+
         if positive {
-            toViewController.view.translatesAutoresizingMaskIntoConstraints = false
+            toViewController.view.frame = container.bounds
             container.addSubview(toViewController.view)
 
-            let constraints: [NSLayoutConstraint] = [
-                toViewController.view.topAnchor.constraintEqualToAnchor(container.topAnchor),
-                toViewController.view.leadingAnchor.constraintEqualToAnchor(container.leadingAnchor),
-                container.trailingAnchor.constraintEqualToAnchor(toViewController.view.trailingAnchor),
-                container.bottomAnchor.constraintEqualToAnchor(toViewController.view.bottomAnchor)
-            ]
-
-            NSLayoutConstraint.activateConstraints(constraints)
-
-            toViewController.view.setNeedsLayout()
-            toViewController.view.layoutIfNeeded()
+            alphaView.frame = container.bounds
+            container.addSubview(alphaView)
         }
 
         let maskView: UIView?
-        let frameToValue: NSValue
-        let cornerRadiusToValue: CGFloat
 
         if positive {
             maskView = UIView(frame: rect)
             maskView?.backgroundColor = UIColor.whiteColor()
             maskView?.layer.cornerRadius = rect.height / 2.0
-            toViewController.view.maskView = maskView
-
-            frameToValue = NSValue(CGRect: toViewController.view.frame)
-            cornerRadiusToValue = 0.0
+            container.maskView = maskView
         }
         else {
-            maskView = fromViewController.view.maskView
-
-            frameToValue = NSValue(CGRect: rect)
-            cornerRadiusToValue = rect.height / 2.0
+            maskView = container.maskView
         }
 
         let frameAnimation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
         frameAnimation.springBounciness = 0.0
-        frameAnimation.toValue = frameToValue
+        frameAnimation.toValue = positive ? NSValue(CGRect: toViewController.view.frame) : NSValue(CGRect: rect)
         frameAnimation.completionBlock = { (popAnimation: POPAnimation?, finished: Bool) in
             let completed = !transitionContext.transitionWasCancelled()
             transitionContext.completeTransition(completed)
@@ -74,10 +84,14 @@ extension BuyAnimationController: UIViewControllerAnimatedTransitioning {
 
         let cornerRadiusAnimation = POPSpringAnimation(propertyNamed: kPOPLayerCornerRadius)
         cornerRadiusAnimation.springBounciness = 0.0
-        cornerRadiusAnimation.toValue = cornerRadiusToValue
+        cornerRadiusAnimation.toValue = positive ? 0.0 : rect.height / 2.0
+
+        let alphaAnimation = POPSpringAnimation(propertyNamed: kPOPViewAlpha)
+        alphaAnimation.toValue = positive ? 0.0 : 1.0
 
         maskView?.pop_addAnimation(frameAnimation, forKey: "frame")
         maskView?.layer.pop_addAnimation(cornerRadiusAnimation, forKey: "cornerRadius")
+        alphaView.pop_addAnimation(alphaAnimation, forKey: "alpha")
     }
 
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {

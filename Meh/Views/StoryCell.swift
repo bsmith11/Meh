@@ -50,7 +50,7 @@ extension StoryCell {
 private extension StoryCell {
     func configureViews() {
         contentStackView.axis = .Vertical
-        contentStackView.spacing = 10.0
+        contentStackView.spacing = 20.0
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(contentStackView)
 
