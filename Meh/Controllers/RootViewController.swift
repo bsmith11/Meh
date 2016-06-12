@@ -11,6 +11,7 @@ import pop
 
 class RootViewController: UIViewController {
     private let splashViewController: SplashViewController
+    private let dealViewModel: DealViewModel
     private let dealViewController: DealViewController
 
     private var displayedViewController: UIViewController?
@@ -26,46 +27,12 @@ class RootViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         splashViewController = SplashViewController(nibName: nil, bundle: nil)
 
-        let dealViewModel = DealViewModel()
+        dealViewModel = DealViewModel()
         dealViewController = DealViewController(viewModel: dealViewModel)
 
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        let completion = { (deal: Deal?, error: NSError?) in
-            if let error = error {
-                print("Failed to fetch deal with error: \(error)")
-
-                self.displayViewController(nil)
-
-                let errorView = ErrorView(error: error)
-                errorView.translatesAutoresizingMaskIntoConstraints = false
-                self.view.addSubview(errorView)
-
-                let constraints: [NSLayoutConstraint] = [
-                    errorView.leadingAnchor.constraintEqualToAnchor(self.view.leadingAnchor),
-                    self.view.trailingAnchor.constraintEqualToAnchor(errorView.trailingAnchor),
-                    self.view.bottomAnchor.constraintEqualToAnchor(errorView.bottomAnchor)
-                ]
-
-                NSLayoutConstraint.activateConstraints(constraints)
-
-                errorView.setNeedsLayout()
-                errorView.layoutIfNeeded()
-
-                self.displayErrorView(errorView, displayed: false, animated: false)
-                self.displayErrorView(errorView, displayed: true, animated: true)
-            }
-            else if let _ = deal {
-                print("Successfully fetched deal")
-
-                self.displayViewController(self.dealViewController)
-            }
-            else {
-                print("Deal is nil")
-            }
-        }
-
-        dealViewModel.fetchDealWithCompletion(completion)
+        fetchDeal()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -111,27 +78,32 @@ private extension RootViewController {
         }
     }
 
-    func displayErrorView(errorView: ErrorView, displayed: Bool, animated: Bool) {
-        let translation = displayed ? 0.0 : errorView.bounds.height
-        let toValue = NSValue(CGSize: CGSize(width: 0.0, height: translation))
-        let animation: POPAnimation
+    func fetchDeal() {
+        splashViewController.startAnimating()
 
-        if animated {
-            let springAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY)
-            springAnimation.springBounciness = 5.0
-            springAnimation.springSpeed = 1.0
-            springAnimation.toValue = toValue
+        let completion = { [weak self] (deal: Deal?, error: NSError?) in
+            self?.splashViewController.stopAnimating()
 
-            animation = springAnimation
+            guard let _ = deal else {
+                let dealError: NSError
+
+                if let error = error {
+                    dealError = error
+                }
+                else {
+                    dealError = NSError.errorWithCategory(.InvalidResponse)
+                }
+
+                ErrorService.displayError(dealError, actionHandler: {
+                    self?.fetchDeal()
+                })
+
+                return
+            }
+
+            self?.displayViewController(self?.dealViewController)
         }
-        else {
-            let basicAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
-            basicAnimation.duration = 0.0
-            basicAnimation.toValue = toValue
 
-            animation = basicAnimation
-        }
-
-        errorView.layer.pop_addAnimation(animation, forKey: "display")
+        dealViewModel.fetchDealWithCompletion(completion)
     }
 }

@@ -14,18 +14,18 @@ enum ErrorCategory {
     case ServerError
 
     var title: String {
-        return "Error"
-    }
-
-    var message: String {
         switch self {
         case .Unknown:
             return "Something seems to have gone wrong..."
         case .InvalidResponse:
-            return "Invalid response from server"
+            return "The server stopped speaking English..."
         case .ServerError:
             return "The server just exploded..."
         }
+    }
+
+    var message: String {
+        return "Tap to try again"
     }
 
     var code: Int {

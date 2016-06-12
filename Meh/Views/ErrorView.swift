@@ -12,6 +12,11 @@ class ErrorView: UIView {
     private let contentStackView = UIStackView(frame: .zero)
     private let titleLabel = UILabel(frame: .zero)
     private let messageLabel = UILabel(frame: .zero)
+    private let button = UIButton(type: .System)
+
+    var actionHandler: ErrorActionHandler?
+
+    static let bounceAdjustmentHeight = CGFloat(50.0)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,6 +72,14 @@ private extension ErrorView {
         messageLabel.font = UIFont.mehFontWithSize(20.0, style: .Regular)
         messageLabel.textColor = UIColor.whiteColor()
         contentStackView.addArrangedSubview(messageLabel)
+
+        let highlightEvents: UIControlEvents = [.TouchDown, .TouchDragEnter]
+        let unhighlightEvents: UIControlEvents = [.TouchCancel, .TouchDragExit, .TouchUpInside]
+        button.addTarget(self, action: #selector(ErrorView.didHighlightButton), forControlEvents: highlightEvents)
+        button.addTarget(self, action: #selector(ErrorView.didUnhighlightButton), forControlEvents: unhighlightEvents)
+        button.addTarget(self, action: #selector(ErrorView.didTapButton), forControlEvents: .TouchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(button)
     }
 
     func configureLayout() {
@@ -74,9 +87,26 @@ private extension ErrorView {
             contentStackView.topAnchor.constraintEqualToAnchor(topAnchor, constant: 20.0),
             contentStackView.leadingAnchor.constraintEqualToAnchor(leadingAnchor, constant: 20.0),
             trailingAnchor.constraintEqualToAnchor(contentStackView.trailingAnchor, constant: 20.0),
-            bottomAnchor.constraintEqualToAnchor(contentStackView.bottomAnchor, constant: 20.0)
+            bottomAnchor.constraintEqualToAnchor(contentStackView.bottomAnchor, constant: 20.0 + ErrorView.bounceAdjustmentHeight),
+
+            button.topAnchor.constraintEqualToAnchor(topAnchor),
+            button.leadingAnchor.constraintEqualToAnchor(leadingAnchor),
+            trailingAnchor.constraintEqualToAnchor(button.trailingAnchor),
+            bottomAnchor.constraintEqualToAnchor(button.bottomAnchor)
         ]
 
         NSLayoutConstraint.activateConstraints(constraints)
+    }
+
+    @objc func didHighlightButton() {
+        messageLabel.textColor = UIColor.grayColor()
+    }
+
+    @objc func didUnhighlightButton() {
+        messageLabel.textColor = UIColor.whiteColor()
+    }
+
+    @objc func didTapButton() {
+        actionHandler?()
     }
 }

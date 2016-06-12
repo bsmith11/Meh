@@ -33,6 +33,18 @@ class SplashViewController: UIViewController {
     }
 }
 
+// MARK: - Public
+
+extension SplashViewController {
+    func startAnimating() {
+        shimmerView.shimmering = true
+    }
+
+    func stopAnimating() {
+        shimmerView.shimmering = false
+    }
+}
+
 // MARK: - Private
 
 private extension SplashViewController {
