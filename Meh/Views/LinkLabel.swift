@@ -24,6 +24,9 @@ struct Link {
 class LinkLabel: UILabel {
     static let linkAttributeName = "MehLink"
 
+    private var layoutManager = NSLayoutManager()
+    private var textStorage: NSTextStorage?
+    private var shouldConfigureLayoutManager = true
     private var links = [Link]()
     private var activeLink: Link? {
         willSet {
@@ -153,15 +156,52 @@ class LinkLabel: UILabel {
             super.touchesCancelled(touches, withEvent: event)
         }
     }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        if shouldConfigureLayoutManager {
+            configureLayoutManager()
+        }
+        else {
+            shouldConfigureLayoutManager = true
+        }
+    }
 }
 
 // MARK: - Private
 
 private extension LinkLabel {
+    func configureLayoutManager() {
+        let size = CGSize(width: bounds.width, height: bounds.height)
+        let textContainer = NSTextContainer(size: size)
+        textContainer.lineFragmentPadding = 0.0
+        textContainer.lineBreakMode = .ByWordWrapping
+        textContainer.maximumNumberOfLines = 0
+
+        layoutManager.usesFontLeading = false
+
+        while !layoutManager.textContainers.isEmpty {
+            layoutManager.removeTextContainerAtIndex(0)
+        }
+
+        layoutManager.addTextContainer(textContainer)
+
+        textStorage?.removeLayoutManager(layoutManager)
+
+        let attributedString = attributedText ?? NSAttributedString(string: "")
+        textStorage = NSTextStorage(attributedString: attributedString)
+        textStorage?.addLayoutManager(layoutManager)
+
+        layoutManager.ensureLayoutForTextContainer(textContainer)
+    }
+
     func applyLinkColor(linkColor: UIColor, range: NSRange) {
         if let attributedText = attributedText {
             let mutableAttributedText = NSMutableAttributedString(attributedString: attributedText)
             mutableAttributedText.addAttribute(NSForegroundColorAttributeName, value: linkColor, range: range)
+
+            shouldConfigureLayoutManager = false
 
             self.attributedText = mutableAttributedText
         }
@@ -194,14 +234,11 @@ private extension LinkLabel {
     }
 
     func characterIndexAtPoint(point: CGPoint) -> Int {
-        guard let attributedText = attributedText where bounds.contains(point) else {
+        guard let textContainer = layoutManager.textContainers.first where bounds.contains(point) else {
             return NSNotFound
         }
 
         //TODO: Fix index returning valid when tap is on empty space on last line of text
-        //TODO: Cache TextKit layout stuff instead of recalculating layout each time
-        let index = attributedText.characterIndexForPoint(point, bounds: bounds)
-
-        return index
+        return layoutManager.characterIndexForPoint(point, inTextContainer: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
     }
 }
