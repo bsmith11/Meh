@@ -85,7 +85,7 @@ extension StoryCell {
         let titleHeight = viewModel.titleAttributedString.heightForSize(size)
         let bodyHeight = viewModel.bodyAttributedString.heightForSize(size)
 
-        return 20.0 + titleHeight + 10.0 + bodyHeight + 20.0
+        return 20.0 + titleHeight + 20.0 + bodyHeight + 20.0
     }
 }
 
