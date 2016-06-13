@@ -91,10 +91,8 @@ private extension DealViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
         collectionView.delaysContentTouches = false
-        collectionView.registerClass(FeaturesCell.self)
-        collectionView.registerClass(SpecsCell.self)
         collectionView.registerClass(VideoCell.self)
-        collectionView.registerClass(StoryCell.self)
+        collectionView.registerClass(ParagraphCell.self)
         collectionView.registerClass(PhotosHeaderView.self, elementKind: DealCollectionViewLayout.photosHeaderElementKind)
         collectionView.registerClass(TitleHeaderView.self, elementKind: DealCollectionViewLayout.titleHeaderElementKind)
         collectionView.registerClass(BuyHeaderView.self, elementKind: DealCollectionViewLayout.buyHeaderElementKind)
@@ -183,7 +181,7 @@ extension DealViewController: UICollectionViewDataSource {
         switch item {
         case .Features:
             let featuresViewModel = FeaturesViewModel(deal: viewModel.deal)
-            let cell: FeaturesCell = collectionView.dequeueCellForIndexPath(indexPath)
+            let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(featuresViewModel)
             cell.linkHandler = { [weak self] (URL: NSURL) in
                 self?.handleURL(URL)
@@ -192,7 +190,7 @@ extension DealViewController: UICollectionViewDataSource {
             return cell
         case .Specs:
             let specsViewModel = SpecsViewModel(deal: viewModel.deal)
-            let cell: SpecsCell = collectionView.dequeueCellForIndexPath(indexPath)
+            let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(specsViewModel)
 
             return cell
@@ -204,8 +202,17 @@ extension DealViewController: UICollectionViewDataSource {
             return cell
         case .Story:
             let storyViewModel = StoryViewModel(deal: viewModel.deal)
-            let cell: StoryCell = collectionView.dequeueCellForIndexPath(indexPath)
+            let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(storyViewModel)
+            cell.linkHandler = { [weak self] (URL: NSURL) in
+                self?.handleURL(URL)
+            }
+
+            return cell
+        case .Paragraph(let String):
+            let paragraphViewModel = ParagraphViewModel(paragraph: String, theme: viewModel.deal?.theme)
+            let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
+            cell.configureWithViewModel(paragraphViewModel)
             cell.linkHandler = { [weak self] (URL: NSURL) in
                 self?.handleURL(URL)
             }
@@ -278,17 +285,21 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
         case .Features:
             let featuresViewModel = FeaturesViewModel(deal: viewModel.deal)
 
-            return FeaturesCell.heightWithViewModel(featuresViewModel, width: width)
+            return ParagraphCell.heightWithViewModel(featuresViewModel, width: width)
         case .Specs:
             let specsViewModel = SpecsViewModel(deal: viewModel.deal)
 
-            return SpecsCell.heightWithViewModel(specsViewModel, width: width)
+            return ParagraphCell.heightWithViewModel(specsViewModel, width: width)
         case .Video:
             return VideoCell.height()
         case .Story:
             let storyViewModel = StoryViewModel(deal: viewModel.deal)
 
-            return StoryCell.heightWithViewModel(storyViewModel, width: width)
+            return ParagraphCell.heightWithViewModel(storyViewModel, width: width)
+        case .Paragraph(let string):
+            let paragraphViewModel = ParagraphViewModel(paragraph: string, theme: viewModel.deal?.theme)
+
+            return ParagraphCell.heightWithViewModel(paragraphViewModel, width: width)
         }
     }
 

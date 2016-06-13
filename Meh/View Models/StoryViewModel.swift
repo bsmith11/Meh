@@ -8,23 +8,16 @@
 
 import TSMarkdownParser
 
-struct StoryViewModel {
+struct StoryViewModel: ParagraphViewModelProtocol {
     let theme: Theme
-    let title: String
-    let body: String
-    let titleAttributedString: NSAttributedString
-    let bodyAttributedString: NSAttributedString
+    let attributedString: NSAttributedString
 
     init(deal: Deal?) {
         theme = deal?.theme ?? Theme()
 
-        title = deal?.story?.title ?? "No Title"
-        body = deal?.story?.body ?? "No Body"
+        let title = deal?.story?.title ?? "No Title"
 
-        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(30.0, color: theme.backgroundColor)
-        titleAttributedString = titleMarkdownParser.attributedStringFromMarkdown(title)
-
-        let bodyMarkdownParser = TSMarkdownParser.parserWithFontSize(16.0, color: theme.backgroundColor)
-        bodyAttributedString = bodyMarkdownParser.attributedStringFromMarkdown(body)
+        let markdownParser = TSMarkdownParser.parserWithFontSize(30.0, color: theme.backgroundColor)
+        attributedString = markdownParser.attributedStringFromMarkdown(title)
     }
 }

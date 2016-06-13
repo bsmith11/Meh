@@ -8,28 +8,25 @@
 
 import TSMarkdownParser
 
-struct SpecsViewModel {
-    let title: String
-    let titleAttributedString: NSAttributedString
-    let specs: String
-    let specsAttributedString: NSAttributedString
+struct SpecsViewModel: ParagraphViewModelProtocol {
     let theme: Theme
+    let attributedString: NSAttributedString
+    let specsAttributedString: NSAttributedString
 
     init(deal: Deal?) {
         theme = deal?.theme ?? Theme()
 
-        title = "Specifications"
-
+        let title = "Specifications"
         let attributes = [
             NSForegroundColorAttributeName: theme.backgroundColor,
             NSFontAttributeName: UIFont.mehFontWithSize(30.0, style: .Bold)
         ]
 
-        titleAttributedString = NSAttributedString(string: title, attributes: attributes)
+        attributedString = NSAttributedString(string: title, attributes: attributes)
 
-        specs = deal?.specifications ?? "No Specifications"
+        let specs = deal?.specifications ?? "No Specifications"
 
-        let specsMarkdownParser = TSMarkdownParser.parserWithFontSize(16.0, color: theme.foregroundColor)
-        specsAttributedString = specsMarkdownParser.attributedStringFromMarkdown(specs)
+        let markdownParser = TSMarkdownParser.parserWithFontSize(16.0, color: theme.foregroundColor)
+        specsAttributedString = markdownParser.attributedStringFromMarkdown(specs)
     }
 }

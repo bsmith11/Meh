@@ -11,8 +11,6 @@ import UIKit
 class FooterView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        backgroundColor = UIColor.whiteColor()
     }
 
     required init?(coder aDecoder: NSCoder) {

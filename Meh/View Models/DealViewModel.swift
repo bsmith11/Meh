@@ -8,21 +8,34 @@
 
 import UIKit
 
-enum DealItem {
+enum DealItem: Equatable {
     case Features
     case Specs
     case Video
     case Story
+    case Paragraph(String)
+}
+
+func == (lhs: DealItem, rhs: DealItem) -> Bool {
+    switch (lhs, rhs) {
+    case (.Features, .Features):
+        return true
+    case (.Specs, .Specs):
+        return true
+    case (.Video, .Video):
+        return true
+    case (.Story, .Story):
+        return true
+    case (.Paragraph(let leftString), .Paragraph(let rightString)):
+        return leftString == rightString
+    default:
+        return false
+    }
 }
 
 class DealViewModel {
     private let dealService: DealService
-    private let items: [DealItem] = [
-//        .Specs,
-        .Features,
-        .Video,
-        .Story
-    ]
+    private var items = [DealItem]()
 
     private(set) var deal: Deal?
 
@@ -70,8 +83,30 @@ extension DealViewModel {
     func fetchDealWithCompletion(completion: DealCompletion?) {
         dealService.fetchDeal { [weak self] (deal: Deal?, error: NSError?) in
             self?.deal = deal
+            self?.configureItems()
 
             completion?(deal, error)
+        }
+    }
+}
+
+// MARK: - Private
+
+private extension DealViewModel {
+    func configureItems() {
+        items.removeAll()
+//        items.append(.Specs)
+        items.append(.Features)
+        items.append(.Video)
+        items.append(.Story)
+
+        if let body = deal?.story?.body {
+            for substring in body.componentsSeparatedByString("\r\n\r\n") {
+                let string = substring.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                if !string.isEmpty {
+                    self.items.append(.Paragraph(string))
+                }
+            }
         }
     }
 }

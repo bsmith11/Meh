@@ -8,17 +8,16 @@
 
 import TSMarkdownParser
 
-struct FeaturesViewModel {
+struct FeaturesViewModel: ParagraphViewModelProtocol {
     let theme: Theme
-    let features: String
-    let featuresAttributedString: NSAttributedString
+    let attributedString: NSAttributedString
 
     init(deal: Deal?) {
         theme = deal?.theme ?? Theme()
 
-        features = deal?.features ?? "No Features"
+        let features = deal?.features ?? "No Features"
 
         let markdownParser = TSMarkdownParser.parserWithFontSize(16.0, color: theme.backgroundColor)
-        featuresAttributedString = markdownParser.attributedStringFromMarkdown(features)
+        attributedString = markdownParser.attributedStringFromMarkdown(features)
     }
 }
