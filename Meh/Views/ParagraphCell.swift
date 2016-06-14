@@ -39,7 +39,7 @@ extension ParagraphCell {
         topConstraint?.constant = viewModel is ParagraphViewModel ? 0.0 : 20.0
 
         backgroundColor = viewModel.theme.accentColor
-//        paragraphLabel.linkColor = viewModel.theme.accentColor
+        paragraphLabel.linkColor = viewModel.theme.backgroundColor
         paragraphLabel.attributedString = viewModel.attributedString
     }
 }

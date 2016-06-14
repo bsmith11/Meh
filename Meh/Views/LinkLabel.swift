@@ -64,6 +64,7 @@ class LinkLabel: UILabel {
                         self.links.append(link)
 
                         mutableAttributedText.addAttribute(NSForegroundColorAttributeName, value: self.linkColor, range: attributeRange)
+                        mutableAttributedText.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.StyleSingle.rawValue, range: attributeRange)
                     }
                 }
 

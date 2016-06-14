@@ -146,9 +146,9 @@ private extension DealViewController {
     func bounceContentOffsetWithCompletion(completion: AnimationCompletion?) {
         let bounceAnimation = POPSpringAnimation(propertyNamed: kPOPCollectionViewContentOffset)
         bounceAnimation.toValue = NSValue(CGPoint: .zero)
-        bounceAnimation.velocity = NSValue(CGPoint: CGPoint(x: 0.0, y: 500.0))
+        bounceAnimation.velocity = NSValue(CGPoint: CGPoint(x: 0.0, y: 100.0))
         bounceAnimation.springBounciness = 20.0
-        bounceAnimation.springSpeed = 20.0
+        bounceAnimation.springSpeed = 5.0
         bounceAnimation.completionBlock = { (animation: POPAnimation?, finished: Bool) in
             completion?(finished)
         }
@@ -178,14 +178,16 @@ extension DealViewController: UICollectionViewDataSource {
             preconditionFailure("Item is nil")
         }
 
+        let linkHandler: LinkHandlerBlock = { [weak self] (URL: NSURL) in
+            self?.handleURL(URL)
+        }
+
         switch item {
         case .Features:
             let featuresViewModel = FeaturesViewModel(deal: viewModel.deal)
             let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(featuresViewModel)
-            cell.linkHandler = { [weak self] (URL: NSURL) in
-                self?.handleURL(URL)
-            }
+            cell.linkHandler = linkHandler
 
             return cell
         case .Specs:
@@ -204,18 +206,14 @@ extension DealViewController: UICollectionViewDataSource {
             let storyViewModel = StoryViewModel(deal: viewModel.deal)
             let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(storyViewModel)
-            cell.linkHandler = { [weak self] (URL: NSURL) in
-                self?.handleURL(URL)
-            }
+            cell.linkHandler = linkHandler
 
             return cell
         case .Paragraph(let String):
             let paragraphViewModel = ParagraphViewModel(paragraph: String, theme: viewModel.deal?.theme)
             let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(paragraphViewModel)
-            cell.linkHandler = { [weak self] (URL: NSURL) in
-                self?.handleURL(URL)
-            }
+            cell.linkHandler = linkHandler
 
             return cell
         }
