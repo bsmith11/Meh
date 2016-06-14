@@ -1,8 +1,8 @@
 //
-//  ImageAnimationController.swift
+//  FocusAnimationController.swift
 //  Meh
 //
-//  Created by Bradley Smith on 3/24/16.
+//  Created by Bradley Smith on 6/13/16.
 //  Copyright © 2016 Brad Smith. All rights reserved.
 //
 
@@ -12,7 +12,12 @@ private struct AssociatedKeys {
     static var tintViewAssociatedKey = "tint_view"
 }
 
-class ImageAnimationController: NSObject {
+protocol FocusableViewControllerDelegate: NSObjectProtocol {
+    func viewControllerWillStartPresentAnimation(viewController: UIViewController)
+    func viewControllerDidFinishDismissAnimation(viewController: UIViewController)
+}
+
+class FocusAnimationController: NSObject {
     private let duration = 0.5
 
     var positive: Bool
@@ -28,7 +33,7 @@ class ImageAnimationController: NSObject {
 
 // MARK: - Public
 
-extension ImageAnimationController {
+extension FocusAnimationController {
     func finishTransition() {
         context?.completeTransition(true)
     }
@@ -40,7 +45,7 @@ extension ImageAnimationController {
 
 // MARK: - Private
 
-private extension ImageAnimationController {
+private extension FocusAnimationController {
     func tintViewFromObject(object: NSObject?) -> UIView {
         if let tintView = objc_getAssociatedObject(object, &AssociatedKeys.tintViewAssociatedKey) as? UIView {
             return tintView
@@ -61,13 +66,13 @@ private extension ImageAnimationController {
 
 // MARK: - UIViewControllerAnimatedTransitioning
 
-extension ImageAnimationController: UIViewControllerAnimatedTransitioning {
+extension FocusAnimationController: UIViewControllerAnimatedTransitioning {
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         context = transitionContext
 
         if let container = transitionContext.containerView(),
-           let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-           let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) {
+            let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
+            let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) {
 
             let object = positive ? toViewController : fromViewController
             let tintView = self.tintViewFromObject(object)

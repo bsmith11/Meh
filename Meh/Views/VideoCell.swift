@@ -16,7 +16,6 @@ protocol VideoCellDelegate: NSObjectProtocol {
 class VideoCell: UICollectionViewCell {
     private let videoImageView = UIImageView(frame: .zero)
     private let videoButton = UIButton(type: .System)
-    private let spinner = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
 
     private weak var delegate: VideoCellDelegate?
@@ -43,6 +42,8 @@ class VideoCell: UICollectionViewCell {
 
 extension VideoCell {
     func configureWithViewModel(viewModel: VideoViewModel, delegate: VideoCellDelegate?) {
+        backgroundColor = viewModel.theme.accentColor
+
         if let thumbnailURL = viewModel.videoThumbnailURL {
             videoImageView.af_setImageWithURL(thumbnailURL, placeholderImage: nil, filter: nil, imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: false, completion: nil)
         }
@@ -50,17 +51,15 @@ extension VideoCell {
             videoImageView.image = nil
         }
 
-        videoButton.hidden = viewModel.loading
-        videoButton.enabled = !viewModel.loading
-
-        if viewModel.loading {
-            spinner.startAnimating()
-        }
-        else {
-            spinner.stopAnimating()
-        }
-
         self.delegate = delegate
+    }
+
+    func showViews() {
+        setViewsHidden(false)
+    }
+
+    func hideViews() {
+        setViewsHidden(true)
     }
 }
 
@@ -85,11 +84,6 @@ private extension VideoCell {
         videoButton.setImage(image, forState: .Normal)
         videoButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(videoButton)
-
-        spinner.color = UIColor.blackColor()
-        spinner.hidesWhenStopped = true
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(spinner)
     }
 
     func configureLayout() {
@@ -108,12 +102,15 @@ private extension VideoCell {
             videoButton.leadingAnchor.constraintEqualToAnchor(videoImageView.leadingAnchor),
             videoImageView.trailingAnchor.constraintEqualToAnchor(videoButton.trailingAnchor),
             videoImageView.bottomAnchor.constraintEqualToAnchor(videoButton.bottomAnchor),
-
-            spinner.centerXAnchor.constraintEqualToAnchor(blurView.centerXAnchor),
-            spinner.centerYAnchor.constraintEqualToAnchor(blurView.centerYAnchor)
         ]
 
         NSLayoutConstraint.activateConstraints(constraints)
+    }
+
+    func setViewsHidden(hidden: Bool) {
+        videoImageView.hidden = hidden
+        blurView.hidden = hidden
+        videoButton.hidden = hidden
     }
 
     @objc func didSelectVideo() {

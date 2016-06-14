@@ -10,11 +10,6 @@ import UIKit
 import AlamofireImage
 import pop
 
-protocol ImageViewControllerDelegate: NSObjectProtocol {
-    func imageViewControllerWillStartPresentAnimation(imageViewController: ImageViewController)
-    func imageViewControllerDidFinishDismissAnimation(imageViewController: ImageViewController)
-}
-
 class ImageViewController: UIViewController {
     private let minimumZoom: CGFloat = 1.0
     private let maximumZoom: CGFloat = 2.0
@@ -25,10 +20,10 @@ class ImageViewController: UIViewController {
     private let panGesture = UIPanGestureRecognizer(target: nil, action: nil)
 
     private var previousLocation: CGPoint = .zero
-    private var animationController = ImageAnimationController(positive: true)
+    private var animationController = FocusAnimationController(positive: true)
     private var interactionController: UIPercentDrivenInteractiveTransition?
 
-    weak var delegate: ImageViewControllerDelegate?
+    weak var delegate: FocusableViewControllerDelegate?
 
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -75,7 +70,7 @@ class ImageViewController: UIViewController {
         super.viewWillAppear(animated)
 
         let animations = { (context: UIViewControllerTransitionCoordinatorContext) in
-            self.delegate?.imageViewControllerWillStartPresentAnimation(self)
+            self.delegate?.viewControllerWillStartPresentAnimation(self)
 
             self.scrollView.center = self.view.center
         }
@@ -98,7 +93,7 @@ class ImageViewController: UIViewController {
 
         let completion = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
             if !context.isCancelled() {
-                self.delegate?.imageViewControllerDidFinishDismissAnimation(self)
+                self.delegate?.viewControllerDidFinishDismissAnimation(self)
             }
         }
 

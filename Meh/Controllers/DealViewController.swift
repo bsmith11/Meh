@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import youtube_ios_player_helper
 import SafariServices
 import pop
 
@@ -16,24 +15,11 @@ typealias AnimationCompletion = (Bool) -> Void
 class DealViewController: UIViewController {
     private let viewModel: DealViewModel
     private let collectionView: ControlContainableCollectionView
-    private let playerView = YTPlayerView(frame: .zero)
-    private let playerVariables = [
-        "rel": 0,
-        "showinfo": 0
-    ]
 
     private var selectedPhotoHeaderView: PhotosHeaderView?
+    private var selectedVideoCell: VideoCell?
     private var didAppear = false
     private var animationsComplete = false
-    private var videoLoading = false {
-        didSet {
-            if let indexPath = viewModel.indexPathForItem(.Video) where videoLoading != oldValue {
-                if animationsComplete {
-                    self.collectionView.reloadItemsAtIndexPaths([indexPath])
-                }
-            }
-        }
-    }
 
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -99,9 +85,6 @@ private extension DealViewController {
         collectionView.registerClass(FooterView.self, elementKind: DealCollectionViewLayout.footerElementKind)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-
-        playerView.delegate = self
-        playerView.translatesAutoresizingMaskIntoConstraints = false
     }
 
     func configureLayout() {
@@ -197,7 +180,7 @@ extension DealViewController: UICollectionViewDataSource {
 
             return cell
         case .Video:
-            let videoViewModel = VideoViewModel(deal: viewModel.deal, loading: videoLoading)
+            let videoViewModel = VideoViewModel(deal: viewModel.deal)
             let cell: VideoCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(videoViewModel, delegate: self)
 
@@ -362,51 +345,37 @@ extension DealViewController: BuyHeaderViewDelegate {
 
 extension DealViewController: VideoCellDelegate {
     func videoCellDidSelectVideo(cell: VideoCell) {
-        if let videoID = viewModel.deal?.videoURL?.absoluteString.youtubeVideoID() {
-            videoLoading = true
+        selectedVideoCell = cell
 
-            if playerView.playerState() == .Unknown {
-                playerView.loadWithVideoId(videoID, playerVars: playerVariables)
-            }
-            else {
-                playerView.playVideo()
-            }
-        }
+        let originalRect = view.convertRect(cell.frame, fromView: cell.superview)
+        let videoViewModel = VideoViewModel(deal: viewModel.deal)
+        let videoViewController = VideoViewController(viewModel: videoViewModel, originalRect: originalRect)
+        videoViewController.delegate = self
+
+        presentViewController(videoViewController, animated: true, completion: nil)
     }
 }
 
-// MARK: - YTPlayerViewDelegate
+// MARK: - FocusableViewControllerDelegate
 
-extension DealViewController: YTPlayerViewDelegate {
-    func playerViewDidBecomeReady(playerView: YTPlayerView!) {
-        playerView.playVideo()
-    }
-
-    func playerView(playerView: YTPlayerView!, didChangeToState state: YTPlayerState) {
-        switch state {
-        case .Buffering:
-            videoLoading = true
-        default:
-            videoLoading = false
+extension DealViewController: FocusableViewControllerDelegate {
+    func viewControllerWillStartPresentAnimation(imageViewController: UIViewController) {
+        if let photoHeaderView = selectedPhotoHeaderView {
+            photoHeaderView.hideSelectedCell()
+        }
+        else if let videoCell = selectedVideoCell {
+            videoCell.hideViews()
         }
     }
 
-    func playerView(playerView: YTPlayerView!, receivedError error: YTPlayerError) {
-        print("Failed with error: \(error)")
-
-        videoLoading = false
-    }
-}
-
-// MARK: - ImageViewControllerDelegate
-
-extension DealViewController: ImageViewControllerDelegate {
-    func imageViewControllerWillStartPresentAnimation(imageViewController: ImageViewController) {
-        selectedPhotoHeaderView?.hideSelectedCell()
-    }
-
-    func imageViewControllerDidFinishDismissAnimation(imageViewController: ImageViewController) {
-        selectedPhotoHeaderView?.showSelectedCell()
-        selectedPhotoHeaderView = nil
+    func viewControllerDidFinishDismissAnimation(imageViewController: UIViewController) {
+        if let photoHeaderView = selectedPhotoHeaderView {
+            photoHeaderView.showSelectedCell()
+            selectedPhotoHeaderView = nil
+        }
+        else if let videoCell = selectedVideoCell {
+            videoCell.showViews()
+            selectedVideoCell = nil
+        }
     }
 }

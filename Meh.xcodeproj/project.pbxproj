@@ -14,9 +14,10 @@
 		0646A60D1C8A1D1C000E6827 /* meh.json in Resources */ = {isa = PBXBuildFile; fileRef = 0646A60C1C8A1D1C000E6827 /* meh.json */; };
 		0646A60F1C8A22B4000E6827 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0646A60E1C8A22B4000E6827 /* String+Extensions.swift */; };
 		0646A6151C8AAC31000E6827 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0646A6141C8AAC31000E6827 /* ImageViewController.swift */; };
-		0649E20E1CA450280070047C /* ImageAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0649E20D1CA450280070047C /* ImageAnimationController.swift */; };
 		065D77F51D0E283A00E81E8A /* ParagraphCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D77F41D0E283A00E81E8A /* ParagraphCell.swift */; };
 		065D77F71D0E295E00E81E8A /* ParagraphViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D77F61D0E295E00E81E8A /* ParagraphViewModel.swift */; };
+		0675F6061D0F965300A75CC2 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6051D0F965300A75CC2 /* VideoViewController.swift */; };
+		0675F6081D0FB2F300A75CC2 /* FocusAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6071D0FB2F300A75CC2 /* FocusAnimationController.swift */; };
 		06774FE01C8784DD00ECC221 /* DealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06774FDF1C8784DD00ECC221 /* DealViewController.swift */; };
 		06774FE21C87870C00ECC221 /* DealViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06774FE11C87870C00ECC221 /* DealViewModel.swift */; };
 		06774FE41C8790C300ECC221 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06774FE31C8790C300ECC221 /* PhotoCell.swift */; };
@@ -79,9 +80,10 @@
 		0646A60C1C8A1D1C000E6827 /* meh.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = meh.json; sourceTree = "<group>"; };
 		0646A60E1C8A22B4000E6827 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		0646A6141C8AAC31000E6827 /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
-		0649E20D1CA450280070047C /* ImageAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAnimationController.swift; sourceTree = "<group>"; };
 		065D77F41D0E283A00E81E8A /* ParagraphCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParagraphCell.swift; sourceTree = "<group>"; };
 		065D77F61D0E295E00E81E8A /* ParagraphViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParagraphViewModel.swift; sourceTree = "<group>"; };
+		0675F6051D0F965300A75CC2 /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
+		0675F6071D0FB2F300A75CC2 /* FocusAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusAnimationController.swift; sourceTree = "<group>"; };
 		06774FDF1C8784DD00ECC221 /* DealViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DealViewController.swift; sourceTree = "<group>"; };
 		06774FE11C87870C00ECC221 /* DealViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DealViewModel.swift; sourceTree = "<group>"; };
 		06774FE31C8790C300ECC221 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
@@ -164,10 +166,11 @@
 				06774FF51C881D3300ECC221 /* DealCollectionViewLayout.swift */,
 				06E0A90A1CFCFAEA0061EEB2 /* SpecsViewController.swift */,
 				0646A6141C8AAC31000E6827 /* ImageViewController.swift */,
+				0675F6051D0F965300A75CC2 /* VideoViewController.swift */,
 				06BF30121D0914B60040C9F6 /* WebViewController.swift */,
-				0649E20D1CA450280070047C /* ImageAnimationController.swift */,
 				06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */,
 				06AA6ACB1D08DE8800021130 /* BuyAnimationController.swift */,
+				0675F6071D0FB2F300A75CC2 /* FocusAnimationController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -627,7 +630,6 @@
 				06774FF61C881D3300ECC221 /* DealCollectionViewLayout.swift in Sources */,
 				06774FE81C87935700ECC221 /* UIColor+Extensions.swift in Sources */,
 				06FC03771CFFDFC700139EA8 /* ErrorView.swift in Sources */,
-				0649E20E1CA450280070047C /* ImageAnimationController.swift in Sources */,
 				06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */,
 				069283A31CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift in Sources */,
 				06F803CD1C9008B600E486EA /* Theme.swift in Sources */,
@@ -636,6 +638,7 @@
 				06E0A90B1CFCFAEA0061EEB2 /* SpecsViewController.swift in Sources */,
 				06774FEA1C87A60900ECC221 /* PageControl.swift in Sources */,
 				06F803CB1C9007BC00E486EA /* Story.swift in Sources */,
+				0675F6081D0FB2F300A75CC2 /* FocusAnimationController.swift in Sources */,
 				0646A6151C8AAC31000E6827 /* ImageViewController.swift in Sources */,
 				0646A6071C8A09F0000E6827 /* APIClient.swift in Sources */,
 				065D77F51D0E283A00E81E8A /* ParagraphCell.swift in Sources */,
@@ -649,6 +652,7 @@
 				06ABFCA41CF6A62900A7E690 /* StoryViewModel.swift in Sources */,
 				06774FE21C87870C00ECC221 /* DealViewModel.swift in Sources */,
 				06774FE01C8784DD00ECC221 /* DealViewController.swift in Sources */,
+				0675F6061D0F965300A75CC2 /* VideoViewController.swift in Sources */,
 				06AA113C1D0DCD6B0027D420 /* ErrorService.swift in Sources */,
 				06BBE0CE1CF81D2B00954722 /* BuyHeaderView.swift in Sources */,
 				88D02D369DDC50DA562B03BC /* AppDelegate.swift in Sources */,
