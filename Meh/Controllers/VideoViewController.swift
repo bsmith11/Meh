@@ -27,6 +27,8 @@ class VideoViewController: UIViewController {
         "playsinline": 1
     ]
 
+    private var portraitConstraints = [NSLayoutConstraint]()
+    private var landscapeConstraints = [NSLayoutConstraint]()
     private var didLayoutSubviews = false
     private var dismissing = false
     private var videoLoading = false {
@@ -46,6 +48,10 @@ class VideoViewController: UIViewController {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return .Landscape
     }
 
     init(viewModel: VideoViewModel, originalRect: CGRect) {
@@ -123,6 +129,25 @@ class VideoViewController: UIViewController {
 
         transitionCoordinator()?.animateAlongsideTransition(animation, completion: completion)
     }
+
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+
+        let animation = { (context: UIViewControllerTransitionCoordinatorContext) -> Void in
+            if size.width > size.height {
+                NSLayoutConstraint.deactivateConstraints(self.portraitConstraints)
+                NSLayoutConstraint.activateConstraints(self.landscapeConstraints)
+            }
+            else {
+                NSLayoutConstraint.deactivateConstraints(self.landscapeConstraints)
+                NSLayoutConstraint.activateConstraints(self.portraitConstraints)
+            }
+
+            self.view.layoutIfNeeded()
+        }
+
+        coordinator.animateAlongsideTransition(animation, completion: nil)
+    }
 }
 
 // MARK: - Private
@@ -152,12 +177,20 @@ private extension VideoViewController {
     }
 
     func configureLayout() {
-        let constraints: [NSLayoutConstraint] = [
+        portraitConstraints = [
             containerView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor),
+            videoImageView.heightAnchor.constraintEqualToConstant(MediaCell.height() - 20.0)
+        ]
+
+        landscapeConstraints = [
+            containerView.topAnchor.constraintEqualToAnchor(view.topAnchor),
+            view.bottomAnchor.constraintEqualToAnchor(containerView.bottomAnchor)
+        ]
+
+        let constraints: [NSLayoutConstraint] = [
             containerView.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor),
             view.trailingAnchor.constraintEqualToAnchor(containerView.trailingAnchor),
 
-            videoImageView.heightAnchor.constraintEqualToConstant(VideoCell.height()),
             videoImageView.topAnchor.constraintEqualToAnchor(containerView.topAnchor),
             videoImageView.leadingAnchor.constraintEqualToAnchor(containerView.leadingAnchor),
             containerView.trailingAnchor.constraintEqualToAnchor(videoImageView.trailingAnchor),
@@ -173,6 +206,7 @@ private extension VideoViewController {
         ]
 
         NSLayoutConstraint.activateConstraints(constraints)
+        NSLayoutConstraint.activateConstraints(portraitConstraints)
     }
 
     func configureWithViewModel(viewModel: VideoViewModel) {

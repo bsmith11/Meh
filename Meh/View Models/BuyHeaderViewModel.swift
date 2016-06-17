@@ -16,12 +16,7 @@ struct BuyHeaderViewModel {
     init(deal: Deal?) {
         theme = deal?.theme ?? Theme()
 
-        if let _ = deal?.soldOutDate {
-            buyButtonTitle = "X"
-        }
-        else {
-            buyButtonTitle = "$"
-        }
+        buyButtonTitle = "$"
 
         let buyButtonTitleMarkdownParser = TSMarkdownParser.parserWithFontSize(30.0, color: theme.accentColor)
         buyButtonAttributedString = buyButtonTitleMarkdownParser.attributedStringFromMarkdown(buyButtonTitle)

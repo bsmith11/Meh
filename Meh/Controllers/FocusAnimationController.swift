@@ -78,12 +78,26 @@ extension FocusAnimationController: UIViewControllerAnimatedTransitioning {
             let tintView = self.tintViewFromObject(object)
 
             if positive {
-                toViewController.view.frame = fromViewController.view.bounds
-                tintView.frame = fromViewController.view.bounds
                 tintView.alpha = 0.0
-
+                tintView.translatesAutoresizingMaskIntoConstraints = false
                 container.addSubview(tintView)
+
+                toViewController.view.translatesAutoresizingMaskIntoConstraints = false
                 container.addSubview(toViewController.view)
+
+                let constraints: [NSLayoutConstraint] = [
+                    tintView.topAnchor.constraintEqualToAnchor(container.topAnchor),
+                    tintView.leadingAnchor.constraintEqualToAnchor(container.leadingAnchor),
+                    container.trailingAnchor.constraintEqualToAnchor(tintView.trailingAnchor),
+                    container.bottomAnchor.constraintEqualToAnchor(tintView.bottomAnchor),
+
+                    toViewController.view.topAnchor.constraintEqualToAnchor(container.topAnchor),
+                    toViewController.view.leadingAnchor.constraintEqualToAnchor(container.leadingAnchor),
+                    container.trailingAnchor.constraintEqualToAnchor(toViewController.view.trailingAnchor),
+                    container.bottomAnchor.constraintEqualToAnchor(toViewController.view.bottomAnchor),
+                ]
+
+                NSLayoutConstraint.activateConstraints(constraints)
 
                 toViewController.view.setNeedsLayout()
                 toViewController.view.layoutIfNeeded()

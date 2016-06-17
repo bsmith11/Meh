@@ -18,6 +18,10 @@ class SplashViewController: UIViewController {
         return true
     }
 
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return .Portrait
+    }
+
     override func loadView() {
         view = UIView()
         view.backgroundColor = UIColor.whiteColor()

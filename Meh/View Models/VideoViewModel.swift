@@ -13,12 +13,11 @@ struct VideoViewModel {
     let videoURL: NSURL?
     let videoThumbnailURL: NSURL?
 
-    init(deal: Deal?) {
-        theme = deal?.theme ?? Theme()
+    init(videoURL: NSURL?, theme: Theme?) {
+        self.theme = theme ?? Theme()
+        self.videoURL = videoURL
 
-        videoURL = deal?.videoURL
-
-        if let videoID = deal?.videoURL?.absoluteString.youtubeVideoID() {
+        if let videoID = videoURL?.absoluteString.youtubeVideoID() {
             let string = "https://img.youtube.com/vi/" + videoID + "/hqdefault.jpg"
 
             videoThumbnailURL = NSURL(string: string)

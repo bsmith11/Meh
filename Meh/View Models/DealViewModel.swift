@@ -11,7 +11,7 @@ import UIKit
 enum DealItem: Equatable {
     case Features
     case Specs
-    case Video
+    case Video(NSURL?)
     case Story
     case Paragraph(String)
 }
@@ -22,8 +22,8 @@ func == (lhs: DealItem, rhs: DealItem) -> Bool {
         return true
     case (.Specs, .Specs):
         return true
-    case (.Video, .Video):
-        return true
+    case (.Video(let leftURL), .Video(let rightURL)):
+        return leftURL == rightURL
     case (.Story, .Story):
         return true
     case (.Paragraph(let leftString), .Paragraph(let rightString)):
@@ -97,14 +97,19 @@ private extension DealViewModel {
         items.removeAll()
 //        items.append(.Specs)
         items.append(.Features)
-        items.append(.Video)
+        items.append(.Video(deal?.videoURL))
         items.append(.Story)
 
         if let body = deal?.story?.body {
             for substring in body.componentsSeparatedByString("\r\n\r\n") {
                 let string = substring.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
                 if !string.isEmpty {
-                    self.items.append(.Paragraph(string))
+                    if string.isYoutubeVideo() {
+                        items.append(.Video(NSURL(string: string)))
+                    }
+                    else {
+                        items.append(.Paragraph(string))
+                    }
                 }
             }
         }

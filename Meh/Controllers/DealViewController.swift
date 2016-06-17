@@ -17,12 +17,16 @@ class DealViewController: UIViewController {
     private let collectionView: ControlContainableCollectionView
 
     private var selectedPhotoHeaderView: PhotosHeaderView?
-    private var selectedVideoCell: VideoCell?
+    private var selectedMediaCell: MediaCell?
     private var didAppear = false
     private var animationsComplete = false
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return .Portrait
     }
 
     init(viewModel: DealViewModel) {
@@ -77,7 +81,7 @@ private extension DealViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
         collectionView.delaysContentTouches = false
-        collectionView.registerClass(VideoCell.self)
+        collectionView.registerClass(MediaCell.self)
         collectionView.registerClass(ParagraphCell.self)
         collectionView.registerClass(PhotosHeaderView.self, elementKind: DealCollectionViewLayout.photosHeaderElementKind)
         collectionView.registerClass(TitleHeaderView.self, elementKind: DealCollectionViewLayout.titleHeaderElementKind)
@@ -179,10 +183,10 @@ extension DealViewController: UICollectionViewDataSource {
             cell.configureWithViewModel(specsViewModel)
 
             return cell
-        case .Video:
-            let videoViewModel = VideoViewModel(deal: viewModel.deal)
-            let cell: VideoCell = collectionView.dequeueCellForIndexPath(indexPath)
-            cell.configureWithViewModel(videoViewModel, delegate: self)
+        case .Video(let videoURL):
+            let videoViewModel = VideoViewModel(videoURL: videoURL, theme: viewModel.deal?.theme)
+            let cell: MediaCell = collectionView.dequeueCellForIndexPath(indexPath)
+            cell.configureWithViewModel(videoViewModel)
 
             return cell
         case .Story:
@@ -240,11 +244,25 @@ extension DealViewController: UICollectionViewDataSource {
 extension DealViewController: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if let item = viewModel.itemAtIndexPath(indexPath) {
-            if case .Specs = item {
+            switch item {
+            case .Specs:
                 let specsViewModel = SpecsViewModel(deal: viewModel.deal)
                 let specsViewController = SpecsViewController(viewModel: specsViewModel)
 
                 presentViewController(specsViewController, animated: true, completion: nil)
+            case .Video(let videoURL):
+                if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? MediaCell {
+                    selectedMediaCell = cell
+
+                    let originalRect = view.convertRect(cell.imageViewFrame, fromView: cell.imageViewSuperview)
+                    let videoViewModel = VideoViewModel(videoURL: videoURL, theme: viewModel.deal?.theme)
+                    let videoViewController = VideoViewController(viewModel: videoViewModel, originalRect: originalRect)
+                    videoViewController.delegate = self
+
+                    presentViewController(videoViewController, animated: true, completion: nil)
+                }
+            default:
+                break
             }
         }
     }
@@ -272,7 +290,7 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
 
             return ParagraphCell.heightWithViewModel(specsViewModel, width: width)
         case .Video:
-            return VideoCell.height()
+            return MediaCell.height()
         case .Story:
             let storyViewModel = StoryViewModel(deal: viewModel.deal)
 
@@ -341,21 +359,6 @@ extension DealViewController: BuyHeaderViewDelegate {
     }
 }
 
-// MARK: - VideoCellDelegate
-
-extension DealViewController: VideoCellDelegate {
-    func videoCellDidSelectVideo(cell: VideoCell) {
-        selectedVideoCell = cell
-
-        let originalRect = view.convertRect(cell.frame, fromView: cell.superview)
-        let videoViewModel = VideoViewModel(deal: viewModel.deal)
-        let videoViewController = VideoViewController(viewModel: videoViewModel, originalRect: originalRect)
-        videoViewController.delegate = self
-
-        presentViewController(videoViewController, animated: true, completion: nil)
-    }
-}
-
 // MARK: - FocusableViewControllerDelegate
 
 extension DealViewController: FocusableViewControllerDelegate {
@@ -363,8 +366,8 @@ extension DealViewController: FocusableViewControllerDelegate {
         if let photoHeaderView = selectedPhotoHeaderView {
             photoHeaderView.hideSelectedCell()
         }
-        else if let videoCell = selectedVideoCell {
-            videoCell.hideViews()
+        else if let mediaCell = selectedMediaCell {
+            mediaCell.showSubviews(false, animated: false)
         }
     }
 
@@ -373,9 +376,9 @@ extension DealViewController: FocusableViewControllerDelegate {
             photoHeaderView.showSelectedCell()
             selectedPhotoHeaderView = nil
         }
-        else if let videoCell = selectedVideoCell {
-            videoCell.showViews()
-            selectedVideoCell = nil
+        else if let mediaCell = selectedMediaCell {
+            mediaCell.showSubviews(true, animated: true)
+            selectedMediaCell = nil
         }
     }
 }

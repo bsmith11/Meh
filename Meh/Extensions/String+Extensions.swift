@@ -9,6 +9,15 @@
 import Foundation
 
 extension String {
+    func isYoutubeVideo() -> Bool {
+        if let videoID = youtubeVideoID() {
+            return !videoID.isEmpty
+        }
+        else {
+            return false
+        }
+    }
+
     func youtubeVideoID() -> String? {
         var pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*"
 

@@ -21,6 +21,10 @@ class SpecsViewController: UIViewController {
         return true
     }
 
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return .Portrait
+    }
+
     init(viewModel: SpecsViewModel) {
         self.viewModel = viewModel
 
