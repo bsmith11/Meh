@@ -133,7 +133,6 @@ private extension DealViewController {
     func bounceContentOffsetWithCompletion(completion: AnimationCompletion?) {
         let bounceAnimation = POPSpringAnimation(propertyNamed: kPOPCollectionViewContentOffset)
         bounceAnimation.toValue = NSValue(CGPoint: .zero)
-        bounceAnimation.velocity = NSValue(CGPoint: CGPoint(x: 0.0, y: 100.0))
         bounceAnimation.springBounciness = 20.0
         bounceAnimation.springSpeed = 5.0
         bounceAnimation.completionBlock = { (animation: POPAnimation?, finished: Bool) in
@@ -189,6 +188,12 @@ extension DealViewController: UICollectionViewDataSource {
             cell.configureWithViewModel(videoViewModel)
 
             return cell
+        case .Image(let imageURL):
+            let imageViewModel = ImageViewModel(imageURL: imageURL, theme: viewModel.deal?.theme)
+            let cell: MediaCell = collectionView.dequeueCellForIndexPath(indexPath)
+            cell.configureWithViewModel(imageViewModel)
+
+            return cell
         case .Story:
             let storyViewModel = StoryViewModel(deal: viewModel.deal)
             let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
@@ -196,8 +201,8 @@ extension DealViewController: UICollectionViewDataSource {
             cell.linkHandler = linkHandler
 
             return cell
-        case .Paragraph(let String):
-            let paragraphViewModel = ParagraphViewModel(paragraph: String, theme: viewModel.deal?.theme)
+        case .Paragraph(let string):
+            let paragraphViewModel = ParagraphViewModel(paragraph: string, theme: viewModel.deal?.theme)
             let cell: ParagraphCell = collectionView.dequeueCellForIndexPath(indexPath)
             cell.configureWithViewModel(paragraphViewModel)
             cell.linkHandler = linkHandler
@@ -261,6 +266,17 @@ extension DealViewController: UICollectionViewDelegate {
 
                     presentViewController(videoViewController, animated: true, completion: nil)
                 }
+            case .Image(let imageURL):
+                if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? MediaCell,
+                       imageURL = imageURL {
+                    selectedMediaCell = cell
+
+                    let originalRect = view.convertRect(cell.imageViewFrame, fromView: cell.imageViewSuperview)
+                    let imageViewController = ImageViewController(URL: imageURL, originalRect: originalRect)
+                    imageViewController.delegate = self
+
+                    presentViewController(imageViewController, animated: true, completion: nil)
+                }
             default:
                 break
             }
@@ -290,6 +306,8 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
 
             return ParagraphCell.heightWithViewModel(specsViewModel, width: width)
         case .Video:
+            return MediaCell.height()
+        case .Image:
             return MediaCell.height()
         case .Story:
             let storyViewModel = StoryViewModel(deal: viewModel.deal)

@@ -12,7 +12,7 @@ import pop
 
 class ImageViewController: UIViewController {
     private let minimumZoom: CGFloat = 1.0
-    private let maximumZoom: CGFloat = 2.0
+    private let maximumZoom: CGFloat = 3.0
     private let URL: NSURL
     private let originalRect: CGRect
     private let scrollView = UIScrollView(frame: .zero)

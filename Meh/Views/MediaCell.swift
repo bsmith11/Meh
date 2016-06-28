@@ -19,6 +19,8 @@ class MediaCell: UICollectionViewCell {
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
     private let playImageView = UIImageView(frame: .zero)
 
+    private var horizontalConstraints = [NSLayoutConstraint]()
+
     var imageViewFrame: CGRect {
         return mediaImageView.frame
     }
@@ -62,6 +64,19 @@ extension MediaCell {
         configureWithState(.Video)
     }
 
+    func configureWithViewModel(viewModel: ImageViewModel) {
+        backgroundColor = viewModel.theme.accentColor
+
+        if let imageURL = viewModel.imageURL {
+            mediaImageView.af_setImageWithURL(imageURL, placeholderImage: nil, filter: nil, imageTransition: .CrossDissolve(0.5), runImageTransitionIfCached: false, completion: nil)
+        }
+        else {
+            mediaImageView.image = nil
+        }
+
+        configureWithState(.Image)
+    }
+
     func showSubviews(shown: Bool, animated: Bool) {
         let alpha: CGFloat = shown ? 1.0 : 0.0
 
@@ -87,7 +102,6 @@ extension MediaCell {
 private extension MediaCell {
     func configureViews() {
         mediaImageView.clipsToBounds = true
-        mediaImageView.contentMode = .ScaleAspectFill
         mediaImageView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(mediaImageView)
 
@@ -104,9 +118,8 @@ private extension MediaCell {
 
     func configureLayout() {
         let constraints: [NSLayoutConstraint] = [
+            mediaImageView.centerXAnchor.constraintEqualToAnchor(contentView.centerXAnchor),
             mediaImageView.topAnchor.constraintEqualToAnchor(contentView.topAnchor),
-            mediaImageView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor),
-            contentView.trailingAnchor.constraintEqualToAnchor(mediaImageView.trailingAnchor),
             contentView.bottomAnchor.constraintEqualToAnchor(mediaImageView.bottomAnchor, constant: 20.0),
 
             blurView.widthAnchor.constraintEqualToConstant(80.0),
@@ -118,6 +131,11 @@ private extension MediaCell {
             playImageView.centerYAnchor.constraintEqualToAnchor(blurView.centerYAnchor)
         ]
 
+        horizontalConstraints = [
+            mediaImageView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor),
+            contentView.trailingAnchor.constraintEqualToAnchor(mediaImageView.trailingAnchor),
+        ]
+
         NSLayoutConstraint.activateConstraints(constraints)
     }
 
@@ -125,8 +143,12 @@ private extension MediaCell {
         switch state {
         case .Image:
             blurView.hidden = true
+            mediaImageView.contentMode = .ScaleAspectFit
+            NSLayoutConstraint.deactivateConstraints(horizontalConstraints)
         case .Video:
             blurView.hidden = false
+            mediaImageView.contentMode = .ScaleAspectFill
+            NSLayoutConstraint.activateConstraints(horizontalConstraints)
         }
     }
 }

@@ -9,7 +9,14 @@
 import Foundation
 
 extension String {
-    func isYoutubeVideo() -> Bool {
+    func isImageURL() -> Bool {
+        let prefix = hasPrefix("http")
+        let suffix = hasSuffix("jpg") || hasSuffix("jpeg") || hasSuffix("png")
+
+        return prefix && suffix
+    }
+
+    func isYoutubeURL() -> Bool {
         if let videoID = youtubeVideoID() {
             return !videoID.isEmpty
         }
