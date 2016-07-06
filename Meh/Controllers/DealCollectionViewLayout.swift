@@ -110,11 +110,8 @@ class DealCollectionViewLayout: UICollectionViewLayout {
                 allLayoutAttributes.append(buyHeaderLayoutAttributes)
                 allLayoutAttributes.append(footerLayoutAttributes)
 
-                for attributes in allLayoutAttributes {
-                    if CGRectIntersectsRect(attributes.frame, rect) {
-                        layoutAttributes.append(attributes)
-                    }
-                }
+                let attributes = allLayoutAttributes.filter({$0.frame.intersects(rect)})
+                layoutAttributes.appendContentsOf(attributes)
             }
         }
 

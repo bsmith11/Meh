@@ -39,7 +39,7 @@ extension DealService {
         client.request(route) { (result: Result) in
             if result.isSuccess {
                 guard let dictionary = result.value as? [String: AnyObject],
-                      let deal = Deal(dictionary: dictionary) else {
+                          deal = Deal(dictionary: dictionary) else {
                     let error = NSError.errorWithCategory(.InvalidResponse)
 
                     completion?(nil, error)

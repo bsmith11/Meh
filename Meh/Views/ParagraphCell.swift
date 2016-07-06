@@ -13,8 +13,6 @@ typealias LinkHandlerBlock = (NSURL) -> Void
 class ParagraphCell: UICollectionViewCell {
     private let paragraphLabel = LinkLabel(frame: .zero)
 
-    private var topConstraint: NSLayoutConstraint?
-
     var linkHandler: LinkHandlerBlock?
 
     override init(frame: CGRect) {
@@ -36,8 +34,6 @@ class ParagraphCell: UICollectionViewCell {
 
 extension ParagraphCell {
     func configureWithViewModel(viewModel: ParagraphViewModelProtocol) {
-        topConstraint?.constant = viewModel is FeaturesViewModel ? 20.0 : 0.0
-
         backgroundColor = viewModel.theme.accentColor
         paragraphLabel.linkColor = viewModel.theme.backgroundColor
         paragraphLabel.attributedString = viewModel.attributedString
@@ -59,10 +55,8 @@ private extension ParagraphCell {
             paragraphLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 20.0),
             paragraphLabel.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor, constant: 20.0),
             contentView.trailingAnchor.constraintEqualToAnchor(paragraphLabel.trailingAnchor, constant: 20.0),
-            contentView.bottomAnchor.constraintEqualToAnchor(paragraphLabel.bottomAnchor, constant: 20.0)
+            contentView.bottomAnchor.constraintEqualToAnchor(paragraphLabel.bottomAnchor, constant: 0.0)
         ]
-
-        topConstraint = constraints.first
 
         NSLayoutConstraint.activateConstraints(constraints)
     }
@@ -75,9 +69,8 @@ extension ParagraphCell {
         let constrainedWidth = width - 40.0
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
         let height = viewModel.attributedString.heightForSize(size)
-        let top = CGFloat(viewModel is FeaturesViewModel ? 20.0 : 0.0)
 
-        return top + height + 20.0
+        return 20.0 + height
     }
 }
 

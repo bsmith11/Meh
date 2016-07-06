@@ -60,7 +60,7 @@ private extension TitleHeaderView {
         let constraints: [NSLayoutConstraint] = [
             titleLabel.topAnchor.constraintEqualToAnchor(topAnchor, constant: 10.0),
             titleLabel.leadingAnchor.constraintEqualToAnchor(leadingAnchor, constant: 20.0),
-            trailingAnchor.constraintEqualToAnchor(titleLabel.trailingAnchor, constant: 20.0 + 50.0 + 20.0),
+            trailingAnchor.constraintEqualToAnchor(titleLabel.trailingAnchor, constant: 20.0 + 60.0 + 20.0),
             bottomAnchor.constraintEqualToAnchor(titleLabel.bottomAnchor, constant: 10.0)
         ]
 
@@ -72,7 +72,7 @@ private extension TitleHeaderView {
 
 extension TitleHeaderView {
     static func heightWithViewModel(viewModel: TitleHeaderViewModel, width: CGFloat) -> CGFloat {
-        let constrainedWidth = width - (20.0 + 20.0 + 50.0 + 20.0)
+        let constrainedWidth = width - (20.0 + 20.0 + 60.0 + 20.0)
         let size = CGSize(width: constrainedWidth, height: CGFloat.max)
         let titleHeight = viewModel.titleAttributedString.heightForSize(size)
 

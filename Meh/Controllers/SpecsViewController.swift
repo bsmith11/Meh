@@ -70,7 +70,7 @@ private extension SpecsViewController {
 
         specsLabel.numberOfLines = 0
         specsLabel.delegate = self
-        specsLabel.linkColor = viewModel.theme.backgroundColor
+        specsLabel.linkColor = viewModel.theme.accentColor
         specsLabel.translatesAutoresizingMaskIntoConstraints = false
         scrollViewContentView.addSubview(specsLabel)
     }

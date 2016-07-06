@@ -71,8 +71,8 @@ extension FocusAnimationController: UIViewControllerAnimatedTransitioning {
         context = transitionContext
 
         if let container = transitionContext.containerView(),
-            let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-            let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) {
+               fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
+               toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) {
 
             let object = positive ? toViewController : fromViewController
             let tintView = self.tintViewFromObject(object)
@@ -103,7 +103,11 @@ extension FocusAnimationController: UIViewControllerAnimatedTransitioning {
                 toViewController.view.layoutIfNeeded()
             }
 
+//            let presenter = positive ? fromViewController : toViewController
+//            let transform = positive ? CGAffineTransformMakeScale(0.95, 0.95) : CGAffineTransformIdentity
+
             let animations = {
+//                presenter.view.transform = transform
                 tintView.alpha = self.positive ? 1.0 : 0.0
             }
 

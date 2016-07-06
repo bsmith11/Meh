@@ -61,4 +61,30 @@ extension String {
             return nil
         }
     }
+
+    func stringByApplyingRegularExpression(regularExpression: NSRegularExpression, block: (NSTextCheckingResult, NSMutableString) -> Void) -> String {
+        let mutableString = NSMutableString(string: self)
+        let options: NSMatchingOptions = .WithoutAnchoringBounds
+
+        var match: NSTextCheckingResult?
+        var location = 0
+        var range = NSRange(location: location, length: mutableString.length - location)
+
+        match = regularExpression.firstMatchInString(String(mutableString), options: options, range: range)
+
+        while match != nil {
+            if let match = match {
+                let oldLength = mutableString.length
+                block(match, mutableString)
+                let newLength = mutableString.length
+
+                location = match.range.location + match.range.length + newLength - oldLength
+            }
+
+            range = NSRange(location: location, length: mutableString.length - location)
+            match = regularExpression.firstMatchInString(String(mutableString), options: options, range: range)
+        }
+
+        return String(mutableString)
+    }
 }

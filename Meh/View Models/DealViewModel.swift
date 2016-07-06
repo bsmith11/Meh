@@ -99,11 +99,11 @@ private extension DealViewModel {
     func configureItems() {
         items.removeAll()
 //        items.append(.Specs)
-        items.append(.Features)
-        items.append(.Video(deal?.videoURL))
-        items.append(.Story)
+//        items.append(.Features)
+//        items.append(.Video(deal?.videoURL))
+//        items.append(.Story)
 
-        if let body = deal?.story?.body {
+        if let body = deal?.specifications {
             for substring in body.componentsSeparatedByString("\r\n\r\n") {
                 let string = substring.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
                 if !string.isEmpty {

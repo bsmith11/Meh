@@ -47,7 +47,7 @@ struct TitleHeaderViewModel {
             title = "No Price"
         }
 
-        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(30.0, color: theme.accentColor)
+        let titleMarkdownParser = TSMarkdownParser.parserWithFontSize(38.0, color: theme.accentColor)
         titleAttributedString = titleMarkdownParser.attributedStringFromMarkdown(title)
     }
 }

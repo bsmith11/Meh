@@ -23,7 +23,7 @@ class BuyHeaderView: UICollectionReusableView {
         configureViews()
         configureLayout()
 
-        layer.cornerRadius = 25.0
+        layer.cornerRadius = 30.0
         clipsToBounds = true
     }
 
@@ -52,8 +52,8 @@ private extension BuyHeaderView {
 
     func configureLayout() {
         let constraints: [NSLayoutConstraint] = [
-            buyButton.widthAnchor.constraintEqualToConstant(50.0),
-            buyButton.heightAnchor.constraintEqualToConstant(50.0),
+            buyButton.widthAnchor.constraintEqualToConstant(60.0),
+            buyButton.heightAnchor.constraintEqualToConstant(60.0),
             buyButton.topAnchor.constraintEqualToAnchor(topAnchor),
             buyButton.leadingAnchor.constraintEqualToAnchor(leadingAnchor),
             trailingAnchor.constraintEqualToAnchor(buyButton.trailingAnchor),
@@ -72,6 +72,6 @@ private extension BuyHeaderView {
 
 extension BuyHeaderView {
     static func sizeWithViewModel(viewModel: BuyHeaderViewModel) -> CGSize {
-        return CGSize(width: 50.0, height: 50.0)
+        return CGSize(width: 60.0, height: 60.0)
     }
 }

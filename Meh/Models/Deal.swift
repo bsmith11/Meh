@@ -72,6 +72,20 @@ struct Deal {
 
             specifications = dealDictionary["specifications"] as? String
 
+            do {
+                let regex = try NSRegularExpression(pattern: "^(.*)\r\n====\r\n", options: .AnchorsMatchLines)
+                let block = { (result: NSTextCheckingResult, mutableString: NSMutableString) in
+                    let removalRange = (mutableString as NSString).rangeOfString("\r\n====\r\n", options: .LiteralSearch, range: result.range)
+                    mutableString.replaceCharactersInRange(removalRange, withString: "\r\n\r\n")
+                    mutableString.insertString("#", atIndex: result.range.location)
+                }
+
+                specifications = specifications?.stringByApplyingRegularExpression(regex, block: block)
+            }
+            catch {
+                print("Failed to initialize regular expression")
+            }
+
             if let storyDictionary = dealDictionary["story"] as? Dictionary<String, String> {
                 story = Story(dictionary: storyDictionary)
             }

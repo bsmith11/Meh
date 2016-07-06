@@ -44,7 +44,7 @@ extension TSMarkdownParser {
 
         markdownParser.addLinkParsingWithLinkFormattingBlock(linkBlock)
 
-        let leadBlock = { (mutableAttributedString: NSMutableAttributedString, range: NSRange, level: UInt) in
+        let listLeadBlock = { (mutableAttributedString: NSMutableAttributedString, range: NSRange, level: UInt) in
             let attributes = mutableAttributedString.attributesAtIndex(range.location, longestEffectiveRange: nil, inRange: range)
             let leadString = "\u{2022} "
             let leadAttributedString = NSAttributedString(string: leadString, attributes: attributes)
@@ -58,7 +58,21 @@ extension TSMarkdownParser {
             mutableAttributedString.replaceCharactersInRange(range, withString: leadString)
         }
 
-        markdownParser.addListParsingWithMaxLevel(1, leadFormattingBlock: leadBlock, textFormattingBlock: nil)
+        markdownParser.addListParsingWithMaxLevel(1, leadFormattingBlock: listLeadBlock, textFormattingBlock: nil)
+
+        let headerLeadBlock = { (mutableAttributedString: NSMutableAttributedString, range: NSRange, level: UInt) in
+            mutableAttributedString.replaceCharactersInRange(range, withString: "")
+        }
+
+        let headerTextFormattingBlock = { (mutableAttributedString: NSMutableAttributedString, range: NSRange, level: UInt) in
+            let attributes = [
+                NSFontAttributeName: UIFont.mehFontWithSize(24.0, style: .Bold)
+            ]
+
+            mutableAttributedString.addAttributes(attributes, range: range)
+        }
+
+        markdownParser.addShortHeaderParsingWithMaxLevel(1, leadFormattingBlock: headerLeadBlock, textFormattingBlock: headerTextFormattingBlock)
 
         return markdownParser
     }

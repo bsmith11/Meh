@@ -16,9 +16,9 @@ struct BuyHeaderViewModel {
     init(deal: Deal?) {
         theme = deal?.theme ?? Theme()
 
-        buyButtonTitle = "$"
+        buyButtonTitle = "Buy"
 
-        let buyButtonTitleMarkdownParser = TSMarkdownParser.parserWithFontSize(30.0, color: theme.accentColor)
+        let buyButtonTitleMarkdownParser = TSMarkdownParser.parserWithFontSize(18.0, color: theme.accentColor)
         buyButtonAttributedString = buyButtonTitleMarkdownParser.attributedStringFromMarkdown(buyButtonTitle)
     }
 }
