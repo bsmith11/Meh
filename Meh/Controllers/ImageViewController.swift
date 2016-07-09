@@ -29,10 +29,6 @@ class ImageViewController: UIViewController {
         return true
     }
 
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return .Portrait
-    }
-
     init(URL: NSURL, originalRect: CGRect) {
         self.URL = URL
         self.originalRect = originalRect

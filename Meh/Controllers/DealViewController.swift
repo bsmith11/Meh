@@ -25,10 +25,6 @@ class DealViewController: UIViewController {
         return true
     }
 
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return .Portrait
-    }
-
     init(viewModel: DealViewModel) {
         self.viewModel = viewModel
 

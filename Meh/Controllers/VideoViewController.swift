@@ -50,10 +50,6 @@ class VideoViewController: UIViewController {
         return true
     }
 
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return .Landscape
-    }
-
     init(viewModel: VideoViewModel, originalRect: CGRect) {
         self.viewModel = viewModel
         self.originalRect = originalRect
