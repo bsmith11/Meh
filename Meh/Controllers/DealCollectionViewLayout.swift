@@ -194,11 +194,13 @@ private extension DealCollectionViewLayout {
     func photoHeaderFrameForContentOffset(contentOffset: CGPoint) -> CGRect {
         var frame = photosHeaderLayoutAttributes.frame
 
-        if contentOffset.y + frame.height < titleHeaderLayoutAttributes.frame.minY {
+        let titleHeaderFrame = titleHeaderFrameForContentOffset(contentOffset)
+
+        if contentOffset.y + frame.height < titleHeaderFrame.minY {
             frame.origin.y = contentOffset.y
         }
         else {
-            frame.origin.y = titleHeaderLayoutAttributes.frame.minY - frame.height
+            frame.origin.y = titleHeaderFrame.minY - frame.height
         }
 
         return frame
@@ -207,11 +209,15 @@ private extension DealCollectionViewLayout {
     func titleHeaderFrameForContentOffset(contentOffset: CGPoint) -> CGRect {
         var frame = titleHeaderLayoutAttributes.frame
 
-        if contentOffset.y > (collectionView!.bounds.height - frame.height) {
+        guard let collectionView = collectionView else {
+            return frame
+        }
+
+        if contentOffset.y > (collectionView.bounds.height - frame.height) {
             frame.origin.y = contentOffset.y
         }
         else {
-            frame.origin.y = collectionView!.bounds.height - frame.height
+            frame.origin.y = collectionView.bounds.height - frame.height
         }
 
         return frame
@@ -220,8 +226,13 @@ private extension DealCollectionViewLayout {
     func buyHeaderFrameForContentOffset(contentOffset: CGPoint) -> CGRect {
         var frame = buyHeaderLayoutAttributes.frame
 
-        let value = (contentOffset.y + collectionView!.bounds.height) - 20.0 - frame.height
-        let otherValue = titleHeaderLayoutAttributes.frame.maxY - (frame.height / 2.0)
+        guard let collectionView = collectionView else {
+            return frame
+        }
+
+        let value = (contentOffset.y + collectionView.bounds.height) - 20.0 - frame.height
+        let titleHeaderFrame = titleHeaderFrameForContentOffset(contentOffset)
+        let otherValue = titleHeaderFrame.maxY - (frame.height / 2.0)
 
         frame.origin.y = min(value, otherValue)
 
@@ -231,12 +242,14 @@ private extension DealCollectionViewLayout {
     func footerFrame() -> CGRect {
         var frame: CGRect = .zero
 
-        if let collectionView = collectionView {
-            let threshold = collectionView.contentOffset.y + collectionView.bounds.height
-            let height = max(0.0, threshold - contentHeight)
-
-            frame = CGRect(x: 0.0, y: contentHeight, width: contentWidth, height: height)
+        guard let collectionView = collectionView else {
+            return frame
         }
+
+        let threshold = collectionView.contentOffset.y + collectionView.bounds.height
+        let height = max(0.0, threshold - contentHeight)
+
+        frame = CGRect(x: 0.0, y: contentHeight, width: contentWidth, height: height)
 
         return frame
     }

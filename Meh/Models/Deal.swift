@@ -73,9 +73,9 @@ struct Deal {
             specifications = dealDictionary["specifications"] as? String
 
             do {
-                let regex = try NSRegularExpression(pattern: "^(.*)\r\n====\r\n", options: .AnchorsMatchLines)
+                let regex = try NSRegularExpression(pattern: "^(.*)\r\n====", options: .AnchorsMatchLines)
                 let block = { (result: NSTextCheckingResult, mutableString: NSMutableString) in
-                    let removalRange = (mutableString as NSString).rangeOfString("\r\n====\r\n", options: .LiteralSearch, range: result.range)
+                    let removalRange = (mutableString as NSString).rangeOfString("\r\n====", options: .LiteralSearch, range: result.range)
                     mutableString.replaceCharactersInRange(removalRange, withString: "\r\n\r\n")
                     mutableString.insertString("#", atIndex: result.range.location)
                 }
