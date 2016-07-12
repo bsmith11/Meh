@@ -49,7 +49,7 @@ extension SplashViewController {
 
 private extension SplashViewController {
     func configureViews() {
-        let image = UIImage(named: "meh_logo")!
+        let image = UIImage(named: "meh_app_icon")!
         let imageView = UIImageView(frame: .zero)
         imageView.contentMode = .Center
         imageView.image = image
@@ -67,7 +67,7 @@ private extension SplashViewController {
             shimmerView.widthAnchor.constraintEqualToConstant(width),
             shimmerView.heightAnchor.constraintEqualToConstant(height),
             shimmerView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor),
-            shimmerView.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 120.0)
+            shimmerView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor)
         ]
 
         NSLayoutConstraint.activateConstraints(constraints)
