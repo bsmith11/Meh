@@ -50,7 +50,6 @@
 		06E0A90B1CFCFAEA0061EEB2 /* SpecsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A90A1CFCFAEA0061EEB2 /* SpecsViewController.swift */; };
 		06E0A90D1CFCFBF10061EEB2 /* SpecsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A90C1CFCFBF10061EEB2 /* SpecsViewModel.swift */; };
 		06E0A90F1CFD0D630061EEB2 /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */; };
-		06F803C11C8D2C9C00E486EA /* meh_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 06F803C01C8D2C9C00E486EA /* meh_logo.png */; };
 		06F803CB1C9007BC00E486EA /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F803CA1C9007BC00E486EA /* Story.swift */; };
 		06F803CD1C9008B600E486EA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F803CC1C9008B600E486EA /* Theme.swift */; };
 		06FC03771CFFDFC700139EA8 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FC03761CFFDFC700139EA8 /* ErrorView.swift */; };
@@ -117,7 +116,6 @@
 		06E0A90A1CFCFAEA0061EEB2 /* SpecsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecsViewController.swift; sourceTree = "<group>"; };
 		06E0A90C1CFCFBF10061EEB2 /* SpecsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecsViewModel.swift; sourceTree = "<group>"; };
 		06E0A90E1CFD0D630061EEB2 /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
-		06F803C01C8D2C9C00E486EA /* meh_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meh_logo.png; sourceTree = "<group>"; };
 		06F803CA1C9007BC00E486EA /* Story.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
 		06F803CC1C9008B600E486EA /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		06FC03761CFFDFC700139EA8 /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
@@ -256,7 +254,6 @@
 		8FC91BDEF2B40FD54C042982 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				06F803C01C8D2C9C00E486EA /* meh_logo.png */,
 				0646A60C1C8A1D1C000E6827 /* meh.json */,
 				CDBF7F3678D9AD4C1CFC1CAB /* Images.xcassets */,
 				88A068A6637898C6658A2B03 /* LaunchScreen.xib */,
@@ -407,7 +404,6 @@
 				940872298607AE30EE401C9F /* Frameworks */,
 				93BB08717629423BA8C6D8B9 /* Resources */,
 				E3B20179CFB3E167F9B401CB /* Warn for TODO and FIXME comments */,
-				31EB60B10C77669D4C84A253 /* Set version number */,
 				C9A27BD988B7E7B2B7FC9DA3 /* Embed Pods Frameworks */,
 				06D87CA7F99E6F594A34002A /* Copy Pods Resources */,
 				0677500A1C89E58F00ECC221 /* Swift Lint */,
@@ -463,7 +459,6 @@
 				23D45A9B76B6FD2D4F2D3971 /* Images.xcassets in Resources */,
 				1A12714BB5B69D96A32372A3 /* LaunchScreen.xib in Resources */,
 				80C59789D3FF42207459F54D /* Settings.bundle in Resources */,
-				06F803C11C8D2C9C00E486EA /* meh_logo.png in Resources */,
 				0646A60D1C8A1D1C000E6827 /* meh.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

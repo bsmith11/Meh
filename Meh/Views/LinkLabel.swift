@@ -213,7 +213,7 @@ private extension LinkLabel {
     }
 
     func linkAtPoint(point: CGPoint) -> Link? {
-        guard CGRectInset(bounds, -15.0, -15.0).contains(point) && !links.isEmpty else {
+        guard bounds.insetBy(dx: -15.0, dy: -15.0).contains(point) && !links.isEmpty else {
             return nil
         }
 
