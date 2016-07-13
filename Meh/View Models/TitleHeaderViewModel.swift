@@ -24,8 +24,9 @@ struct TitleHeaderViewModel {
         theme = deal?.theme ?? Theme()
 
         if let _ = deal?.soldOutDate {
-            let randomIndex = Int(arc4random_uniform(UInt32(titles.count)))
-            title = titles[randomIndex]
+//            let randomIndex = Int(arc4random_uniform(UInt32(titles.count)))
+//            title = titles[randomIndex]
+            title = "Sold Out"
         }
         else if let prices = deal?.prices where !prices.isEmpty {
             var lowestPrice = Int.max
