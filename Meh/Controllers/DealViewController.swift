@@ -140,8 +140,13 @@ private extension DealViewController {
     }
 
     func handleURL(URL: NSURL) {
-        let safariViewController = SFSafariViewController(URL: URL)
-        presentViewController(safariViewController, animated: true, completion: nil)
+        if let validURL = URL.validSchemeURL() {
+            let safariViewController = SFSafariViewController(URL: validURL)
+            presentViewController(safariViewController, animated: true, completion: nil)
+        }
+        else if UIApplication.sharedApplication().canOpenURL(URL) {
+            UIApplication.sharedApplication().openURL(URL)
+        }
     }
 }
 

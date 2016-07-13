@@ -16,6 +16,7 @@
 		0646A6151C8AAC31000E6827 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0646A6141C8AAC31000E6827 /* ImageViewController.swift */; };
 		065D77F51D0E283A00E81E8A /* ParagraphCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D77F41D0E283A00E81E8A /* ParagraphCell.swift */; };
 		065D77F71D0E295E00E81E8A /* ParagraphViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D77F61D0E295E00E81E8A /* ParagraphViewModel.swift */; };
+		0665DEF81D35CAB9006D2070 /* NSURL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665DEF71D35CAB9006D2070 /* NSURL+Extensions.swift */; };
 		0675F6061D0F965300A75CC2 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6051D0F965300A75CC2 /* VideoViewController.swift */; };
 		0675F6081D0FB2F300A75CC2 /* FocusAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6071D0FB2F300A75CC2 /* FocusAnimationController.swift */; };
 		0675F6131D14716000A75CC2 /* MediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6121D14716000A75CC2 /* MediaCell.swift */; };
@@ -82,6 +83,7 @@
 		0646A6141C8AAC31000E6827 /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		065D77F41D0E283A00E81E8A /* ParagraphCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParagraphCell.swift; sourceTree = "<group>"; };
 		065D77F61D0E295E00E81E8A /* ParagraphViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParagraphViewModel.swift; sourceTree = "<group>"; };
+		0665DEF71D35CAB9006D2070 /* NSURL+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Extensions.swift"; sourceTree = "<group>"; };
 		0675F6051D0F965300A75CC2 /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		0675F6071D0FB2F300A75CC2 /* FocusAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusAnimationController.swift; sourceTree = "<group>"; };
 		0675F6121D14716000A75CC2 /* MediaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCell.swift; sourceTree = "<group>"; };
@@ -359,6 +361,7 @@
 				069283A21CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift */,
 				06BBE0CB1CF7FD8A00954722 /* UICollectionView+Extensions.swift */,
 				06E0A9061CFB71670061EEB2 /* TSMarkdownParser+Extensions.swift */,
+				0665DEF71D35CAB9006D2070 /* NSURL+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -644,6 +647,7 @@
 				067750001C89007400ECC221 /* ControlContainableCollectionView.swift in Sources */,
 				0646A60B1C8A0D52000E6827 /* Deal.swift in Sources */,
 				06ABFCA81CF6B0E600A7E690 /* VideoViewModel.swift in Sources */,
+				0665DEF81D35CAB9006D2070 /* NSURL+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
