@@ -38,6 +38,17 @@ extension String {
         }
     }
 
+    func tableMarkdownRows() -> [[String]]? {
+        guard hasPrefix("|") else {
+            return nil
+        }
+
+        let rawRows = componentsSeparatedByString("\n")
+        let rows = rawRows.map({$0.componentsSeparatedByString("|").filter({!$0.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).isEmpty})})
+
+        return rows
+    }
+
     func stringMatchingRegexPattern(pattern: String) -> String? {
         var strings = [String]()
 

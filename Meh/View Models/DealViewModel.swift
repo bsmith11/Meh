@@ -15,6 +15,7 @@ enum DealItem: Equatable {
     case Image(NSURL?)
     case Story
     case Paragraph(String)
+    case Table([[String]])
 }
 
 func == (lhs: DealItem, rhs: DealItem) -> Bool {
@@ -31,6 +32,8 @@ func == (lhs: DealItem, rhs: DealItem) -> Bool {
         return true
     case (.Paragraph(let leftString), .Paragraph(let rightString)):
         return leftString == rightString
+    case (.Table(let leftObject), .Table(let rightObject)):
+        return leftObject == rightObject
     default:
         return false
     }
@@ -112,6 +115,9 @@ private extension DealViewModel {
                     }
                     else if string.isImageURL() {
                         items.append(.Image(NSURL(string: string)))
+                    }
+                    else if let rows = string.tableMarkdownRows() {
+                        items.append(.Table(rows))
                     }
                     else {
                         items.append(.Paragraph(string))

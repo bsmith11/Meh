@@ -17,6 +17,8 @@
 		065D77F51D0E283A00E81E8A /* ParagraphCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D77F41D0E283A00E81E8A /* ParagraphCell.swift */; };
 		065D77F71D0E295E00E81E8A /* ParagraphViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D77F61D0E295E00E81E8A /* ParagraphViewModel.swift */; };
 		0665DEF81D35CAB9006D2070 /* NSURL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665DEF71D35CAB9006D2070 /* NSURL+Extensions.swift */; };
+		0665DEFA1D3816A9006D2070 /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665DEF91D3816A9006D2070 /* TableCell.swift */; };
+		0665DEFC1D38207C006D2070 /* TableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665DEFB1D38207C006D2070 /* TableViewModel.swift */; };
 		0675F6061D0F965300A75CC2 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6051D0F965300A75CC2 /* VideoViewController.swift */; };
 		0675F6081D0FB2F300A75CC2 /* FocusAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6071D0FB2F300A75CC2 /* FocusAnimationController.swift */; };
 		0675F6131D14716000A75CC2 /* MediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0675F6121D14716000A75CC2 /* MediaCell.swift */; };
@@ -84,6 +86,8 @@
 		065D77F41D0E283A00E81E8A /* ParagraphCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParagraphCell.swift; sourceTree = "<group>"; };
 		065D77F61D0E295E00E81E8A /* ParagraphViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParagraphViewModel.swift; sourceTree = "<group>"; };
 		0665DEF71D35CAB9006D2070 /* NSURL+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Extensions.swift"; sourceTree = "<group>"; };
+		0665DEF91D3816A9006D2070 /* TableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
+		0665DEFB1D38207C006D2070 /* TableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewModel.swift; sourceTree = "<group>"; };
 		0675F6051D0F965300A75CC2 /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		0675F6071D0FB2F300A75CC2 /* FocusAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusAnimationController.swift; sourceTree = "<group>"; };
 		0675F6121D14716000A75CC2 /* MediaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCell.swift; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 				06AA6AC21D07B32400021130 /* TitleHeaderView.swift */,
 				06BBE0CD1CF81D2B00954722 /* BuyHeaderView.swift */,
 				065D77F41D0E283A00E81E8A /* ParagraphCell.swift */,
+				0665DEF91D3816A9006D2070 /* TableCell.swift */,
 				0646A6041C89EF3F000E6827 /* FooterView.swift */,
 				06774FFF1C89007400ECC221 /* ControlContainableCollectionView.swift */,
 				06E0A9081CFBDC920061EEB2 /* LinkLabel.swift */,
@@ -337,6 +342,7 @@
 				06BC10941D221D5900651875 /* ImageViewModel.swift */,
 				06ABFCA31CF6A62900A7E690 /* StoryViewModel.swift */,
 				065D77F61D0E295E00E81E8A /* ParagraphViewModel.swift */,
+				0665DEFB1D38207C006D2070 /* TableViewModel.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -619,6 +625,7 @@
 				06774FE81C87935700ECC221 /* UIColor+Extensions.swift in Sources */,
 				06FC03771CFFDFC700139EA8 /* ErrorView.swift in Sources */,
 				06E0A9051CF929480061EEB2 /* PhotosHeaderViewModel.swift in Sources */,
+				0665DEFA1D3816A9006D2070 /* TableCell.swift in Sources */,
 				069283A31CB4CED400A0D2D5 /* NSAttributedString+Extensions.swift in Sources */,
 				06F803CD1C9008B600E486EA /* Theme.swift in Sources */,
 				06AA11331D0A6FDD0027D420 /* NSError+Extensions.swift in Sources */,
@@ -643,6 +650,7 @@
 				0675F6061D0F965300A75CC2 /* VideoViewController.swift in Sources */,
 				06AA113C1D0DCD6B0027D420 /* ErrorService.swift in Sources */,
 				06BBE0CE1CF81D2B00954722 /* BuyHeaderView.swift in Sources */,
+				0665DEFC1D38207C006D2070 /* TableViewModel.swift in Sources */,
 				88D02D369DDC50DA562B03BC /* AppDelegate.swift in Sources */,
 				067750001C89007400ECC221 /* ControlContainableCollectionView.swift in Sources */,
 				0646A60B1C8A0D52000E6827 /* Deal.swift in Sources */,

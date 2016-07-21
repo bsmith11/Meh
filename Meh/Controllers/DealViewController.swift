@@ -80,6 +80,7 @@ private extension DealViewController {
         collectionView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 20.0, right: 0.0)
         collectionView.registerClass(MediaCell.self)
         collectionView.registerClass(ParagraphCell.self)
+        collectionView.registerClass(TableCell.self)
         collectionView.registerClass(PhotosHeaderView.self, elementKind: DealCollectionViewLayout.photosHeaderElementKind)
         collectionView.registerClass(TitleHeaderView.self, elementKind: DealCollectionViewLayout.titleHeaderElementKind)
         collectionView.registerClass(BuyHeaderView.self, elementKind: DealCollectionViewLayout.buyHeaderElementKind)
@@ -210,6 +211,12 @@ extension DealViewController: UICollectionViewDataSource {
             cell.linkHandler = linkHandler
 
             return cell
+        case .Table(let rows):
+            let tableViewModel = TableViewModel(rows: rows, theme: viewModel.deal?.theme)
+            let cell: TableCell = collectionView.dequeueCellForIndexPath(indexPath)
+            cell.configureWithViewModel(tableViewModel)
+
+            return cell
         }
     }
 
@@ -319,6 +326,10 @@ extension DealViewController: DealCollectionViewLayoutDelegate {
             let paragraphViewModel = ParagraphViewModel(paragraph: string, theme: viewModel.deal?.theme)
 
             return ParagraphCell.heightWithViewModel(paragraphViewModel, width: width)
+        case .Table(let rows):
+            let tableViewModel = TableViewModel(rows: rows, theme: viewModel.deal?.theme)
+
+            return TableCell.heightWithViewModel(tableViewModel, width: width)
         }
     }
 
